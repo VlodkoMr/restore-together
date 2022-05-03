@@ -1,0 +1,57 @@
+{
+  "name": "restore-together",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "npm run build:contract && npm run build:web",
+    "build:contract": "node contract/compile.js",
+    "build:contract:debug": "node contract/compile.js --debug",
+    "build:web": "parcel build src/index.html --public-url ./",
+    "dev:deploy:contract": "near dev-deploy",
+    "deploy:contract": "near deploy",
+    "deploy:pages": "gh-pages -d dist/",
+    "deploy": "npm run build && npm run deploy:contract && npm run deploy:pages",
+    "prestart": "npm run build:contract:debug && npm run dev:deploy:contract",
+    "start": "env-cmd -f ./neardev/dev-account.env parcel src/index.html --open",
+    "dev": "nodemon --watch contract/src -e rs --exec \"npm run start\""
+  },
+  "devDependencies": {
+    "env-cmd": "~10.1.0",
+    "near-cli": "~2.1.1",
+    "nodemon": "~2.0.3",
+    "react-test-renderer": "~17.0.1",
+    "shelljs": "~0.8.4"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.5.0",
+    "@heroicons/react": "^1.0.5",
+    "autoprefixer": "^10.4.7",
+    "big.js": "^6.1.1",
+    "css-loader": "^6.7.1",
+    "file-loader": "^6.2.0",
+    "html-loader": "^3.1.0",
+    "near-api-js": "~0.43.1",
+    "parcel": "2.3.2",
+    "postcss": "^8.4.13",
+    "process": "^0.11.10",
+    "react": "~17.0.1",
+    "react-dom": "~17.0.1",
+    "react-router-dom": "^6.3.0",
+    "regenerator-runtime": "~0.13.5",
+    "style-loader": "^3.3.1",
+    "styled-components": "^5.3.5",
+    "tailwindcss": "^3.0.24"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
