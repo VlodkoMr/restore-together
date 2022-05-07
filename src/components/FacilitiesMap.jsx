@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 function FacilitiesMap({ locations, centerCoord, google }) {
-  const [center, setCenter] = useState("");
+  const [center, setCenter] = useState();
 
-  useEffect(() => {
-
-  }, [locations]);
+  // useEffect(() => {
+  // }, [locations]);
 
   useEffect(() => {
     let coord = centerCoord.split(",");
@@ -15,7 +14,6 @@ function FacilitiesMap({ locations, centerCoord, google }) {
       lng: coord[1]
     })
   }, [centerCoord]);
-
 
   return (
     <>
@@ -31,6 +29,9 @@ function FacilitiesMap({ locations, centerCoord, google }) {
           zoom={11}
           disableDefaultUI={true}
         >
+          {locations.map(marker => (
+            <Marker position={marker} key={marker.id} />
+          ))}
         </Map>
       )}
     </>

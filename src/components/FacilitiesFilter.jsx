@@ -6,11 +6,16 @@ import {
   statusConfig,
 } from '../near/content';
 import Dropdown from './basic/Dropdown';
+import { Link } from '../assets/styles/common.style';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFacility, setRegion, setStatus } from '../store/facilityFilterSlice';
 
 export const FacilitiesFilter = ({ size }) => {
-  const [facility, setFacility] = useState("");
-  const [status, setStatus] = useState("");
-  const [region, setRegion] = useState(defaultRegion);
+  const dispatch = useDispatch();
+  const region = useSelector(state => state.facility.filter.region);
+  const status = useSelector(state => state.facility.filter.status);
+  const facility = useSelector(state => state.facility.filter.facility);
+
   const [regionList, setRegionList] = useState([]);
   const [statusList, setStatusList] = useState([]);
   const [facilityTypeList, setFacilityTypeList] = useState([]);
@@ -62,6 +67,18 @@ export const FacilitiesFilter = ({ size }) => {
     </div>
   );
 
+  const getFacilityUrl = () => {
+    const searchParams = new URLSearchParams();
+    searchParams.append("region", region);
+    if (facility) {
+      searchParams.append("facility", facility);
+    }
+    if (status) {
+      searchParams.append("status", status);
+    }
+    return `/facilities?${searchParams.toString()}`
+  };
+
   return (
     <>
       <div
@@ -71,25 +88,27 @@ export const FacilitiesFilter = ({ size }) => {
         <FilterOption title="Region"
                       options={regionList}
                       selected={region}
-                      onSelect={(id) => setRegion(id)} />
+                      onSelect={(id) => dispatch(setRegion({ id }))} />
         <FilterOption title="Facility Type"
                       options={facilityTypeList}
                       selected={facility}
-                      onSelect={(id) => setFacility(id)} />
+                      onSelect={(id) => dispatch(setFacility({ id }))} />
         <FilterOption title="Status"
                       options={statusList}
                       selected={status}
-                      onSelect={(id) => setStatus(id)} />
-        <button type="button"
-                className="absolute right-2.5 top-2.5 text-white bg-red-500 transition hover:bg-red-600 hover:text-white focus:ring-4 items-center
+                      onSelect={(id) => dispatch(setStatus({ id }))} />
+        <Link to={getFacilityUrl()}>
+          <button type="button"
+                  className="absolute right-2.5 top-2.5 text-white bg-red-500 transition hover:bg-red-600 hover:text-white focus:ring-4 items-center
                   focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-3 text-center inline-flex">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fillRule="evenodd"
-                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                  clipRule="evenodd">
-            </path>
-          </svg>
-        </button>
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd">
+              </path>
+            </svg>
+          </button>
+        </Link>
       </div>
     </>
   );
