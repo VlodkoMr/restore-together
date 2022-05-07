@@ -4,7 +4,14 @@ import { Link as ReactLink, NavLink as ReactNavLink } from "react-router-dom";
 export const Wrapper = styled.section.attrs({
   className: `
   relative
-  mb-auto`,
+  z-1`
+})``;
+
+export const Container = styled.section.attrs({
+  className: `
+  max-w-[1420px]
+  mx-auto
+  px-6`
 })``;
 
 export const Link = styled(ReactLink).attrs(() => ({
@@ -16,7 +23,7 @@ export const Link = styled(ReactLink).attrs(() => ({
     `,
 }))``;
 
-export const NavLink = styled(ReactNavLink).attrs({
+export const NavLink = styled(ReactNavLink).attrs((props) => ({
   className: `
     px-2.5
     py-2.5
@@ -28,10 +35,10 @@ export const NavLink = styled(ReactNavLink).attrs({
     ease-in-out
     duration-200
     rounded-xl
-    uppercase
-    hover:text-orange-400
+    hover:text-red-400
     cursor-pointer`,
-})``;
+}))`
+&.active{ text-decoration: underline }`;
 
 export const Btn = styled.button`
 `;
