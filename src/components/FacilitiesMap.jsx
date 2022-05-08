@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Map, Marker, InfoWindow, GoogleApiWrapper } from 'google-maps-react';
 import { statusConfig } from '../near/content';
+import { Link } from 'react-router-dom';
 
 function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
   const [center, setCenter] = useState();
@@ -29,6 +30,10 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
     setShowingInfoWindow(false);
     setActiveLocation(null);
   };
+
+  const openActiveLocation = () => {
+    console.log('...')
+  }
 
   return (
     <>
@@ -61,7 +66,9 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
               {activeLocation && (
                 <>
                   <img src={activeLocation.media} alt="" className="w-64 h-48 object-cover" />
-                  <h1 className="w-64 px-4 py-3 text-sm font-normal">{activeLocation.title}</h1>
+                  <h1 className="w-64 px-4 py-3 text-sm font-normal">
+                    {activeLocation.title}
+                  </h1>
                   <p
                     className="absolute left-4 top-4 bg-white/75 font-normal rounded-md px-2 py-1 drop-shadow-md ">
                     {statusConfig[activeLocation.status]}
