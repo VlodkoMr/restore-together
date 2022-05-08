@@ -17,7 +17,7 @@ export default function Dropdown({ title, options, selected, onSelect }) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button
-        className={`flex items-center justify-between py-2 pl-3 pr-4 font-medium text-gray-700 border-b border-gray-100 
+        className={`flex items-center justify-between py-2 pl-3 pr-4 text-gray-700 border-b border-gray-100 
         hover:bg-gray-50 min-w-[180px]
         md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto`}>
         {getTitle()}

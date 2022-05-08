@@ -19,7 +19,7 @@ export const Header = ({ currentUser, color }) => {
     <div className={`${color === "dark" ? "border-b" : ""}`}>
       <Container
         className={`flex flex-row justify-between py-5 
-          ${color === "dark" ? "text-neutral-700" : "text-white"}`
+          ${color === "dark" ? "text-neutral-700" : "text-white max-w-[1400px]"}`
         }>
         <div className="xl:w-72 w-48">
           <Link to="/">

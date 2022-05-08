@@ -9,7 +9,6 @@ export const Wrapper = styled.section.attrs({
 
 export const Container = styled.section.attrs({
   className: `
-  max-w-[1420px]
   mx-auto
   px-6`
 })``;

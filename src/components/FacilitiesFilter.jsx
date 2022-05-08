@@ -82,8 +82,8 @@ export const FacilitiesFilter = ({ size }) => {
   return (
     <>
       <div
-        className={`w-full relative bg-white h-16 mx-auto py-3 flex flex-row text-slate-900 
-          ${size === "sm" ? "pr-12 pl-6 bg-gray-50" : "sm:w-[740px] px-10 rounded-full"}
+        className={`w-full relative bg-white mx-auto flex flex-row text-slate-900 
+          ${size === "sm" ? "pr-12 pl-6 bg-gray-50 h-14 py-2" : "sm:w-[740px] px-10 rounded-full h-16 py-3"}
         `}>
         <FilterOption title="Region"
                       options={regionList}
@@ -99,8 +99,9 @@ export const FacilitiesFilter = ({ size }) => {
                       onSelect={(id) => dispatch(setStatus({ id }))} />
         <Link to={getFacilityUrl()}>
           <button type="button"
-                  className="absolute right-2.5 top-2.5 text-white bg-red-500 transition hover:bg-red-600 hover:text-white focus:ring-4 items-center
-                  focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-3 text-center inline-flex">
+                  className={`absolute right-2.5 text-white bg-red-500 transition hover:bg-red-600 hover:text-white focus:ring-4 items-center
+                  focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-3 text-center inline-flex
+                  ${size === "sm" ? "mr-2 top-2" : "top-2.5"}`}>
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path fillRule="evenodd"
                     d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"

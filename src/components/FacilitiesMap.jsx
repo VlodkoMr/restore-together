@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { Map, Marker, InfoWindow, GoogleApiWrapper } from 'google-maps-react';
+import { statusConfig } from '../near/content';
 
-function FacilitiesMap({ locations, centerCoord, google }) {
+function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
   const [center, setCenter] = useState();
-
-  // useEffect(() => {
-  // }, [locations]);
+  const [activeMarker, setActiveMarker] = useState();
+  const [activeLocation, setActiveLocation] = useState();
+  const [showingInfoWindow, setShowingInfoWindow] = useState(false);
 
   useEffect(() => {
     let coord = centerCoord.split(",");
@@ -15,6 +16,20 @@ function FacilitiesMap({ locations, centerCoord, google }) {
     })
   }, [centerCoord]);
 
+  const handleMarkerClick = (marker, item) => {
+    setHighLight(item.id);
+    setActiveMarker(marker);
+    setShowingInfoWindow(true);
+    setActiveLocation(item);
+  };
+
+  const onMapClicked = () => {
+    setHighLight(null);
+    setActiveMarker(null);
+    setShowingInfoWindow(false);
+    setActiveLocation(null);
+  };
+
   return (
     <>
       {center && (
@@ -22,16 +37,40 @@ function FacilitiesMap({ locations, centerCoord, google }) {
           google={google}
           containerStyle={{
             width: '100%',
-            height: 'calc(100vh - 176px)'
+            height: 'calc(100vh - 168px)'
           }}
+          zoomControl={true}
+          fullscreenControl={true}
           center={center}
           initialCenter={center}
-          zoom={11}
           disableDefaultUI={true}
+          zoom={11}
+          onClick={onMapClicked}
         >
-          {locations.map(marker => (
-            <Marker position={marker} key={marker.id} />
+          {locations.map(item => (
+            <Marker position={item}
+                    key={item.id}
+                    onClick={(props, marker) => handleMarkerClick(marker, item)}
+            />
           ))}
+
+          <InfoWindow
+            marker={activeMarker}
+            visible={showingInfoWindow}>
+            <div className="relative">
+              {activeLocation && (
+                <>
+                  <img src={activeLocation.media} alt="" className="w-64 h-48 object-cover" />
+                  <h1 className="w-64 px-4 py-3 text-sm font-normal">{activeLocation.title}</h1>
+                  <p
+                    className="absolute left-4 top-4 bg-white/75 font-normal rounded-md px-2 py-1 drop-shadow-md ">
+                    {statusConfig[activeLocation.status]}
+                  </p>
+                </>
+              )}
+            </div>
+          </InfoWindow>
+
         </Map>
       )}
     </>

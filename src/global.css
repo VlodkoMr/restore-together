@@ -45,8 +45,27 @@ body {
     }
 }
 
-.facility-col {
-    min-height: calc(100vh - 96px);
+.facility-image {
+    width: 160px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.facility-title {
+    max-width: calc(50vw - 230px);
+    letter-spacing: -0.01em;
+}
+
+.gm-style .gm-style-iw-c {
+    padding: 0;
+}
+
+.gm-style .gm-style-iw-d {
+    overflow: hidden !important;
+}
+
+.gm-ui-hover-effect {
+    display: none !important;
 }
 
 /*.lrContainers {*/
