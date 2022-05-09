@@ -65,9 +65,11 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
             <div className="relative">
               {activeLocation && (
                 <>
-                  <img src={activeLocation.media} alt="" className="w-64 h-48 object-cover" />
+                  <a href="/">
+                    <img src={activeLocation.media} alt="" className="w-64 h-48 object-cover" />
+                  </a>
                   <h1 className="w-64 px-4 py-3 text-sm font-normal">
-                    {activeLocation.title}
+                    <a href="/">{activeLocation.title}</a>
                   </h1>
                   <p
                     className="absolute left-4 top-4 bg-white/75 font-normal rounded-md px-2 py-1 drop-shadow-md ">
