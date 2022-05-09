@@ -7,7 +7,7 @@ export const About = ({ currentUser }) => {
     <Wrapper>
       <Header color="dark" currentUser={currentUser} />
 
-      <Container className="pt-6 xl:w-1/2 sm:w-3/4 mx-auto text-lg text-justify">
+      <Container className="pt-4 xl:w-1/2 sm:w-3/4 mx-auto text-lg text-justify">
         <h2 className="text-3xl text-center my-6 font-semibold">About Project</h2>
         <p className="mb-4">Many monuments and cultural heritage have been affected by Russia's attack on Ukraine in
           2022. We want to restore this heritage together using NEAR blockchain and DeFi

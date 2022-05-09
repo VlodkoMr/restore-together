@@ -13,6 +13,7 @@ import {
   TwitterShareButton,
 } from "react-share";
 import { Loader } from '../components/basic/Loader';
+import { MyProposalForm } from '../components/MyProposalForm';
 
 export const FacilityDetails = ({ currentUser }) => {
   const dispatch = useDispatch();
@@ -106,20 +107,7 @@ export const FacilityDetails = ({ currentUser }) => {
                 </div>
 
                 <h3 className="text-xl font-medium mb-2 mt-6">Add Proposal</h3>
-                <div className="flex flex-row px-5 py-4 relative mb-3 shadow border border-gray-100 rounded-lg">
-                  <div className="w-[52px] mr-5">
-                    <img src={tmpLogo} alt="" width="w-full" className="rounded-full mt-1" />
-                  </div>
-                  <div className="w-full relative">
-                    <textarea className="border p-2 w-full mb-1" placeholder="Describe your proposal"> </textarea>
-                    <input type="number" className="border px-2 mt-1 py-1.5 w-[90px] mr-2" placeholder="Time" />
-                    <span className="text-gray-600">days</span>
-                    <input type="number" className="border px-2 ml-10 py-1.5 w-[90px] mr-2" placeholder="Budget" />
-                    <span className="text-gray-600">NEAR</span>
-                    <Button title="Add Proposal" size="xs" noIcon className="absolute right-0" />
-                  </div>
-                </div>
-
+                <MyProposalForm />
               </div>
 
               <div className="w-1/3">

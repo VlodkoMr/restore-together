@@ -26,6 +26,8 @@ function OneFacilityMap({ locations, centerCoord, google }) {
           center={center}
           initialCenter={center}
           disableDefaultUI={true}
+          draggable={false}
+          zoomControl={true}
           zoom={14}
         >
           {locations.map(item => (

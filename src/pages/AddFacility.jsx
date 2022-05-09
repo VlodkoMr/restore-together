@@ -74,9 +74,9 @@ export const AddFacility = ({ currentUser }) => {
     <Wrapper>
       <Header color="dark" currentUser={currentUser} />
 
-      <Container className="pt-6 w-[520px]">
+      <Container className="pt-4 w-[520px]">
         <h2 className="text-3xl text-center my-6 font-semibold">Add Facility</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="pb-6">
           <div className="mb-3">
             <FormLabel>Title<sup className="text-red-400">*</sup></FormLabel>
             <input type="text" className="border py-1.5 px-2 w-full" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -92,18 +92,21 @@ export const AddFacility = ({ currentUser }) => {
             </div>
           </div>
           <div className="mb-4">
+            <FormLabel>Current Photo<sup className="text-red-400">*</sup></FormLabel>
+            <input type="file" accept="image/*" className="border py-1.5 px-2 w-full text-sm" ref={photoInput} />
+          </div>
+          <div className="mb-4">
             <FormLabel>Set Location<sup className="text-red-400">*</sup></FormLabel>
             <div className="h-[180px]">
               <AddFacilityMap centerCoord={regionsCoordConfig[region]} markerLocation={markerLocation} setMarkerLocation={setMarkerLocation} />
             </div>
           </div>
-          <div className="mb-4">
-            <FormLabel>Current Photo<sup className="text-red-400">*</sup></FormLabel>
-            <input type="file" accept="image/*" className="border py-1.5 px-2 w-full text-sm" ref={photoInput} />
-          </div>
           <div className="mb-3">
-            <FormLabel>Describe more details<sup className="text-red-400">*</sup></FormLabel>
-            <textarea className="border p-2 w-full mb-1 h-28" value={description} onChange={(e) => setDescription(e.target.value)}> </textarea>
+            <FormLabel>Describe facility details<sup className="text-red-400">*</sup></FormLabel>
+            <textarea className="border p-2 w-full mb-1 h-20"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}>
+            </textarea>
           </div>
           <div className="text-left">
             <Button title="Submit" />
