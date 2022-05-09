@@ -10,6 +10,7 @@ export const Button = ({
   disabled,
   secondary,
   className,
+  roundedClass,
   readonly
 }) => {
   const sizeMapping = {
@@ -27,9 +28,12 @@ export const Button = ({
   return (
     <>
       <Btn
-        className={`border-2 rounded-lg font-semibold uppercase text-white group transition ease-in-out duration-200 ${
+        className={`border-2 font-semibold uppercase text-white group transition ease-in-out duration-200 ${
           disabled && "grayscale cursor-default opacity-40"
         } 
+        ${
+          roundedClass ? roundedClass : "rounded-lg"
+        }
         ${
           readonly && "grayscale opacity-70"
         }

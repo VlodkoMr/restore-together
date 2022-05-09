@@ -31,10 +31,6 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
     setActiveLocation(null);
   };
 
-  const openActiveLocation = () => {
-    console.log('...')
-  }
-
   return (
     <>
       {center && (
@@ -42,7 +38,7 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
           google={google}
           containerStyle={{
             width: '100%',
-            height: 'calc(100vh - 168px)'
+            height: 'calc(100vh - 170px)'
           }}
           zoomControl={true}
           fullscreenControl={true}

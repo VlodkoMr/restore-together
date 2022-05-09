@@ -6,7 +6,7 @@ import { Button } from './basic/Button';
 import { Container, Link, NavLink } from '../assets/styles/common.style';
 import { login, logout } from '../near/utils';
 
-export const Header = ({ currentUser, color }) => {
+export const Header = ({ currentUser, color, width }) => {
   // const [scroll, setScroll] = useState(false);
   // useEffect(() => {
   //   // Change header bg on scroll
@@ -17,10 +17,10 @@ export const Header = ({ currentUser, color }) => {
 
   return (
     <div className={`${color === "dark" ? "border-b" : ""}`}>
-      <Container
-        className={`flex flex-row justify-between py-5 
+      <Container width={width}
+                 className={`flex flex-row justify-between py-5
           ${color === "dark" ? "text-neutral-700" : "text-white max-w-[1400px]"}`
-        }>
+                 }>
         <div className="xl:w-72 w-48">
           <Link to="/">
             <img src={color === "dark" ? logoIcon : logoWhiteIcon} alt="logo" width="140" />
@@ -29,7 +29,7 @@ export const Header = ({ currentUser, color }) => {
 
         <div className="pt-4">
           <NavLink to="/">Home</NavLink>
-          <NavLink to="/facilities">Facilities</NavLink>
+          <NavLink to="/facility">Facilities</NavLink>
           <NavLink to="/add-facility">Add Facility</NavLink>
           <NavLink to="/about">About</NavLink>
         </div>
@@ -38,7 +38,7 @@ export const Header = ({ currentUser, color }) => {
           {currentUser ? (
             <>
               <div className="mt-2 flex flex-row place-content-end">
-                <p className="pt-0.5">{currentUser.accountId}</p>
+                <p className="pt-0.5 font-medium">{currentUser.accountId}</p>
                 <img src={logoutIcon}
                      alt="logout"
                      title="Logout"

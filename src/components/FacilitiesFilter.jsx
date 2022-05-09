@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  defaultRegion,
   facilityTypeConfig,
   regionsConfig,
   statusConfig,
@@ -76,7 +75,7 @@ export const FacilitiesFilter = ({ size }) => {
     if (status) {
       searchParams.append("status", status);
     }
-    return `/facilities?${searchParams.toString()}`
+    return `/facility?${searchParams.toString()}`
   };
 
   return (
@@ -93,7 +92,7 @@ export const FacilitiesFilter = ({ size }) => {
                       options={facilityTypeList}
                       selected={facility}
                       onSelect={(id) => dispatch(setFacility({ id }))} />
-        <FilterOption title="Status"
+        <FilterOption title="Stage"
                       options={statusList}
                       selected={status}
                       onSelect={(id) => dispatch(setStatus({ id }))} />

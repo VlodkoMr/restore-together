@@ -10,6 +10,7 @@ import {
 import { initContract, login, logout } from './near/utils';
 
 import './global.css'
+import { FacilityDetails } from './pages/FacilityDetails';
 
 export default function App() {
   const [isReady, setIsReady] = React.useState(false);
@@ -51,9 +52,16 @@ export default function App() {
           />
           <Route
             exact
-            path="/facilities"
+            path="/facility"
             element={
               <Facilities currentUser={currentUser} />
+            }
+          />
+          <Route
+            exact
+            path="/facility/:id"
+            element={
+              <FacilityDetails currentUser={currentUser} />
             }
           />
           <Route

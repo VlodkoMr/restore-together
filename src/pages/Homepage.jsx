@@ -3,7 +3,7 @@ import bgTop from "../assets/images/bg-top.png";
 
 import React from "react";
 import { Header } from '../components/Header';
-import { Wrapper } from '../assets/styles/common.style';
+import { Link, Wrapper } from '../assets/styles/common.style';
 import { FacilitiesFilter } from '../components/FacilitiesFilter';
 
 export const Homepage = ({ currentUser }) => {
@@ -25,8 +25,12 @@ export const Homepage = ({ currentUser }) => {
           <FacilitiesFilter />
         </div>
 
-        <div className="text-center mt-6">
-          text...
+        <div className="text-center mt-8 leading-6">
+          <p>Many monuments and cultural heritage have been affected by Russia's attack on Ukraine in 2022. </p>
+          <p>
+            Let's restore Ukraine together!
+            <Link to={`/about`} className="text-white ml-1 underline">Read more</Link>.
+          </p>
         </div>
 
       </Wrapper>
