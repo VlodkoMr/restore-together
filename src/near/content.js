@@ -1,4 +1,5 @@
 export const defaultRegion = '10';
+export const googleAPIKey = 'AIzaSyABJhkerDplCjq7Een9GZgE3JtI3XxuRqw';
 
 export const facilityTypeConfig = {
   'architecture': 'Architecture',

@@ -12,6 +12,7 @@ import {
   TelegramShareButton, TwitterIcon,
   TwitterShareButton,
 } from "react-share";
+import { Loader } from '../components/basic/Loader';
 
 export const FacilityDetails = ({ currentUser }) => {
   const dispatch = useDispatch();
@@ -152,7 +153,7 @@ export const FacilityDetails = ({ currentUser }) => {
             </Container>
           </>
         ) : (
-          <>loading...</>
+          <Loader />
         )}
       </Wrapper>
     </>

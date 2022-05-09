@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Map, Marker, InfoWindow, GoogleApiWrapper } from 'google-maps-react';
-import { statusConfig } from '../near/content';
+import { googleAPIKey, statusConfig } from '../near/content';
 import { Link } from 'react-router-dom';
 
 function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
@@ -83,5 +83,5 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
 }
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyABJhkerDplCjq7Een9GZgE3JtI3XxuRqw"
+  apiKey: googleAPIKey
 })(FacilitiesMap)

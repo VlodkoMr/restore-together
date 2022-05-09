@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { googleAPIKey } from '../near/content';
 
-function AddFacilityMap({ centerCoord, google }) {
+function AddFacilityMap({ centerCoord, google, markerLocation, setMarkerLocation }) {
   const [center, setCenter] = useState();
-  const [tmpMarker, setTmpMarker] = useState();
 
   useEffect(() => {
     let coord = centerCoord.split(",");
@@ -14,7 +14,7 @@ function AddFacilityMap({ centerCoord, google }) {
   }, [centerCoord]);
 
   const onMapClicked = (props, e, marker) => {
-    setTmpMarker({
+    setMarkerLocation({
       lat: marker.latLng.lat(),
       lng: marker.latLng.lng(),
     });
@@ -41,8 +41,8 @@ function AddFacilityMap({ centerCoord, google }) {
           zoom={12}
           onClick={onMapClicked}
         >
-          {tmpMarker && (
-            <Marker position={tmpMarker} />
+          {markerLocation && (
+            <Marker position={markerLocation} />
           )}
         </Map>
       )}
@@ -51,5 +51,5 @@ function AddFacilityMap({ centerCoord, google }) {
 }
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyABJhkerDplCjq7Een9GZgE3JtI3XxuRqw"
+  apiKey: googleAPIKey
 })(AddFacilityMap)

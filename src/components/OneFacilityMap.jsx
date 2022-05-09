@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { googleAPIKey } from '../near/content';
 
 function OneFacilityMap({ locations, centerCoord, google }) {
   const [center, setCenter] = useState();
@@ -37,5 +38,5 @@ function OneFacilityMap({ locations, centerCoord, google }) {
 }
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyABJhkerDplCjq7Een9GZgE3JtI3XxuRqw"
+  apiKey: googleAPIKey
 })(OneFacilityMap)
