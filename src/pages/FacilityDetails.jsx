@@ -68,7 +68,7 @@ export const FacilityDetails = ({ currentUser }) => {
             </div>
 
             <Container className="flex flex-row mt-4 pt-2">
-              <div className="w-2/3 mr-8">
+              <div className="w-2/3 mr-10">
                 <h1 className="text-2xl font-medium">Some page super title name</h1>
 
                 <div className="text-gray-600 text-sm">
@@ -111,8 +111,10 @@ export const FacilityDetails = ({ currentUser }) => {
                   </div>
                   <div className="w-full relative">
                     <textarea className="border p-2 w-full mb-1" placeholder="Describe your proposal"> </textarea>
-                    <input type="number" className="border px-2 mt-1 py-1.5 w-[90px] mr-1" placeholder="Time" /> days
-                    <input type="number" className="border px-2 ml-10 py-1.5 w-[90px] mr-1" placeholder="Budget" /> NEAR
+                    <input type="number" className="border px-2 mt-1 py-1.5 w-[90px] mr-2" placeholder="Time" />
+                    <span className="text-gray-600">days</span>
+                    <input type="number" className="border px-2 ml-10 py-1.5 w-[90px] mr-2" placeholder="Budget" />
+                    <span className="text-gray-600">NEAR</span>
                     <Button title="Add Proposal" size="xs" noIcon className="absolute right-0" />
                   </div>
                 </div>

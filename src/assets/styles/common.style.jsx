@@ -56,3 +56,11 @@ export const Col = styled.div.attrs({
     flex
     flex-col`,
 })``;
+
+export const FormLabel = styled.div.attrs({
+  className: `
+    block
+    text-base
+    font-medium
+    `,
+})``;

@@ -27,11 +27,11 @@ pub struct Welcome {
 }
 
 impl Default for Welcome {
-  fn default() -> Self {
-    Self {
-      records: LookupMap::new(b"a".to_vec()),
+    fn default() -> Self {
+        Self {
+            records: LookupMap::new(b"a".to_vec()),
+        }
     }
-  }
 }
 
 #[near_bindgen]
@@ -40,7 +40,7 @@ impl Welcome {
         let account_id = env::signer_account_id();
 
         // Use env::log to record logs permanently to the blockchain!
-        env::log(format!("Saving greeting '{}' for account '{}'", message, account_id,).as_bytes());
+        env::log(format!("Saving greeting '{}' for account '{}'", message, account_id, ).as_bytes());
 
         self.records.insert(&account_id, &message);
     }

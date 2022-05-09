@@ -105,7 +105,7 @@ export const Facilities = ({ currentUser }) => {
                         <div className="w-48">
                           <p>Status: {statusConfig[facility.status]}</p>
                           <p>Type: {facilityTypeConfig[facility.facilityType]}</p>
-                          <p className="mt-2 underline">open...</p>
+                          {/*<p className="mt-2 underline">open...</p>*/}
                         </div>
                         <div>
                           <p>Investments: 100 NEAR</p>
