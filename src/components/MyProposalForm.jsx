@@ -6,6 +6,8 @@ export const MyProposalForm = () => {
   const [proposalText, setProposalText] = useState("");
   useEffect(() => {
     console.log('...')
+    //
+    // console.log(storage)
   }, []);
 
   return (

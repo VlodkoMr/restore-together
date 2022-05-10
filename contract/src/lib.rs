@@ -135,17 +135,17 @@ impl Default for Contract {
 #[near_bindgen]
 impl Contract {
     #[payable]
-    pub fn add_facility(&mut self, title: String, region: u8, facility_type: u8, media: String, lat: String, lng: String, description: String) {
+    pub fn add_facility(&mut self, id: String, title: String, region: u8, facility_type: u8, media: String, lat: String, lng: String, description: String) {
         self.assert_contract_owner(self.owner_id.to_string());
         if env::attached_deposit() != Contract::convert_to_yocto("0.1") {
             panic!("Please attach o.1 NEAR to create new Facility")
         }
-
-        self.facility_count += 1;
-        let token_id = self.facility_count.to_string();
+        if self.facility.contains_key(&id) {
+            panic!("Facility ID already exists");
+        }
 
         let facility = Facility {
-            token_id: token_id.clone(),
+            token_id: id.to_string(),
             title,
             description,
             media,
@@ -159,11 +159,16 @@ impl Contract {
             is_validated: false,
             performer: None,
         };
-        self.facility.insert(&token_id, &facility);
+        self.facility.insert(&id, &facility);
+        self.facility_count += 1;
 
         let mut region_facilities = self.facility_by_region.get(&region).unwrap_or(vec![]);
-        region_facilities.push(token_id.clone());
+        region_facilities.push(id.to_string());
         self.facility_by_region.insert(&region, &region_facilities);
+    }
+
+    pub fn get_facility_by_id(&self, token_id: TokenId) -> Facility {
+        self.facility.get(&token_id).unwrap()
     }
 
     pub fn get_region_facility(&self, region: u8) -> Vec<Facility> {

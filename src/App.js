@@ -7,10 +7,10 @@ import {
   AddFacility,
   About,
 } from "./pages";
-import { initContract, login, logout } from './near/utils';
+import { FacilityDetails } from './pages/FacilityDetails';
+import { initContract } from './near/utils';
 
 import './global.css'
-import { FacilityDetails } from './pages/FacilityDetails';
 
 export default function App() {
   const [isReady, setIsReady] = React.useState(false);
@@ -20,15 +20,8 @@ export default function App() {
     window.nearInitPromise = initContract()
       .then(async () => {
         if (window.walletConnection.isSignedIn()) {
-          const accountId = window.walletConnection?.getAccountId();
-          console.log('accountId', accountId);
-          //   let tokenBalance = await window.ftContract.ft_balance_of({
-          //     account_id: accountId,
-          //   });
-          //
           setCurrentUser({
-            accountId: accountId,
-            // tokenBalance: tokenBalance,
+            accountId: window.walletConnection.getAccountId(),
           });
         }
 

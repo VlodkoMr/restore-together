@@ -2,14 +2,14 @@ export const defaultRegion = '10';
 export const googleAPIKey = 'AIzaSyABJhkerDplCjq7Een9GZgE3JtI3XxuRqw';
 
 export const facilityTypeConfig = {
-  'architecture': 'Architecture',
-  'monument': 'Monument/Sculpture',
-  'temple': 'Temple/Church',
-  'art': 'Art',
-  'music': 'Music',
-  'books': 'Books',
-  'zoos': 'Zoos',
-  'other': 'Other',
+  '1': 'Architecture',
+  '2': 'Monument/Sculpture',
+  '3': 'Temple/Church',
+  '4': 'Art',
+  '5': 'Music',
+  '6': 'Books',
+  '7': 'Zoos',
+  '8': 'Other',
 };
 
 export const statusConfig = {
