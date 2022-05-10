@@ -13,60 +13,99 @@
 
 // To conserve gas, efficient serialization is achieved through Borsh (http://borsh.io/)
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, setup_alloc};
-use near_sdk::collections::LookupMap;
+use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, setup_alloc};
+use near_contract_standards::non_fungible_token::TokenId;
+use near_sdk::collections::{LookupMap, LookupSet, UnorderedMap};
 
 setup_alloc!();
 
-// Structs in Rust are similar to other languages, and may include impl keyword as shown below
-// Note: the names of the structs are not important when calling the smart contract, but the function names are
+type PerformerId = u32;
+
+#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct Facility {
+    pub token_id: TokenId,
+    pub title: String,
+    pub description: String,
+    pub media: String,
+    pub region: u8,
+    pub facility_type: u8,
+    pub status: u8,
+    pub lat: String,
+    pub lng: String,
+    pub total_invested: Balance,
+    pub total_investors: u32,
+    pub is_validated: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct FacilityInvestment {
+    pub user_id: AccountId,
+    pub amount: Balance,
+    pub timestamp: Timestamp,
+}
+
+#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct Performer {
+    pub id: PerformerId,
+    pub name: String,
+    pub media: String,
+    pub description: String,
+    pub rating: u8, // 1 - 10
+    pub is_validated: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct FacilityProposal {
+    pub performer_id: PerformerId,
+    pub estimate_amount: Balance,
+    pub estimate_time: u32,
+    pub text: String,
+    pub votes: UnorderedMap<AccountId, PerformerId>,
+}
+
+
+#[derive(BorshStorageKey, BorshSerialize)]
+pub enum StorageKeys {
+    Performers,
+    Facility,
+    FacilityByRegion,
+    FacilityInvestors,
+    FacilityProposals,
+}
+
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
-pub struct Welcome {
-    records: LookupMap<String, String>,
+pub struct RestoreTogether {
+    owner_id: AccountId,
+    management_accounts: Vec<AccountId>,
+    performers: UnorderedMap<PerformerId, Performer>,
+    facility: LookupMap<TokenId, Facility>,
+    facility_by_region: LookupMap<u8, TokenId>,
+    facility_investors: LookupMap<TokenId, Vec<FacilityInvestment>>,
+    facility_proposals: LookupMap<TokenId, Vec<FacilityProposal>>,
 }
 
-impl Default for Welcome {
+impl Default for RestoreTogether {
     fn default() -> Self {
         Self {
-            records: LookupMap::new(b"a".to_vec()),
+            owner_id: env::predecessor_account_id(),
+            management_accounts: vec![],
+            performers: UnorderedMap::new(StorageKeys::Performers),
+            facility: LookupMap::new(StorageKeys::Facility),
+            facility_by_region: LookupMap::new(StorageKeys::FacilityByRegion),
+            facility_investors: LookupMap::new(StorageKeys::FacilityInvestors),
+            facility_proposals: LookupMap::new(StorageKeys::FacilityProposals),
         }
     }
 }
 
 #[near_bindgen]
-impl Welcome {
-    pub fn set_greeting(&mut self, message: String) {
-        let account_id = env::signer_account_id();
+impl RestoreTogether {}
 
-        // Use env::log to record logs permanently to the blockchain!
-        env::log(format!("Saving greeting '{}' for account '{}'", message, account_id, ).as_bytes());
-
-        self.records.insert(&account_id, &message);
-    }
-
-    // `match` is similar to `switch` in other languages; here we use it to default to "Hello" if
-    // self.records.get(&account_id) is not yet defined.
-    // Learn more: https://doc.rust-lang.org/book/ch06-02-match.html#matching-with-optiont
-    pub fn get_greeting(&self, account_id: String) -> String {
-        match self.records.get(&account_id) {
-            Some(greeting) => greeting,
-            None => "Hello".to_string(),
-        }
-    }
-}
-
-/*
- * The rest of this file holds the inline tests for the code above
- * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
- *
- * To run from contract directory:
- * cargo test -- --nocapture
- *
- * From project root, to run in combination with frontend tests:
- * yarn test
- *
- */
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -74,48 +113,48 @@ mod tests {
     use near_sdk::{testing_env, VMContext};
 
     // mock the context for testing, notice "signer_account_id" that was accessed above from env::
-    fn get_context(input: Vec<u8>, is_view: bool) -> VMContext {
-        VMContext {
-            current_account_id: "alice_near".to_string(),
-            signer_account_id: "bob_near".to_string(),
-            signer_account_pk: vec![0, 1, 2],
-            predecessor_account_id: "carol_near".to_string(),
-            input,
-            block_index: 0,
-            block_timestamp: 0,
-            account_balance: 0,
-            account_locked_balance: 0,
-            storage_usage: 0,
-            attached_deposit: 0,
-            prepaid_gas: 10u64.pow(18),
-            random_seed: vec![0, 1, 2],
-            is_view,
-            output_data_receivers: vec![],
-            epoch_height: 19,
-        }
-    }
-
-    #[test]
-    fn set_then_get_greeting() {
-        let context = get_context(vec![], false);
-        testing_env!(context);
-        let mut contract = Welcome::default();
-        contract.set_greeting("howdy".to_string());
-        assert_eq!(
-            "howdy".to_string(),
-            contract.get_greeting("bob_near".to_string())
-        );
-    }
-
-    #[test]
-    fn get_default_greeting() {
-        let context = get_context(vec![], true);
-        testing_env!(context);
-        let contract = Welcome::default();
-        // this test did not call set_greeting so should return the default "Hello" greeting
-        assert_eq!(
-            "Hello".to_string(),
-            contract.get_greeting("francis.near".to_string())
-        );
-    }
+    // fn get_context(input: Vec<u8>, is_view: bool) -> VMContext {
+    //     VMContext {
+    //         current_account_id: "alice_near".to_string(),
+    //         signer_account_id: "bob_near".to_string(),
+    //         signer_account_pk: vec![0, 1, 2],
+    //         predecessor_account_id: "carol_near".to_string(),
+    //         input,
+    //         block_index: 0,
+    //         block_timestamp: 0,
+    //         account_balance: 0,
+    //         account_locked_balance: 0,
+    //         storage_usage: 0,
+    //         attached_deposit: 0,
+    //         prepaid_gas: 10u64.pow(18),
+    //         random_seed: vec![0, 1, 2],
+    //         is_view,
+    //         output_data_receivers: vec![],
+    //         epoch_height: 19,
+    //     }
+    // }
+    //
+    // #[test]
+    // fn set_then_get_greeting() {
+    //     let context = get_context(vec![], false);
+    //     testing_env!(context);
+    //     let mut contract = Welcome::default();
+    //     contract.set_greeting("howdy".to_string());
+    //     assert_eq!(
+    //         "howdy".to_string(),
+    //         contract.get_greeting("bob_near".to_string())
+    //     );
+    // }
+    //
+    // #[test]
+    // fn get_default_greeting() {
+    //     let context = get_context(vec![], true);
+    //     testing_env!(context);
+    //     let contract = Welcome::default();
+    //     // this test did not call set_greeting so should return the default "Hello" greeting
+    //     assert_eq!(
+    //         "Hello".to_string(),
+    //         contract.get_greeting("francis.near".to_string())
+    //     );
+    // }
 }
