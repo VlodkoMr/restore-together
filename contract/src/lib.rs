@@ -1,25 +1,51 @@
-/*
- * This is an example of a Rust smart contract with two simple, symmetric functions:
- *
- * 1. set_greeting: accepts a greeting, such as "howdy", and records it for the user (account_id)
- *    who sent the request
- * 2. get_greeting: accepts an account_id and returns the greeting saved for it, defaulting to
- *    "Hello"
- *
- * Learn more about writing NEAR smart contracts with Rust:
- * https://github.com/near/near-sdk-rs
- *
- */
-
-// To conserve gas, efficient serialization is achieved through Borsh (http://borsh.io/)
+use std::fmt;
+use std::str::FromStr;
+use std::string::ParseError;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, setup_alloc};
 use near_contract_standards::non_fungible_token::TokenId;
-use near_sdk::collections::{LookupMap, LookupSet, UnorderedMap};
+use near_sdk::collections::{LookupMap, UnorderedMap};
+use near_sdk::serde::{Deserialize, Serialize};
+
+mod utils;
 
 setup_alloc!();
 
 type PerformerId = u32;
+
+#[derive(Debug, PartialEq, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[serde(crate = "near_sdk::serde")]
+pub enum FacilityStatus {
+    Fundraising,
+    InProgress,
+    Completed,
+    Issue,
+}
+
+impl fmt::Display for FacilityStatus {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            FacilityStatus::Fundraising => write!(f, "1"),
+            FacilityStatus::InProgress => write!(f, "2"),
+            FacilityStatus::Completed => write!(f, "3"),
+            FacilityStatus::Issue => write!(f, "4"),
+        }
+    }
+}
+
+impl FromStr for FacilityStatus {
+    type Err = ParseError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s {
+            "1" => FacilityStatus::Fundraising,
+            "2" => FacilityStatus::InProgress,
+            "3" => FacilityStatus::Completed,
+            "4" => FacilityStatus::Issue,
+            _ => panic!("Wrong metadata")
+        })
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
 #[serde(crate = "near_sdk::serde")]
@@ -30,12 +56,13 @@ pub struct Facility {
     pub media: String,
     pub region: u8,
     pub facility_type: u8,
-    pub status: u8,
     pub lat: String,
     pub lng: String,
+    pub status: FacilityStatus,
     pub total_invested: Balance,
     pub total_investors: u32,
     pub is_validated: bool,
+    pub performer: Option<PerformerId>,
 }
 
 #[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
@@ -53,7 +80,7 @@ pub struct Performer {
     pub name: String,
     pub media: String,
     pub description: String,
-    pub rating: u8, // 1 - 10
+    pub rating: u8,
     pub is_validated: bool,
 }
 
@@ -64,9 +91,8 @@ pub struct FacilityProposal {
     pub estimate_amount: Balance,
     pub estimate_time: u32,
     pub text: String,
-    pub votes: UnorderedMap<AccountId, PerformerId>,
+    pub votes: Vec<AccountId>,
 }
-
 
 #[derive(BorshStorageKey, BorshSerialize)]
 pub enum StorageKeys {
@@ -79,22 +105,25 @@ pub enum StorageKeys {
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
-pub struct RestoreTogether {
+pub struct Contract {
     owner_id: AccountId,
     management_accounts: Vec<AccountId>,
     performers: UnorderedMap<PerformerId, Performer>,
+
     facility: LookupMap<TokenId, Facility>,
-    facility_by_region: LookupMap<u8, TokenId>,
+    facility_count: u32,
+    facility_by_region: LookupMap<u8, Vec<TokenId>>,
     facility_investors: LookupMap<TokenId, Vec<FacilityInvestment>>,
     facility_proposals: LookupMap<TokenId, Vec<FacilityProposal>>,
 }
 
-impl Default for RestoreTogether {
+impl Default for Contract {
     fn default() -> Self {
         Self {
             owner_id: env::predecessor_account_id(),
             management_accounts: vec![],
             performers: UnorderedMap::new(StorageKeys::Performers),
+            facility_count: 0,
             facility: LookupMap::new(StorageKeys::Facility),
             facility_by_region: LookupMap::new(StorageKeys::FacilityByRegion),
             facility_investors: LookupMap::new(StorageKeys::FacilityInvestors),
@@ -104,7 +133,46 @@ impl Default for RestoreTogether {
 }
 
 #[near_bindgen]
-impl RestoreTogether {}
+impl Contract {
+    #[payable]
+    pub fn add_facility(&mut self, title: String, region: u8, facility_type: u8, media: String, lat: String, lng: String, description: String) {
+        self.assert_contract_owner(self.owner_id.to_string());
+        if env::attached_deposit() != Contract::convert_to_yocto("0.1") {
+            panic!("Please attach o.1 NEAR to create new Facility")
+        }
+
+        self.facility_count += 1;
+        let token_id = self.facility_count.to_string();
+
+        let facility = Facility {
+            token_id: token_id.clone(),
+            title,
+            description,
+            media,
+            region,
+            facility_type,
+            lat,
+            lng,
+            status: FacilityStatus::Fundraising,
+            total_invested: 0,
+            total_investors: 0,
+            is_validated: false,
+            performer: None,
+        };
+        self.facility.insert(&token_id, &facility);
+
+        let mut region_facilities = self.facility_by_region.get(&region).unwrap_or(vec![]);
+        region_facilities.push(token_id.clone());
+        self.facility_by_region.insert(&region, &region_facilities);
+    }
+
+    pub fn get_region_facility(&self, region: u8) -> Vec<Facility> {
+        let region_facilities = self.facility_by_region.get(&region).unwrap_or(vec![]);
+        region_facilities.into_iter()
+            .flat_map(|token_id| self.facility.get(&token_id))
+            .collect()
+    }
+}
 
 #[cfg(test)]
 mod tests {
