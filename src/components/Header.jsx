@@ -47,7 +47,9 @@ export const Header = ({ currentUser, color, width }) => {
               </div>
             </>
           ) : (
-            <Button title="LogIn" onClick={login} secondary />
+            <Button title="LogIn" onClick={login}
+                    className={`border-red-400 bg-transparent hover:border-red-500
+                    ${color === "dark" ? "text-red-400 hover:text-red-500 " : ""}`} />
           )}
         </div>
       </Container>

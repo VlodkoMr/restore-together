@@ -18,10 +18,10 @@ function AddFacilityMap({ centerCoord, google, markerLocation, setMarkerLocation
       lat: marker.latLng.lat(),
       lng: marker.latLng.lng(),
     });
-    setCenter({
-      lat: marker.latLng.lat(),
-      lng: marker.latLng.lng()
-    });
+    // setCenter({
+    //   lat: marker.latLng.lat(),
+    //   lng: marker.latLng.lng()
+    // });
   };
 
   return (

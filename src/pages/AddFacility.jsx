@@ -12,6 +12,7 @@ import { useSearchParams } from "react-router-dom";
 import { convertToTera, convertToYocto, dataURLtoFile } from '../near/utils';
 
 export const AddFacility = ({ currentUser }) => {
+    const history = useHistory();
     const { state: searchFilters } = useLocation();
     const [isReady, setIsReady] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -240,11 +241,11 @@ export const AddFacility = ({ currentUser }) => {
     }
 
     const resetForm = () => {
-      localStorage.removeItem('addFacility');
-      localStorage.removeItem('addFacilityId');
-      localStorage.removeItem('step');
+      // localStorage.removeItem('addFacility');
+      // localStorage.removeItem('addFacilityId');
+      // localStorage.removeItem('step');
 
-      // reload?
+      history.push("/add-facility");
     }
 
     const StepCircle = ({ step }) => (
@@ -257,7 +258,8 @@ export const AddFacility = ({ currentUser }) => {
 
     const StepDescription = ({ step, text }) => (
       <div className="w-1/3">
-        <div className={`text-center text-sm mt-1 font-medium ${currentStep >= step ? "text-red-500" : "text-gray-300"}`}>{text}</div>
+        <div
+          className={`text-center text-sm mt-1 font-medium ${currentStep >= step ? "text-red-500" : "text-gray-300"}`}>{text}</div>
       </div>
     )
 
