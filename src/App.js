@@ -25,9 +25,7 @@ export default function App() {
           });
         }
 
-        setTimeout(() => {
-          setIsReady(true);
-        }, 500);
+        setIsReady(true);
       })
       .catch(console.error);
   }, []);
@@ -35,39 +33,42 @@ export default function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route
-            exact
-            path="/"
-            element={
-              <Homepage currentUser={currentUser} isReady={isReady} />
-            }
-          />
-          <Route
-            exact
-            path="/facility"
-            element={
-              <Facilities currentUser={currentUser} />
-            }
-          />
-          <Route
-            exact
-            path="/facility/:id"
-            element={
-              <FacilityDetails currentUser={currentUser} />
-            }
-          />
-          <Route
-            exact
-            path="/add-facility"
-            element={<AddFacility currentUser={currentUser} />}
-          />
-          <Route
-            exact
-            path="/about"
-            element={<About currentUser={currentUser} />}
-          />
-        </Routes>
+        {isReady && (
+          <Routes>
+            <Route
+              exact
+              path="/"
+              element={
+                <Homepage currentUser={currentUser} />
+              }
+            />
+            <Route
+              exact
+              path="/facility"
+              element={
+                <Facilities currentUser={currentUser} />
+              }
+            />
+            <Route
+              exact
+              path="/facility/:id"
+              element={
+                <FacilityDetails currentUser={currentUser} />
+              }
+            />
+            <Route
+              exact
+              path="/add-facility"
+              element={<AddFacility currentUser={currentUser} />}
+            />
+            <Route
+              exact
+              path="/about"
+              element={<About currentUser={currentUser} />}
+            />
+          </Routes>
+        )}
+
       </BrowserRouter>
     </>
   )

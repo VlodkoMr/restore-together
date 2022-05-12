@@ -8,6 +8,7 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFacility, setRegion, setStatus } from '../store/facilityFilterSlice';
 import { Loader } from '../components/basic/Loader';
+import { getMediaUrl } from '../near/utils';
 
 export const Facilities = ({ currentUser }) => {
   const dispatch = useDispatch();
@@ -19,6 +20,13 @@ export const Facilities = ({ currentUser }) => {
   const [highLight, setHighLight] = useState();
   const [isReady, setIsReady] = useState(false);
 
+  const loadRegionFacilities = async () => {
+    const result = await window.contract.get_region_facility({
+      region: parseInt(region)
+    });
+    setFacilityList(result);
+    setIsReady(true);
+  }
 
   useEffect(() => {
     if (searchParams.has('region')) {
@@ -33,42 +41,7 @@ export const Facilities = ({ currentUser }) => {
     }
 
     setCenterCoord(regionsCoordConfig[region]);
-    setIsReady(true);
-
-    setFacilityList([{
-      id: 1,
-      title: `Пам’ятник посмішці`,
-      lat: "50.41",
-      lng: "30.52",
-      status: "Fundraising",
-      facilityType: "4",
-      media: "https://etnoxata.com.ua/image/catalog/stat3/06_2016/08_06_16/03.jpg"
-    }, {
-      id: 2,
-      title: `Пам’ятник гривні`,
-      lat: "50.39",
-      lng: "30.49",
-      status: "Fundraising",
-      facilityType: "2",
-      media: "https://pustunchik.ua/uploads/school/cache/old/interesting/Navkolo-svitu/Pamyatnyky-Ukr/3.jpg"
-    }, {
-      id: 3,
-      title: `Пам’ятник варенику`,
-      lat: "50.42",
-      lng: "30.51",
-      status: "Fundraising",
-      facilityType: "1",
-      media: "https://uain.media/2017/08/34882195.jpg"
-    }, {
-      id: 4,
-      title: `Пам’ятник заздрості`,
-      lat: "50.30",
-      lng: "30.40",
-      status: "Fundraising",
-      facilityType: "1",
-      media: "https://uain.media/2017/08/big-58d67c54ff93674dfc064e5c-58dba449f0331-1cdn92a.jpg"
-    },
-    ]);
+    loadRegionFacilities();
   }, [searchParams]);
 
   return (
@@ -100,11 +73,11 @@ export const Facilities = ({ currentUser }) => {
                     facilityList.length > 0 ? (
                       facilityList.map(facility => (
                         <Container
-                          className={`border-b transition hover:bg-gray-50 ${highLight === facility.id ? "bg-gray-50" : ""}`}
-                          key={facility.id}>
+                          className={`border-b transition hover:bg-gray-50 ${highLight === facility.token_id ? "bg-gray-50" : ""}`}
+                          key={facility.token_id}>
 
-                          <Link className="relative flex flex-row py-4 last:border-b-0" to={`/facility/${facility.id}`}>
-                            <img src={facility.media} alt="" className="facility-image rounded-xl mr-6" />
+                          <Link className="relative flex flex-row py-4 last:border-b-0" to={`/facility/${facility.token_id}`}>
+                            <img src={getMediaUrl(facility.media)} alt="" className="facility-image rounded-xl mr-6" />
                             <div>
                               <h4 className="text-lg my-2 whitespace-nowrap text-ellipsis overflow-hidden facility-title">
                                 {facility.title}
@@ -125,7 +98,7 @@ export const Facilities = ({ currentUser }) => {
                         </Container>
                       ))
                     ) : (
-                      <>No facilities</>
+                      <div className="m-4 text-gray-500">*No facilities</div>
                     )
                   }
                 </>
