@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Header } from '../components/Header';
-import { Btn, Container, Link, Wrapper } from '../assets/styles/common.style';
-import { defaultRegion, facilityTypeConfig, regionsConfig, regionsCoordConfig, statusConfig } from '../near/content';
-import { useDispatch, useSelector } from 'react-redux';
+import { Container, Link, Wrapper } from '../assets/styles/common.style';
+import { facilityTypeConfig, regionsConfig, statusConfig } from '../near/content';
+import { useDispatch } from 'react-redux';
 import { Button } from '../components/basic/Button';
 import OneFacilityMap from '../components/OneFacilityMap';
 import tmpLogo from '../assets/images/tmp.jpg';
+import { useParams } from "react-router-dom";
+
 import {
   FacebookIcon,
   FacebookShareButton, TelegramIcon,
@@ -17,19 +19,20 @@ import { MyProposalForm } from '../components/MyProposalForm';
 
 export const FacilityDetails = ({ currentUser }) => {
   const dispatch = useDispatch();
+  let { id } = useParams();
   const [facility, setFacility] = useState();
+  const [isReady, setIsReady] = useState();
+
+  const loadFacility = async () => {
+    const result = await window.contract.get_facility_by_id({
+      token_id: id
+    });
+    setFacility(result);
+    setIsReady(true);
+  }
 
   useEffect(() => {
-    setFacility({
-      id: 1,
-      title: `Test ${new Date()}`,
-      region: 10,
-      lat: "50.41",
-      lng: "30.52",
-      status: "1",
-      facilityType: "art",
-      media: "https://etnoxata.com.ua/image/catalog/stat3/06_2016/08_06_16/03.jpg"
-    });
+    loadFacility();
   }, []);
 
   const getFacilityCoordString = () => {
@@ -41,7 +44,7 @@ export const FacilityDetails = ({ currentUser }) => {
       <Wrapper>
         <Header color="dark" currentUser={currentUser} />
 
-        {facility ? (
+        {isReady ? (
           <>
             <div className="bg-gray-50 h-[180px]">
               <OneFacilityMap centerCoord={getFacilityCoordString()} locations={[facility]} />
@@ -71,12 +74,14 @@ export const FacilityDetails = ({ currentUser }) => {
 
             <Container className="flex flex-row mt-4 pt-2">
               <div className="w-2/3 mr-10">
-                <h1 className="text-2xl font-medium">Some page super title name</h1>
+                <h1 className="text-2xl font-medium mt-1">{facility.title}</h1>
 
                 <div className="text-gray-600 text-sm">
-                  {facilityTypeConfig[facility.facilityType]} <span className="mx-1">·</span> Stage: {statusConfig[facility.status]}
+                  {facilityTypeConfig[facility.facility_type]}
+                  <span className="mx-2">·</span>
+                  Stage: {statusConfig[facility.status]}
                 </div>
-                <p className="mt-5">Some text...</p>
+                <p className="mt-5">{facility.description}</p>
 
                 <hr className="my-5 block" />
 
@@ -110,7 +115,7 @@ export const FacilityDetails = ({ currentUser }) => {
                 <MyProposalForm />
               </div>
 
-              <div className="w-1/3">
+              <div className="w-1/3 ml-5">
                 <div className="border rounded-xl shadow-md mt-2 overflow-hidden">
                   <img src={facility.media} alt="" className="w-full shadow-md" />
 

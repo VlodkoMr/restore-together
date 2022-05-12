@@ -10,9 +10,13 @@ import { init } from '@textile/near-storage';
 import { Loader } from '../components/basic/Loader';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { convertToTera, convertToYocto, dataURLtoFile, getMediaUrl } from '../near/utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { setRegion } from '../store/facilityFilterSlice';
 
 export const AddFacility = ({ currentUser }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const { state: searchFilters } = useLocation();
     const [isReady, setIsReady] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -22,9 +26,10 @@ export const AddFacility = ({ currentUser }) => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     // Step 1
+    const region = useSelector(state => state.facility.filter.region);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [region, setRegion] = useState(defaultRegion);
+    // const [region, setRegion] = useState(defaultRegion);
     const [facilityType, setFacilityType] = useState("");
     const [markerLocation, setMarkerLocation] = useState({ lat: null, lng: null });
 
@@ -37,7 +42,7 @@ export const AddFacility = ({ currentUser }) => {
 
     useEffect(() => {
       if (searchFilters) {
-        setRegion(searchFilters.region)
+        dispatch(setRegion({ id: searchFilters.region }))
       }
 
       // Regions List
@@ -96,7 +101,7 @@ export const AddFacility = ({ currentUser }) => {
             let data = JSON.parse(localStorage.getItem('addFacility'));
             setTitle(data.title);
             setDescription(data.description);
-            setRegion(data.region);
+            dispatch(setRegion(data.region));
             setFacilityType(data.facilityType);
             setMarkerLocation({
               lat: data.lat,
@@ -317,7 +322,7 @@ export const AddFacility = ({ currentUser }) => {
                                   title="Select Region"
                                   options={regionList}
                                   selected={region}
-                                  onSelect={(id) => setRegion(id)}
+                                  onSelect={(id) => dispatch(setRegion({ id }))}
                         />
                       </div>
                       <div className="mb-4 w-1/2">

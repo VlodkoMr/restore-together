@@ -7,7 +7,6 @@ import { Link, Wrapper } from '../assets/styles/common.style';
 import { FacilitiesFilter } from '../components/FacilitiesFilter';
 
 export const Homepage = ({ currentUser }) => {
-
   return (
     <>
       <div className="absolute z-0 w-full h-full" style={{

@@ -6,11 +6,13 @@ function AddFacilityMap({ centerCoord, google, markerLocation, setMarkerLocation
   const [center, setCenter] = useState();
 
   useEffect(() => {
-    let coord = centerCoord.split(",");
-    setCenter({
-      lat: coord[0],
-      lng: coord[1]
-    })
+    if (centerCoord) {
+      let coord = centerCoord.split(",");
+      setCenter({
+        lat: coord[0],
+        lng: coord[1]
+      })
+    }
   }, [centerCoord]);
 
   const onMapClicked = (props, e, marker) => {

@@ -28,10 +28,10 @@ function OneFacilityMap({ locations, centerCoord, google }) {
           disableDefaultUI={true}
           draggable={false}
           zoomControl={true}
-          zoom={14}
+          zoom={15}
         >
           {locations.map(item => (
-            <Marker position={item} key={item.id} />
+            <Marker position={item} key={item.token_id} />
           ))}
         </Map>
       )}

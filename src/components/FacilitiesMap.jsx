@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Map, Marker, InfoWindow, GoogleApiWrapper } from 'google-maps-react';
 import { googleAPIKey, statusConfig } from '../near/content';
-import { Link } from 'react-router-dom';
 import { getMediaUrl } from '../near/utils';
 
-function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
+function FacilitiesMap({ locations, centerCoord, setHighLight, filterItems, google }) {
   const [center, setCenter] = useState();
   const [activeMarker, setActiveMarker] = useState();
   const [activeLocation, setActiveLocation] = useState();
@@ -46,10 +45,10 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
           center={center}
           initialCenter={center}
           disableDefaultUI={true}
-          zoom={11}
+          zoom={12}
           onClick={onMapClicked}
         >
-          {locations.map(item => (
+          {locations.filter(filterItems).map(item => (
             <Marker position={item}
                     key={item.token_id}
                     onClick={(props, marker) => handleMarkerClick(marker, item)}
@@ -62,11 +61,11 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, google }) {
             <div className="relative">
               {activeLocation && (
                 <>
-                  <a href="/">
+                  <a href={`/facility/${activeLocation.token_id}`}>
                     <img src={getMediaUrl(activeLocation.media)} alt="" className="w-64 h-48 object-cover" />
                   </a>
                   <h1 className="w-64 px-4 py-3 text-sm font-normal">
-                    <a href="/">{activeLocation.title}</a>
+                    <a href={`/facility/${activeLocation.token_id}`}>{activeLocation.title}</a>
                   </h1>
                   <p
                     className="absolute left-4 top-4 bg-white/75 font-normal rounded-md px-2 py-1 drop-shadow-md ">
