@@ -4,18 +4,16 @@ import AddFacilityMap from '../components/AddFacilityMap';
 import { Header } from '../components/Header';
 import { Container, FormLabel, Link, StepCircle, Wrapper } from '../assets/styles/common.style';
 import { useLocation } from 'react-router-dom';
-import { facilityTypeConfig, regionsConfig, regionsCoordConfig, statusConfig } from '../near/content';
+import { defaultRegion, facilityTypeConfig, regionsConfig, regionsCoordConfig, statusConfig } from '../near/content';
 import { Button } from '../components/basic/Button';
 import { init } from '@textile/near-storage';
 import { Loader } from '../components/basic/Loader';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { convertToTera, convertToYocto, dataURLtoFile, getMediaUrl } from '../near/utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { setRegion } from '../store/facilityFilterSlice';
 
 export const AddFacility = ({ currentUser }) => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const { state: searchFilters } = useLocation();
     const [isReady, setIsReady] = useState(false);
@@ -26,7 +24,7 @@ export const AddFacility = ({ currentUser }) => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     // Step 1
-    const region = useSelector(state => state.facility.filter.region);
+    const [region, setRegion] = useState(defaultRegion);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [facilityType, setFacilityType] = useState("");
@@ -41,7 +39,7 @@ export const AddFacility = ({ currentUser }) => {
 
     useEffect(() => {
       if (searchFilters) {
-        dispatch(setRegion({ id: searchFilters.region }))
+        setRegion(searchFilters.region)
       }
 
       // Regions List
@@ -100,7 +98,7 @@ export const AddFacility = ({ currentUser }) => {
             let data = JSON.parse(localStorage.getItem('addFacility'));
             setTitle(data.title);
             setDescription(data.description);
-            dispatch(setRegion(data.region));
+            setRegion(data.region);
             setFacilityType(data.facilityType);
             setMarkerLocation({
               lat: data.lat,
@@ -321,7 +319,7 @@ export const AddFacility = ({ currentUser }) => {
                                   title="Select Region"
                                   options={regionList}
                                   selected={region}
-                                  onSelect={(id) => dispatch(setRegion({ id }))}
+                                  onSelect={(id) => setRegion(id)}
                         />
                       </div>
                       <div className="mb-4 w-1/2">
@@ -416,7 +414,8 @@ export const AddFacility = ({ currentUser }) => {
                   <Link to={`/facility/${newItem.token_id}`} className="my-6 border rounded-lg flex flex-row">
                     <img src={getMediaUrl(newItem.media)} alt="media" className="facility-image rounded-l-lg mr-4" />
                     <div>
-                      <h3 className="text-lg my-2 whitespace-nowrap text-ellipsis overflow-hidden w-[275px]">{newItem.title}</h3>
+                      <h3
+                        className="text-lg my-2 whitespace-nowrap text-ellipsis overflow-hidden w-[275px]">{newItem.title}</h3>
                       <p className="text-sm text-gray-500">Region: {regionsConfig[newItem.region]}</p>
                       <p className="text-sm text-gray-500">Status: {statusConfig[newItem.status]}</p>
                       <p className="text-sm text-gray-500">Type: {facilityTypeConfig[newItem.facility_type]}</p>

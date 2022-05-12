@@ -20,11 +20,11 @@ impl Contract {
     // }
 
     // Check contract owner
-    pub(crate) fn assert_contract_owner(&self, owner_id: AccountId) {
-        // if env::predecessor_account_id() != owner_id {
-        //     panic!("You can't call this method!");
-        // }
-    }
+    // pub(crate) fn assert_contract_owner(&self, owner_id: AccountId) {
+    // if env::predecessor_account_id() != owner_id {
+    //     panic!("You can't call this method!");
+    // }
+    // }
 
     // Check contract manager
     // pub(crate) fn assert_contract_manager(&self) {

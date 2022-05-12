@@ -10,9 +10,7 @@
     "clean:deploy:contract": "yarn build:contract && rm -rf ./neardev && near dev-deploy",
     "deploy:contract": "near deploy",
     "prestart": "npm run build:contract && npm run dev:deploy:contract",
-    "start": "env-cmd -f ./neardev/dev-account.env parcel src/index.html --open",
-    "local": "NODE_ENV=local env-cmd -f ./neardev/dev-account.env parcel src/index.html --open",
-    "local:deploy:contract": "yarn build:contract && rm -rf ./neardev && local_near dev-deploy",
+    "start": "rm -rf ./dist && env-cmd -f ./neardev/dev-account.env parcel src/index.html --open",
     "dev": "nodemon --watch contract/src -e rs --exec \"npm run start\""
   },
   "devDependencies": {

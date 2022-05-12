@@ -108,6 +108,7 @@ impl Default for Contract {
 
 #[near_bindgen]
 impl Contract {
+
     #[payable]
     pub fn add_facility(&mut self, id: String, title: String, region: u8, facility_type: u8, media: String, lat: String, lng: String, description: String) {
         // self.assert_contract_owner(self.owner_id.to_string());
