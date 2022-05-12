@@ -19,10 +19,12 @@ export async function initContract() {
   window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     viewMethods: [
       'get_region_facility',
-      'get_facility_by_id'
+      'get_facility_by_id',
+      'get_facility_investment'
     ],
     changeMethods: [
-      'add_facility'
+      'add_facility',
+      'add_investment'
     ],
   });
 }

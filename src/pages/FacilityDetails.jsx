@@ -16,12 +16,14 @@ import {
 } from "react-share";
 import { Loader } from '../components/basic/Loader';
 import { MyProposalForm } from '../components/MyProposalForm';
+import { convertToTera, convertToYocto, getMediaUrl } from '../near/utils';
 
 export const FacilityDetails = ({ currentUser }) => {
   const dispatch = useDispatch();
   let { id } = useParams();
   const [facility, setFacility] = useState();
   const [isReady, setIsReady] = useState();
+  const [investAmount, setInvestAmount] = useState("");
 
   const loadFacility = async () => {
     const result = await window.contract.get_facility_by_id({
@@ -37,6 +39,15 @@ export const FacilityDetails = ({ currentUser }) => {
 
   const getFacilityCoordString = () => {
     return `${facility.lat},${facility.lng}`;
+  }
+
+  const handleInvest = async () => {
+    if (parseFloat(investAmount) > 0) {
+      const deposit = convertToYocto(investAmount);
+      await window.contract.add_investment({
+        token_id: id
+      }, convertToTera("80"), deposit);
+    }
   }
 
   return (
@@ -73,10 +84,10 @@ export const FacilityDetails = ({ currentUser }) => {
             </div>
 
             <Container className="flex flex-row mt-4 pt-2">
-              <div className="w-2/3 mr-10">
+              <div className="w-9/12 mr-14">
                 <h1 className="text-2xl font-medium mt-1">{facility.title}</h1>
 
-                <div className="text-gray-600 text-sm">
+                <div className="text-gray-500 text-sm">
                   {facilityTypeConfig[facility.facility_type]}
                   <span className="mx-2">·</span>
                   Stage: {statusConfig[facility.status]}
@@ -111,29 +122,38 @@ export const FacilityDetails = ({ currentUser }) => {
                   </div>
                 </div>
 
-                <h3 className="text-xl font-medium mb-2 mt-6">Add Proposal</h3>
+                <h3 className="font-medium mb-2 mt-6">Add Proposal</h3>
                 <MyProposalForm />
               </div>
 
-              <div className="w-1/3 ml-5">
+              <div className="w-3/12 min-w-[320px]">
                 <div className="border rounded-xl shadow-md mt-2 overflow-hidden">
-                  <img src={facility.media} alt="" className="w-full shadow-md" />
+                  <img src={getMediaUrl(facility.media)} alt="" className="w-full shadow-md" />
 
                   <div className="p-5">
                     <h3 className="text-lg uppercase font-medium text-center mb-5">My Investment</h3>
 
+                    <div className="text-sm my-3">
+                      <div className="flex flex-row my-2 mx-5">
+                        <div className="w-1/2">1. 30/07/2022</div>
+                        <div className="w-1/3 text-red-500 cursor-pointer">cancel</div>
+                        <div className="w-1/3 text-right">5 NEAR</div>
+                      </div>
+                      <div className="flex flex-row my-2 mx-5">
+                        <div className="w-1/2">2. 30/07/2022</div>
+                        <div className="w-1/3 text-red-500 cursor-pointer">cancel</div>
+                        <div className="w-1/3 text-right">5 NEAR</div>
+                      </div>
+                    </div>
 
-                    <div className="flex flex-row my-3 mx-5">
-                      <div className="w-1/2">1. 29/07/2022</div>
-                      <div className="w-1/2 text-right">5 NEAR</div>
-                    </div>
-                    <div className="flex flex-row my-3 mx-5">
-                      <div className="w-1/2">2. 30/07/2022</div>
-                      <div className="w-1/2 text-right">5 NEAR</div>
-                    </div>
-                    <div className="m-5 text-center">
-                      <input type="number" className="p-2.5 border rounded-l-lg text-base border-r-transparent focus:outline-0" placeholder="NEAR Amount" />
-                      <Button title="Invest" roundedClass="rounded-r-lg" className="ml-[-2px]" />
+                    <div className="m-5 text-center flex flex-row">
+                      <input type="number"
+                             min="0.1"
+                             step="0.1"
+                             className="p-2.5 border rounded-l-lg text-base border-r-transparent focus:outline-0 inline-block w-full"
+                             onChange={(e) => setInvestAmount(e.target.value)}
+                             placeholder="NEAR Amount" />
+                      <Button title="Invest" noIcon roundedClass="rounded-r-lg" onClick={() => handleInvest()} />
                     </div>
                     <hr />
                     <div className="flex flex-row m-5 mb-0 font-medium">

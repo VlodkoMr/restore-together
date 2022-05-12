@@ -24,6 +24,8 @@ export const Facilities = ({ currentUser }) => {
     const result = await window.contract.get_region_facility({
       region: parseInt(currentRegion)
     });
+    console.log('result', result);
+    
     setFacilityList(result);
     setIsReady(true);
   }

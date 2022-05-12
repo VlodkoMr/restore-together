@@ -4,7 +4,7 @@ import AddFacilityMap from '../components/AddFacilityMap';
 import { Header } from '../components/Header';
 import { Container, FormLabel, Link, StepCircle, Wrapper } from '../assets/styles/common.style';
 import { useLocation } from 'react-router-dom';
-import { defaultRegion, facilityTypeConfig, regionsConfig, regionsCoordConfig, statusConfig } from '../near/content';
+import { facilityTypeConfig, regionsConfig, regionsCoordConfig, statusConfig } from '../near/content';
 import { Button } from '../components/basic/Button';
 import { init } from '@textile/near-storage';
 import { Loader } from '../components/basic/Loader';
@@ -29,7 +29,6 @@ export const AddFacility = ({ currentUser }) => {
     const region = useSelector(state => state.facility.filter.region);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    // const [region, setRegion] = useState(defaultRegion);
     const [facilityType, setFacilityType] = useState("");
     const [markerLocation, setMarkerLocation] = useState({ lat: null, lng: null });
 
