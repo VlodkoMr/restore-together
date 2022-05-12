@@ -37,36 +37,36 @@ export const Facilities = ({ currentUser }) => {
 
     setFacilityList([{
       id: 1,
-      title: `Test ${new Date()}`,
+      title: `Пам’ятник посмішці`,
       lat: "50.41",
       lng: "30.52",
-      status: "1",
-      facilityType: "art",
+      status: "Fundraising",
+      facilityType: "4",
       media: "https://etnoxata.com.ua/image/catalog/stat3/06_2016/08_06_16/03.jpg"
     }, {
       id: 2,
-      title: `30 украинских памятников`,
+      title: `Пам’ятник гривні`,
       lat: "50.39",
       lng: "30.49",
-      status: "1",
-      facilityType: "art",
+      status: "Fundraising",
+      facilityType: "2",
       media: "https://pustunchik.ua/uploads/school/cache/old/interesting/Navkolo-svitu/Pamyatnyky-Ukr/3.jpg"
     }, {
       id: 3,
-      title: `Some other test x 123`,
+      title: `Пам’ятник варенику`,
       lat: "50.42",
       lng: "30.51",
-      status: "1",
-      facilityType: "art",
-      media: "https://zakarpattya.net.ua/postimages/pub/2015/05/1-80-92-61.jpg"
+      status: "Fundraising",
+      facilityType: "1",
+      media: "https://uain.media/2017/08/34882195.jpg"
     }, {
       id: 4,
-      title: `Тест 321`,
+      title: `Пам’ятник заздрості`,
       lat: "50.30",
       lng: "30.40",
-      status: "1",
-      facilityType: "art",
-      media: "https://tn.fishki.net/26/upload/post/201407/23/1287454/8_3.jpg"
+      status: "Fundraising",
+      facilityType: "1",
+      media: "https://uain.media/2017/08/big-58d67c54ff93674dfc064e5c-58dba449f0331-1cdn92a.jpg"
     },
     ]);
   }, [searchParams]);

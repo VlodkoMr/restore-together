@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Header } from '../components/Header';
-import { Container, FormLabel, StepCircle, Wrapper } from '../assets/styles/common.style';
-import { useLocation } from 'react-router-dom';
 import Dropdown from '../components/basic/Dropdown';
-import { defaultRegion, facilityTypeConfig, regionsConfig, regionsCoordConfig } from '../near/content';
-import { Button } from '../components/basic/Button';
 import AddFacilityMap from '../components/AddFacilityMap';
+import { Header } from '../components/Header';
+import { Container, FormLabel, Link, StepCircle, Wrapper } from '../assets/styles/common.style';
+import { useLocation } from 'react-router-dom';
+import { defaultRegion, facilityTypeConfig, regionsConfig, regionsCoordConfig, statusConfig } from '../near/content';
+import { Button } from '../components/basic/Button';
 import { init } from '@textile/near-storage';
 import { Loader } from '../components/basic/Loader';
-import { useSearchParams } from "react-router-dom";
-import { convertToTera, convertToYocto, dataURLtoFile } from '../near/utils';
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { convertToTera, convertToYocto, dataURLtoFile, getMediaUrl } from '../near/utils';
 
 export const AddFacility = ({ currentUser }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const { state: searchFilters } = useLocation();
     const [isReady, setIsReady] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -78,6 +78,7 @@ export const AddFacility = ({ currentUser }) => {
           let item = await window.contract.get_facility_by_id({
             token_id: localStorage.getItem('addFacilityId')
           });
+          console.log(item)
           setNewItem(item);
           setIsReady(true);
         } else {
@@ -183,7 +184,7 @@ export const AddFacility = ({ currentUser }) => {
         alert("Please select Facility Type");
       } else if (!markerLocation || !markerLocation.lat || !markerLocation.lng) {
         alert("Please set Location using map");
-      } else if (description.length < 20) {
+      } else if (description.length < 10) {
         alert("Please provide more details in description");
       } else {
         setIsLoading(true);
@@ -235,17 +236,18 @@ export const AddFacility = ({ currentUser }) => {
     }
 
     const goBack = () => {
-      // event.preventDefault();
       setCurrentStep(1);
       localStorage.setItem('step', "1");
     }
 
     const resetForm = () => {
-      // localStorage.removeItem('addFacility');
-      // localStorage.removeItem('addFacilityId');
-      // localStorage.removeItem('step');
+      localStorage.removeItem('addFacility');
+      localStorage.removeItem('addFacilityId');
+      localStorage.removeItem('step');
+      navigate("/add-facility");
 
-      history.push("/add-facility");
+      setCurrentStep(1);
+      localStorage.setItem('step', "1");
     }
 
     const StepCircle = ({ step }) => (
@@ -347,6 +349,7 @@ export const AddFacility = ({ currentUser }) => {
                       </FormLabel>
                       <textarea className="border p-2 w-full mb-1 h-20"
                                 value={description}
+                                maxLength="300"
                                 onChange={(e) => setDescription(e.target.value)}>
                       </textarea>
                     </div>
@@ -402,16 +405,24 @@ export const AddFacility = ({ currentUser }) => {
 
           {currentStep === 3 && (
             <>
-              {newItem ? (
+              {newItem && (
                 <>
-                  results...
-                  {newItem.token_id} | {newItem.title}
-                  <div className="mt-6 text-center">
+                  <h3 className="text-center text-xl font-medium">Facility published!</h3>
+
+                  <Link to={`/facility/${newItem.token_id}`} className="my-6 border rounded-lg flex flex-row">
+                    <img src={getMediaUrl(newItem.media)} alt="media" className="facility-image rounded-l-lg mr-4" />
+                    <div>
+                      <h3 className="text-lg my-2 whitespace-nowrap text-ellipsis overflow-hidden w-[275px]">{newItem.title}</h3>
+                      <p className="text-sm text-gray-500">Region: {regionsConfig[newItem.region]}</p>
+                      <p className="text-sm text-gray-500">Status: {statusConfig[newItem.status]}</p>
+                      <p className="text-sm text-gray-500">Type: {facilityTypeConfig[newItem.facility_type]}</p>
+                    </div>
+                  </Link>
+
+                  <div className="mt-8 text-center">
                     <Button title="Add New Facility" noIcon onClick={() => resetForm()} />
                   </div>
                 </>
-              ) : (
-                <Loader />
               )}
             </>
           )}

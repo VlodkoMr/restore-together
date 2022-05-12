@@ -13,10 +13,10 @@ export const facilityTypeConfig = {
 };
 
 export const statusConfig = {
-  '1': 'Fundraising',
-  '2': 'In Progress',
-  '3': 'Completed',
-  '4': 'Has Issues',
+  'Fundraising': 'Fundraising',
+  'InProgress': 'In Progress',
+  'Completed': 'Completed',
+  'Issue': 'Has Issues',
 };
 
 export const regionsConfig = {

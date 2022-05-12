@@ -50,6 +50,10 @@ export function dataURLtoFile(dataUrl, fileName) {
   return new File([u8arr], fileName, { type: mime });
 }
 
+export function getMediaUrl(hash) {
+  return `https://ipfs.io/ipfs/${hash}`;
+}
+
 // export const convertFromYocto = (amount, digits = 1) => {
 //   return Big(amount)
 //     .div(10 ** 24)

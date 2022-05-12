@@ -1,6 +1,6 @@
 use std::fmt;
-use std::str::FromStr;
-use std::string::ParseError;
+// use std::str::FromStr;
+// use std::string::ParseError;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, setup_alloc};
 use near_contract_standards::non_fungible_token::TokenId;
@@ -21,31 +21,31 @@ pub enum FacilityStatus {
     Completed,
     Issue,
 }
-
-impl fmt::Display for FacilityStatus {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            FacilityStatus::Fundraising => write!(f, "1"),
-            FacilityStatus::InProgress => write!(f, "2"),
-            FacilityStatus::Completed => write!(f, "3"),
-            FacilityStatus::Issue => write!(f, "4"),
-        }
-    }
-}
-
-impl FromStr for FacilityStatus {
-    type Err = ParseError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(match s {
-            "1" => FacilityStatus::Fundraising,
-            "2" => FacilityStatus::InProgress,
-            "3" => FacilityStatus::Completed,
-            "4" => FacilityStatus::Issue,
-            _ => panic!("Wrong metadata")
-        })
-    }
-}
+//
+// impl fmt::Display for FacilityStatus {
+//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+//         match self {
+//             FacilityStatus::Fundraising => write!(f, "1"),
+//             FacilityStatus::InProgress => write!(f, "2"),
+//             FacilityStatus::Completed => write!(f, "3"),
+//             FacilityStatus::Issue => write!(f, "4"),
+//         }
+//     }
+// }
+//
+// impl FromStr for FacilityStatus {
+//     type Err = ParseError;
+//
+//     fn from_str(s: &str) -> Result<Self, Self::Err> {
+//         Ok(match s {
+//             "1" => FacilityStatus::Fundraising,
+//             "2" => FacilityStatus::InProgress,
+//             "3" => FacilityStatus::Completed,
+//             "4" => FacilityStatus::Issue,
+//             _ => panic!("Wrong metadata")
+//         })
+//     }
+// }
 
 #[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
 #[serde(crate = "near_sdk::serde")]
