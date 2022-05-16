@@ -3,20 +3,25 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: {
-      accountId: null,
-      // tokenBalance: null
+    account: {
+      id: null,
+      isManager: false,
+      performer: null
+
     }
   },
   reducers: {
     setUserAccountId(state, action) {
-      state.user.accountId = action.payload.account;
+      state.account.id = action.payload.id;
     },
-    // setUserBalance(state, action) {
-    //   state.user.tokenBalance = action.payload.balance;
-    // },
+    setUserPerformer(state, action) {
+      state.account.performer = action.payload.performer;
+    },
+    setUserIsManager(state, action) {
+      state.account.isManager = action.payload.status;
+    },
   }
 });
 
-export const { setUserAccountId, /* setUserBalance */ } = userSlice.actions;
+export const { setUserAccountId, setUserPerformer, setUserIsManager } = userSlice.actions;
 export default userSlice.reducer;

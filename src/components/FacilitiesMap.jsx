@@ -18,7 +18,7 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, filterItems, goog
   }, [centerCoord]);
 
   const handleMarkerClick = (marker, item) => {
-    setHighLight(item.id);
+    setHighLight(item.token_id);
     setActiveMarker(marker);
     setShowingInfoWindow(true);
     setActiveLocation(item);
@@ -65,7 +65,8 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, filterItems, goog
                     <img src={getMediaUrl(activeLocation.media)} alt="" className="w-64 h-48 object-cover" />
                   </a>
                   <h1 className="w-64 px-4 py-3 text-sm font-normal">
-                    <a className="block hover:text-gray-600" href={`/facility/${activeLocation.token_id}`}>{activeLocation.title}</a>
+                    <a className="block hover:text-gray-600"
+                       href={`/facility/${activeLocation.token_id}`}>{activeLocation.title}</a>
                   </h1>
                   <p
                     className="absolute left-4 top-4 bg-white/75 font-normal rounded-md px-2 py-1 drop-shadow-md ">

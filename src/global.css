@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Righteous&family=Roboto:wght@300;400;500;700&display=swap');
+
 html, body {
     height: 100%;
 }
@@ -17,7 +19,7 @@ body {
     font-style: normal;
     font-weight: 400;
     visibility: visible;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
     letter-spacing: 0.02em;
     /*@apply text-indigo-100;*/
 }

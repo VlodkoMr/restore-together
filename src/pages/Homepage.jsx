@@ -6,7 +6,7 @@ import { Header } from '../components/Header';
 import { Link, Wrapper } from '../assets/styles/common.style';
 import { FacilitiesFilter } from '../components/FacilitiesFilter';
 
-export const Homepage = ({ currentUser }) => {
+export const Homepage = () => {
   return (
     <>
       <div className="absolute z-0 w-full h-full" style={{
@@ -18,7 +18,7 @@ export const Homepage = ({ currentUser }) => {
       <div className="top-gradient">&nbsp;</div>
 
       <Wrapper className="text-white">
-        <Header currentUser={currentUser} />
+        <Header />
 
         <div className="mt-4">
           <FacilitiesFilter />

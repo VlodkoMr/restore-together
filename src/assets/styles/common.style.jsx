@@ -61,6 +61,19 @@ export const FormLabel = styled.div.attrs({
   className: `
     block
     text-base
+    mb-1
     font-medium
+    `,
+})``;
+
+export const FormInput = styled.input.attrs({
+  className: `
+    border py-1.5 px-2 w-full
+    `,
+})``;
+
+export const FormTextarea = styled.textarea.attrs({
+  className: `
+    border p-2 w-full mb-1 h-20
     `,
 })``;

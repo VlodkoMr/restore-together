@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Header } from '../components/Header';
 import { Container, Link, Wrapper } from '../assets/styles/common.style';
 import { facilityTypeConfig, regionsConfig, statusConfig } from '../near/content';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '../components/basic/Button';
 import OneFacilityMap from '../components/OneFacilityMap';
-import tmpLogo from '../assets/images/tmp.jpg';
 import { useParams } from "react-router-dom";
 
 import {
@@ -18,12 +17,15 @@ import { Loader } from '../components/basic/Loader';
 import { MyProposalForm } from '../components/MyProposalForm';
 import { convertFromYocto, convertToTera, convertToYocto, getMediaUrl, timestampToDate } from '../near/utils';
 import Big from 'big.js';
+import { OneProposal } from '../components/OneProposal';
 
-export const FacilityDetails = ({ currentUser }) => {
+export const FacilityDetails = () => {
   const dispatch = useDispatch();
+  const currentUser = useSelector(state => state.user.account);
   let { id } = useParams();
   const [facility, setFacility] = useState();
   const [facilityInvestments, setFacilityInvestments] = useState([]);
+  const [facilityProposals, setFacilityProposals] = useState([]);
   const [isReady, setIsReady] = useState();
   const [investAmount, setInvestAmount] = useState("");
 
@@ -35,9 +37,14 @@ export const FacilityDetails = ({ currentUser }) => {
     const investments = await window.contract.get_facility_investment({
       token_id: id
     });
+    const proposals = await window.contract.get_facility_proposals({
+      token_id: id
+    });
+    console.log(proposals)
 
     setFacility(facility);
     setFacilityInvestments(investments);
+    setFacilityProposals(proposals);
     setIsReady(true);
   }
 
@@ -51,8 +58,9 @@ export const FacilityDetails = ({ currentUser }) => {
 
   const userTotalInvested = () => {
     let result = new Big(0);
+    console.log('currentUser', currentUser)
     facilityInvestments
-      .filter(item => item.user_id === currentUser.accountId)
+      .filter(item => item.user_id === currentUser.id)
       .map(item => {
         result = result.plus(item.amount.toString());
       });
@@ -71,7 +79,7 @@ export const FacilityDetails = ({ currentUser }) => {
   return (
     <>
       <Wrapper>
-        <Header color="dark" currentUser={currentUser} />
+        <Header color="dark" />
 
         {isReady ? (
           <>
@@ -116,34 +124,28 @@ export const FacilityDetails = ({ currentUser }) => {
                 <hr className="my-5 block" />
 
                 <h3 className="text-xl font-medium mb-2">Proposals</h3>
-                <div className="flex flex-row shadow border border-gray-100 rounded-lg px-5 py-4 relative mb-3">
-                  <div className="w-16 mr-5">
-                    <img src={tmpLogo} alt="" width="w-full" className="rounded-full my-1" />
-                  </div>
-                  <div>
-                    <p className="text-lg font-medium leading-4">Company Name</p>
-                    <small className="text-gray-500">
-                      Time: 10 days
-                      <span className="mx-1.5">·</span>
-                      Price: 100 NEAR
-                      <span className="mx-1.5">·</span>
-                      Votes: 10%</small>
-                    <p className="mt-2">
-                      Some text...Some text...Some text...Some text...Some text...Some text...Some text...Some
-                      text...Some
-                    </p>
-                  </div>
-                  <div className="w-48 text-right">
-                    <small className="text-gray-500">07/22/2022</small>
-                    <div className="text-red-600 font-medium mt-2">VOTED</div>
-                    {/*<button className="text-sm mt-2 border-2 border-red-500 text-red-600 px-4 py-1 rounded-md font-medium hover:bg-red-50 transition">*/}
-                    {/*  ADD VOTE*/}
-                    {/*</button>*/}
-                  </div>
-                </div>
+                {
+                  facilityProposals.length > 0 ? facilityProposals.map(proposal => (
+                    <OneProposal proposal={proposal} key={proposal.p} />
+                  )) : (
+                    <div className="text-gray-500">
+                      *No Proposals
+                    </div>
+                  )
+                }
 
-                <h3 className="font-medium mb-2 mt-6">Add Proposal</h3>
-                <MyProposalForm />
+                <h3 className="font-medium mb-2 mt-10">Add Proposal</h3>
+                {
+                  currentUser.performer ? (
+                    <MyProposalForm facility_id={facility.token_id} key={facility.token_id} />
+                  ) : (
+                    <>
+                      <p className="text-gray-500">To add new proposal, please register{" "}
+                        <Link to="/my" className="underline">Performer Account</Link>.</p>
+                    </>
+                  )
+                }
+
               </div>
 
               <div className="w-3/12 min-w-[320px]">
@@ -156,7 +158,7 @@ export const FacilityDetails = ({ currentUser }) => {
                     <div className="text-sm my-3">
                       {
                         facilityInvestments
-                          .filter(item => item.user_id === currentUser.accountId)
+                          .filter(item => item.user_id === currentUser.id)
                           .map((item, index) => (
                             <div className="flex flex-row my-2 mx-5" key={item.timestamp}>
                               <div className="w-1/2">{index + 1}. {timestampToDate(item.timestamp)}</div>
@@ -189,7 +191,9 @@ export const FacilityDetails = ({ currentUser }) => {
             </Container>
           </>
         ) : (
-          <Loader />
+          <div className="mt-8">
+            <Loader />
+          </div>
         )}
       </Wrapper>
     </>

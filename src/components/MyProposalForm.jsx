@@ -1,32 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from './basic/Button';
 import tmpLogo from '../assets/images/tmp.jpg';
+import { convertToYocto } from '../near/utils';
 
-export const MyProposalForm = () => {
+export const MyProposalForm = ({ facility_id }) => {
   const [proposalText, setProposalText] = useState("");
-  useEffect(() => {
-    console.log('...')
-    //
-    // console.log(storage)
-  }, []);
+  const [proposalTime, setProposalTime] = useState("");
+  const [proposalBudget, setProposalBudget] = useState("");
+
+  const addProposal = async (event) => {
+    event.preventDefault();
+
+    if (proposalText.length < 10) {
+      alert("Please describe your proposal");
+    } else if (proposalTime.length < 1 || parseInt(proposalTime) < 1) {
+      alert("Please provide time estimate");
+    } else if (proposalBudget.length < 1 || parseFloat(proposalBudget) < 1) {
+      alert("Please provide budget estimate");
+    } else {
+      window.contract.add_facility_proposal({
+        facility_id,
+        text: proposalText,
+        time: parseInt(proposalTime),
+        budget: convertToYocto(proposalBudget),
+      })
+    }
+  };
 
   return (
-    <div className="flex flex-row px-5 py-4 relative mb-3 shadow border border-gray-100 rounded-lg">
-      <div className="w-[52px] mr-5">
-        <img src={tmpLogo} alt="" width="w-full" className="rounded-full mt-1" />
-      </div>
+    <form onSubmit={addProposal}
+          className="flex flex-row relative mb-3 lg:w-3/4 w-full">
+      {/*<div className="w-[52px] mr-5">*/}
+      {/*  <img src={tmpLogo} alt="" width="w-full" className="rounded-full mt-1" />*/}
+      {/*</div>*/}
       <div className="w-full relative">
         <textarea className="border p-2 w-full mb-1"
                   placeholder="Describe your proposal"
                   value={proposalText}
                   onChange={(e) => setProposalText(e.target.value)}>
         </textarea>
-        <input type="number" className="border px-2 mt-1 py-1.5 w-[90px] mr-2" placeholder="Time" />
-        <span className="text-gray-600">days</span>
-        <input type="number" className="border px-2 ml-10 py-1.5 w-[90px] mr-2" placeholder="Budget" />
-        <span className="text-gray-600">NEAR</span>
-        <Button title="Add Proposal" size="xs" noIcon className="absolute right-0" />
+
+        <div className="flex flex-row justify-between">
+          <div>
+            <input type="number" className="border px-2 mt-1 py-1.5 w-[90px] mr-2"
+                   min={1}
+                   value={proposalTime}
+                   onChange={(e) => setProposalTime(e.target.value)}
+                   placeholder="Time" />
+            <span className="text-gray-600">days</span>
+            <input type="number" className="border px-2 ml-10 py-1.5 w-[90px] mr-2"
+                   min={1}
+                   value={proposalBudget}
+                   onChange={(e) => setProposalBudget(e.target.value)}
+                   placeholder="Budget" />
+            <span className="text-gray-600">NEAR</span>
+          </div>
+
+          <Button title="Add Proposal" size="xs" noIcon />
+        </div>
+
       </div>
-    </div>
+    </form>
   );
 };

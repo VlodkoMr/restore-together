@@ -6,26 +6,36 @@ import {
   Facilities,
   AddFacility,
   About,
+  User
 } from "./pages";
 import { FacilityDetails } from './pages/FacilityDetails';
 import { initContract } from './near/utils';
 
 import './global.css'
+import { useDispatch } from 'react-redux';
+import { setUserAccountId, setUserIsManager, setUserPerformer } from './store/userSlice';
 
 export default function App() {
+  const dispatch = useDispatch();
   const [isReady, setIsReady] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState();
+  // const [currentUser, setCurrentUser] = React.useState();
 
   React.useEffect(() => {
     window.nearInitPromise = initContract()
       .then(async () => {
         if (window.walletConnection.isSignedIn()) {
-          setCurrentUser({
-            accountId: window.walletConnection.getAccountId(),
-          });
-        }
+          const accountId = window.walletConnection.getAccountId();
+          dispatch(setUserAccountId({ id: accountId }));
 
-        setIsReady(true);
+          // Load user roles
+          window.contract.get_user_info({ account_id: accountId }).then(info => {
+            dispatch(setUserIsManager({ status: info[0] }));
+            dispatch(setUserPerformer({ performer: info[1] }));
+            setIsReady(true);
+          })
+        } else {
+          setIsReady(true);
+        }
       })
       .catch(console.error);
   }, []);
@@ -39,32 +49,37 @@ export default function App() {
               exact
               path="/"
               element={
-                <Homepage currentUser={currentUser} />
+                <Homepage />
               }
             />
             <Route
               exact
               path="/facility"
               element={
-                <Facilities currentUser={currentUser} />
+                <Facilities />
               }
             />
             <Route
               exact
               path="/facility/:id"
               element={
-                <FacilityDetails currentUser={currentUser} />
+                <FacilityDetails />
               }
             />
             <Route
               exact
               path="/add-facility"
-              element={<AddFacility currentUser={currentUser} />}
+              element={<AddFacility />}
             />
             <Route
               exact
               path="/about"
-              element={<About currentUser={currentUser} />}
+              element={<About />}
+            />
+            <Route
+              exact
+              path="/my"
+              element={<User />}
             />
           </Routes>
         )}

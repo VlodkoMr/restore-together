@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Header } from '../components/Header';
 import { Container, Wrapper } from '../assets/styles/common.style';
 
-export const About = ({ currentUser }) => {
+export const About = () => {
   return (
     <Wrapper>
-      <Header color="dark" currentUser={currentUser} />
+      <Header color="dark" />
 
       <Container className="pt-4 xl:w-1/2 sm:w-3/4 mx-auto text-lg text-justify">
         <h2 className="text-3xl text-center my-6 font-semibold">About Project</h2>

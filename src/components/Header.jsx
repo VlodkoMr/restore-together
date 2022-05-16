@@ -5,8 +5,10 @@ import logoWhiteIcon from "../assets/images/logo-white.png";
 import { Button } from './basic/Button';
 import { Container, Link, NavLink } from '../assets/styles/common.style';
 import { login, logout } from '../near/utils';
+import { useSelector } from 'react-redux';
 
-export const Header = ({ currentUser, color, width }) => {
+export const Header = ({ color, width }) => {
+  const currentUser = useSelector(state => state.user.account);
   // const [scroll, setScroll] = useState(false);
   // useEffect(() => {
   //   // Change header bg on scroll
@@ -35,10 +37,10 @@ export const Header = ({ currentUser, color, width }) => {
         </div>
 
         <div className="xl:w-72 w-48 pt-1 text-right">
-          {currentUser ? (
+          {currentUser.id ? (
             <>
               <div className="mt-2 flex flex-row place-content-end">
-                <p className="pt-0.5 font-medium">{currentUser.accountId}</p>
+                <NavLink to="/my" className="pt-0.5 font-medium hover:text-red-400">{currentUser.id}</NavLink>
                 <img src={logoutIcon}
                      alt="logout"
                      title="Logout"

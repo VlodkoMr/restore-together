@@ -20,11 +20,17 @@ export async function initContract() {
     viewMethods: [
       'get_region_facility',
       'get_facility_by_id',
-      'get_facility_investment'
+      'get_facilities_by_id',
+      'get_facility_investment',
+      'get_user_info',
+      'get_investor_facilities',
+      'get_facility_proposals'
     ],
     changeMethods: [
       'add_facility',
-      'add_investment'
+      'add_investment',
+      'add_facility_proposal',
+      'create_performer_account'
     ],
   });
 }

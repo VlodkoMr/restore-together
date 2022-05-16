@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import Dropdown from '../components/basic/Dropdown';
 import AddFacilityMap from '../components/AddFacilityMap';
 import { Header } from '../components/Header';
-import { Container, FormLabel, Link, StepCircle, Wrapper } from '../assets/styles/common.style';
+import {
+  Container,
+  FormInput,
+  FormLabel,
+  FormTextarea,
+  Link,
+  Wrapper
+} from '../assets/styles/common.style';
 import { useLocation } from 'react-router-dom';
 import { defaultRegion, facilityTypeConfig, regionsConfig, regionsCoordConfig, statusConfig } from '../near/content';
 import { Button } from '../components/basic/Button';
@@ -10,9 +17,8 @@ import { init } from '@textile/near-storage';
 import { Loader } from '../components/basic/Loader';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { convertToTera, convertToYocto, dataURLtoFile, getMediaUrl } from '../near/utils';
-import { useDispatch, useSelector } from 'react-redux';
 
-export const AddFacility = ({ currentUser }) => {
+export const AddFacility = () => {
     const navigate = useNavigate();
 
     const { state: searchFilters } = useLocation();
@@ -80,7 +86,6 @@ export const AddFacility = ({ currentUser }) => {
           let item = await window.contract.get_facility_by_id({
             token_id: localStorage.getItem('addFacilityId')
           });
-          console.log(item)
           setNewItem(item);
           setIsReady(true);
         } else {
@@ -166,7 +171,7 @@ export const AddFacility = ({ currentUser }) => {
     const uploadMediaToIPFS = () => {
       return new Promise(async (resolve, reject) => {
         const storage = await init(window.walletConnection.account());
-        const file = dataURLtoFile(media, `${new Date()}.jpg`);
+        const file = dataURLtoFile(media, `${+new Date()}.jpg`);
         const { id, cid } = await storage.store(file);
         if (id.length && cid && cid["/"].length) {
           resolve(cid["/"]);
@@ -275,7 +280,7 @@ export const AddFacility = ({ currentUser }) => {
 
     return (
       <Wrapper>
-        <Header color="dark" currentUser={currentUser} />
+        <Header color="dark" />
 
         <Container className="pt-4 w-[520px]">
           <h2 className="text-3xl text-center my-6 font-semibold">Add Facility</h2>
@@ -304,11 +309,9 @@ export const AddFacility = ({ currentUser }) => {
                       <FormLabel>
                         Title<sup className="text-red-400">*</sup>
                       </FormLabel>
-                      <input type="text"
-                             className="border py-1.5 px-2 w-full"
-                             value={title}
-                             onChange={(e) => setTitle(e.target.value)}
-                      />
+                      <FormInput type="text"
+                                 value={title}
+                                 onChange={(e) => setTitle(e.target.value)} />
                     </div>
                     <div className="flex flex-row relative z-10">
                       <div className="mb-4 w-1/2 mr-8">
@@ -349,11 +352,11 @@ export const AddFacility = ({ currentUser }) => {
                       <FormLabel>
                         Describe facility details<sup className="text-red-400">*</sup>
                       </FormLabel>
-                      <textarea className="border p-2 w-full mb-1 h-20"
-                                value={description}
-                                maxLength="300"
-                                onChange={(e) => setDescription(e.target.value)}>
-                      </textarea>
+                      <FormTextarea
+                        value={description}
+                        maxLength="300"
+                        onChange={(e) => setDescription(e.target.value)}>
+                      </FormTextarea>
                     </div>
 
                     {!isLoading ? (
@@ -370,11 +373,11 @@ export const AddFacility = ({ currentUser }) => {
                   <form onSubmit={(e) => e.preventDefault()}>
                     <div className="mb-4">
                       <FormLabel>Current Photo<sup className="text-red-400">*</sup></FormLabel>
-                      <input type="file"
-                             accept="image/*"
-                             className="border py-1.5 px-2 w-full text-sm"
-                             ref={photoInput}
-                             onChange={() => resizeImage()} />
+                      <FormInput type="file"
+                                 accept="image/*"
+                                 className="text-sm"
+                                 ref={photoInput}
+                                 onChange={() => resizeImage()} />
                     </div>
 
                     {media && (

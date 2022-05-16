@@ -9,8 +9,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setFacility, setRegion, setStatus } from '../store/facilityFilterSlice';
 import { Loader } from '../components/basic/Loader';
 import { getMediaUrl } from '../near/utils';
+import { OneFacility } from '../components/OneFacility';
 
-export const Facilities = ({ currentUser }) => {
+export const Facilities = () => {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,7 +26,7 @@ export const Facilities = ({ currentUser }) => {
       region: parseInt(currentRegion)
     });
     console.log('result', result);
-    
+
     setFacilityList(result);
     setIsReady(true);
   }
@@ -63,7 +64,7 @@ export const Facilities = ({ currentUser }) => {
   return (
     <>
       <Wrapper>
-        <Header color="dark" width="full" currentUser={currentUser} />
+        <Header color="dark" width="full" />
 
         {
           isReady ? (
@@ -78,7 +79,8 @@ export const Facilities = ({ currentUser }) => {
                     ) : (
                       <p>No facilities in {regionsConfig[region]}</p>
                     )}
-                    <Link to="/add-facility" state={{ region: region }} className="block underline mt-0.5 hover:text-red-500">
+                    <Link to="/add-facility" state={{ region: region }}
+                          className="block underline mt-0.5 hover:text-red-500">
                       Add new facility
                     </Link>
                   </Container>
@@ -90,29 +92,7 @@ export const Facilities = ({ currentUser }) => {
                       <Container
                         className={`border-b transition hover:bg-gray-50 ${highLight === facility.token_id ? "bg-gray-50" : ""}`}
                         key={facility.token_id}>
-
-                        <Link className="relative flex flex-row py-4 last:border-b-0" to={`/facility/${facility.token_id}`}>
-                          <img src={getMediaUrl(facility.media)} alt="" className="facility-image rounded-xl mr-6" />
-                          <div>
-                            <h4 className="text-lg my-2 whitespace-nowrap text-ellipsis overflow-hidden facility-title">
-                              {facility.title}
-                            </h4>
-                            <div className="text-sm text-gray-600 flex flex-row">
-                              <div className="w-48">
-                                <p>Status: {statusConfig[facility.status]}</p>
-                                <p>Type: {facilityTypeConfig[facility.facility_type]}</p>
-                              </div>
-                              <div>
-                                {facility.total_invested > 0 && (
-                                  <>
-                                    <p>Investments: {facility.total_invested} NEAR</p>
-                                    <p>Proposals: {facility.total_investors}</p>
-                                  </>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
+                        <OneFacility facility={facility} />
                       </Container>
                     ))
                   ) : (
@@ -126,7 +106,10 @@ export const Facilities = ({ currentUser }) => {
                   <FacilitiesFilter size="sm" />
                 </div>
                 <div className="relative z-0">
-                  <FacilitiesMap filterItems={filterItems} centerCoord={centerCoord} locations={facilityList} setHighLight={setHighLight} />
+                  <FacilitiesMap filterItems={filterItems}
+                                 centerCoord={centerCoord}
+                                 locations={facilityList}
+                                 setHighLight={setHighLight} />
                 </div>
               </div>
 
