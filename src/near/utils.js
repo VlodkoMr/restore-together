@@ -56,15 +56,22 @@ export function getMediaUrl(hash) {
   return `https://ipfs.io/ipfs/${hash}`;
 }
 
-// export const convertFromYocto = (amount, digits = 1) => {
-//   return Big(amount)
-//     .div(10 ** 24)
-//     .toFixed(digits);
-// };
-//
-// export const convertFromNanoSeconds = (timestamp) => {
-//   return parseInt(Big(timestamp).div(1000000).toFixed());
-// };
+export const convertFromYocto = (amount, digits = 1) => {
+  return Big(amount)
+    .div(10 ** 24)
+    .toFixed(digits);
+};
+
+export const convertFromNanoSeconds = (timestamp) => {
+  return parseInt(Big(timestamp).div(1000000).toFixed());
+};
+
+
+export const timestampToDate = (timestamp) => {
+  const timeSeconds = convertFromNanoSeconds(timestamp);
+  const options = { month: "long", day: "numeric", year: "numeric" };
+  return new Date(timeSeconds).toLocaleDateString("en-US", options);
+};
 
 export const convertToYocto = (amount) => {
   return Big(amount)

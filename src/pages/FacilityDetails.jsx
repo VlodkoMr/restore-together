@@ -16,20 +16,28 @@ import {
 } from "react-share";
 import { Loader } from '../components/basic/Loader';
 import { MyProposalForm } from '../components/MyProposalForm';
-import { convertToTera, convertToYocto, getMediaUrl } from '../near/utils';
+import { convertFromYocto, convertToTera, convertToYocto, getMediaUrl, timestampToDate } from '../near/utils';
+import Big from 'big.js';
 
 export const FacilityDetails = ({ currentUser }) => {
   const dispatch = useDispatch();
   let { id } = useParams();
   const [facility, setFacility] = useState();
+  const [facilityInvestments, setFacilityInvestments] = useState([]);
   const [isReady, setIsReady] = useState();
   const [investAmount, setInvestAmount] = useState("");
 
   const loadFacility = async () => {
-    const result = await window.contract.get_facility_by_id({
+    setIsReady(false);
+    const facility = await window.contract.get_facility_by_id({
       token_id: id
     });
-    setFacility(result);
+    const investments = await window.contract.get_facility_investment({
+      token_id: id
+    });
+
+    setFacility(facility);
+    setFacilityInvestments(investments);
     setIsReady(true);
   }
 
@@ -39,6 +47,16 @@ export const FacilityDetails = ({ currentUser }) => {
 
   const getFacilityCoordString = () => {
     return `${facility.lat},${facility.lng}`;
+  }
+
+  const userTotalInvested = () => {
+    let result = new Big(0);
+    facilityInvestments
+      .filter(item => item.user_id === currentUser.accountId)
+      .map(item => {
+        result = result.plus(item.amount.toString());
+      });
+    return result.toFixed();
   }
 
   const handleInvest = async () => {
@@ -66,7 +84,8 @@ export const FacilityDetails = ({ currentUser }) => {
                 <div className="py-3">
                   <Link className="hover:underline hover:text-red-400" to="/">Home</Link> &raquo;
                   <Link className="hover:underline hover:text-red-400 ml-1" to="/facility">Facilities</Link> &raquo;
-                  <Link className="hover:underline hover:text-red-400 ml-1" to={`/facility?region=${facility.region}`}>{regionsConfig[facility.region]}</Link>
+                  <Link className="hover:underline hover:text-red-400 ml-1"
+                        to={`/facility?region=${facility.region}`}>{regionsConfig[facility.region]}</Link>
                 </div>
 
                 <div className="absolute right-6 top-1.5">
@@ -110,7 +129,8 @@ export const FacilityDetails = ({ currentUser }) => {
                       <span className="mx-1.5">·</span>
                       Votes: 10%</small>
                     <p className="mt-2">
-                      Some text...Some text...Some text...Some text...Some text...Some text...Some text...Some text...Some
+                      Some text...Some text...Some text...Some text...Some text...Some text...Some text...Some
+                      text...Some
                     </p>
                   </div>
                   <div className="w-48 text-right">
@@ -134,16 +154,19 @@ export const FacilityDetails = ({ currentUser }) => {
                     <h3 className="text-lg uppercase font-medium text-center mb-5">My Investment</h3>
 
                     <div className="text-sm my-3">
-                      <div className="flex flex-row my-2 mx-5">
-                        <div className="w-1/2">1. 30/07/2022</div>
-                        <div className="w-1/3 text-red-500 cursor-pointer">cancel</div>
-                        <div className="w-1/3 text-right">5 NEAR</div>
-                      </div>
-                      <div className="flex flex-row my-2 mx-5">
-                        <div className="w-1/2">2. 30/07/2022</div>
-                        <div className="w-1/3 text-red-500 cursor-pointer">cancel</div>
-                        <div className="w-1/3 text-right">5 NEAR</div>
-                      </div>
+                      {
+                        facilityInvestments
+                          .filter(item => item.user_id === currentUser.accountId)
+                          .map((item, index) => (
+                            <div className="flex flex-row my-2 mx-5" key={item.timestamp}>
+                              <div className="w-1/2">{index + 1}. {timestampToDate(item.timestamp)}</div>
+                              <div className="w-1/2 text-right">
+                                <div>{convertFromYocto(item.amount)} NEAR</div>
+                                {/*<div className="text-red-500">cancel</div>*/}
+                              </div>
+                            </div>
+                          ))
+                      }
                     </div>
 
                     <div className="m-5 text-center flex flex-row">
@@ -158,7 +181,7 @@ export const FacilityDetails = ({ currentUser }) => {
                     <hr />
                     <div className="flex flex-row m-5 mb-0 font-medium">
                       <div className="w-1/2">Total</div>
-                      <div className="w-1/2 text-right">10 NEAR</div>
+                      <div className="w-1/2 text-right">{convertFromYocto(userTotalInvested(), 1)} NEAR</div>
                     </div>
                   </div>
                 </div>
