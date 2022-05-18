@@ -14,10 +14,10 @@ import {
   TwitterShareButton,
 } from "react-share";
 import { Loader } from '../components/basic/Loader';
-import { MyProposalForm } from '../components/MyProposalForm';
 import { convertFromYocto, convertToTera, convertToYocto, getMediaUrl, timestampToDate } from '../near/utils';
 import Big from 'big.js';
-import { OneProposal } from '../components/OneProposal';
+import { FacilityDetailsFundraising } from '../components/FacilityDetails/Fundraising';
+import { FacilityDetailsInProgress } from '../components/FacilityDetails/InProgress';
 
 export const FacilityDetails = () => {
   const dispatch = useDispatch();
@@ -28,28 +28,48 @@ export const FacilityDetails = () => {
   const [facilityProposals, setFacilityProposals] = useState([]);
   const [isReady, setIsReady] = useState();
   const [investAmount, setInvestAmount] = useState("");
+  const [allPerformers, setAllPerformers] = useState({});
 
-  const loadFacility = async () => {
+  const facilityPromise = new Promise(async (resolve) => {
+    let result = await window.contract.get_facility_by_id({
+      token_id: id
+    });
+    resolve(result);
+  });
+
+  const facilityInvestmentPromise = new Promise(async (resolve) => {
+    let result = await window.contract.get_facility_investment({
+      token_id: id
+    });
+    resolve(result);
+  });
+  const facilityProposalsPromise = new Promise(async (resolve) => {
+    let result = await window.contract.get_facility_proposals({
+      token_id: id
+    })
+    resolve(result);
+  });
+
+  const allPerformersPromise = new Promise(async (resolve) => {
+    let result = await window.contract.get_all_performers();
+    resolve(result);
+  });
+
+  const loadFacilityData = async () => {
     setIsReady(false);
-    const facility = await window.contract.get_facility_by_id({
-      token_id: id
-    });
-    const investments = await window.contract.get_facility_investment({
-      token_id: id
-    });
-    const proposals = await window.contract.get_facility_proposals({
-      token_id: id
-    });
-    console.log(proposals)
 
-    setFacility(facility);
-    setFacilityInvestments(investments);
-    setFacilityProposals(proposals);
-    setIsReady(true);
+    Promise.all([facilityPromise, facilityInvestmentPromise, facilityProposalsPromise, allPerformersPromise]).then(result => {
+      console.log(result)
+      setFacility(result[0]);
+      setFacilityInvestments(result[1]);
+      setFacilityProposals(result[2]);
+      setAllPerformers(result[3]);
+      setIsReady(true);
+    });
   }
 
   useEffect(() => {
-    loadFacility();
+    loadFacilityData();
   }, []);
 
   const getFacilityCoordString = () => {
@@ -58,7 +78,6 @@ export const FacilityDetails = () => {
 
   const userTotalInvested = () => {
     let result = new Big(0);
-    console.log('currentUser', currentUser)
     facilityInvestments
       .filter(item => item.user_id === currentUser.id)
       .map(item => {
@@ -68,6 +87,10 @@ export const FacilityDetails = () => {
   }
 
   const handleInvest = async () => {
+    if (!currentUser.id) {
+      alert("Please, LogIn for investment");
+      return;
+    }
     if (parseFloat(investAmount) > 0) {
       const deposit = convertToYocto(investAmount);
       await window.contract.add_investment({
@@ -96,15 +119,15 @@ export const FacilityDetails = () => {
                         to={`/facility?region=${facility.region}`}>{regionsConfig[facility.region]}</Link>
                 </div>
 
-                <div className="absolute right-6 top-1.5">
+                <div className="absolute right-6 top-2">
                   <FacebookShareButton url="/">
-                    <FacebookIcon size={32} round={true} />
+                    <FacebookIcon size={28} round={true} />
                   </FacebookShareButton>
-                  <TwitterShareButton url="/" className="mx-1">
-                    <TwitterIcon size={32} round={true} />
+                  <TwitterShareButton url="/" className="mx-1.5">
+                    <TwitterIcon size={28} round={true} />
                   </TwitterShareButton>
                   <TelegramShareButton url="/">
-                    <TelegramIcon size={32} round={true} />
+                    <TelegramIcon size={28} round={true} />
                   </TelegramShareButton>
                 </div>
               </Container>
@@ -117,32 +140,34 @@ export const FacilityDetails = () => {
                 <div className="text-gray-500 text-sm">
                   {facilityTypeConfig[facility.facility_type]}
                   <span className="mx-2">·</span>
-                  Stage: {statusConfig[facility.status]}
+                  Stage: <b>{statusConfig[facility.status]}</b>
+                  {facility.total_invested > 0 && (
+                    <>
+                      <span className="mx-2">·</span>
+                      Total Invested: <b>{convertFromYocto(facility.total_invested, 1)} NEAR</b>
+                    </>
+                  )}
                 </div>
-                <p className="mt-5">{facility.description}</p>
+                <p className="mt-5" style={{ whiteSpace: "pre-wrap" }}>{facility.description}</p>
 
                 <hr className="my-5 block" />
-
-                <h3 className="text-xl font-medium mb-2">Proposals</h3>
                 {
-                  facilityProposals.length > 0 ? facilityProposals.map(proposal => (
-                    <OneProposal proposal={proposal} key={proposal.p} />
-                  )) : (
-                    <div className="text-gray-500">
-                      *No Proposals
-                    </div>
+                  facility.status === "Fundraising" && (
+                    <FacilityDetailsFundraising
+                      facility={facility}
+                      facilityProposals={facilityProposals}
+                      facilityInvestments={facilityInvestments}
+                      allPerformers={allPerformers}
+                    />
                   )
                 }
-
-                <h3 className="font-medium mb-2 mt-10">Add Proposal</h3>
                 {
-                  currentUser.performer ? (
-                    <MyProposalForm facility_id={facility.token_id} key={facility.token_id} />
-                  ) : (
-                    <>
-                      <p className="text-gray-500">To add new proposal, please register{" "}
-                        <Link to="/my" className="underline">Performer Account</Link>.</p>
-                    </>
+                  facility.status === "InProgress" && (
+                    <FacilityDetailsInProgress
+                      facility={facility}
+                      facilityProposals={facilityProposals}
+                      allPerformers={allPerformers}
+                    />
                   )
                 }
 
@@ -171,19 +196,30 @@ export const FacilityDetails = () => {
                       }
                     </div>
 
-                    <div className="m-5 text-center flex flex-row">
-                      <input type="number"
-                             min="0.1"
-                             step="0.1"
-                             className="p-2.5 border rounded-l-lg text-base border-r-transparent focus:outline-0 inline-block w-full"
-                             onChange={(e) => setInvestAmount(e.target.value)}
-                             placeholder="NEAR Amount" />
-                      <Button title="Invest" noIcon roundedClass="rounded-r-lg" onClick={() => handleInvest()} />
-                    </div>
+                    {
+                      facility.status !== 'Completed' && (
+                        <div className="m-5 text-center flex flex-row">
+                          <input type="number"
+                                 min="0.1"
+                                 step="0.1"
+                                 className="p-2.5 border rounded-l-lg text-base border-r-transparent focus:outline-0 inline-block w-full"
+                                 onChange={(e) => setInvestAmount(e.target.value)}
+                                 placeholder="NEAR Amount" />
+                          <Button title="Invest" noIcon roundedClass="rounded-r-lg" onClick={() => handleInvest()} />
+                        </div>
+                      )
+                    }
+
                     <hr />
                     <div className="flex flex-row m-5 mb-0 font-medium">
                       <div className="w-1/2">Total</div>
-                      <div className="w-1/2 text-right">{convertFromYocto(userTotalInvested(), 1)} NEAR</div>
+                      <div className="w-1/2 text-right">
+                        {userTotalInvested() > 0 ? (
+                          <>{convertFromYocto(userTotalInvested(), 1)} NEAR</>
+                        ) : (
+                          <>0 NEAR</>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -53,6 +53,13 @@ body {
     object-fit: cover;
 }
 
+@media all and (max-width: 1200px) {
+    .facility-image {
+        width: 120px;
+        height: 90px;
+    }
+}
+
 .facility-title {
     max-width: calc(50vw - 250px);
     letter-spacing: -0.01em;

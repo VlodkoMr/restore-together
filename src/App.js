@@ -18,7 +18,6 @@ import { setUserAccountId, setUserIsManager, setUserPerformer } from './store/us
 export default function App() {
   const dispatch = useDispatch();
   const [isReady, setIsReady] = React.useState(false);
-  // const [currentUser, setCurrentUser] = React.useState();
 
   React.useEffect(() => {
     window.nearInitPromise = initContract()

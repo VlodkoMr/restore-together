@@ -24,13 +24,16 @@ export async function initContract() {
       'get_facility_investment',
       'get_user_info',
       'get_investor_facilities',
-      'get_facility_proposals'
+      'get_facility_proposals',
+      'get_all_performers',
+      'get_performer_facilities'
     ],
     changeMethods: [
       'add_facility',
       'add_investment',
       'add_facility_proposal',
-      'create_performer_account'
+      'create_performer_account',
+      'vote_for_performer'
     ],
   });
 }
@@ -55,7 +58,10 @@ export function dataURLtoFile(dataUrl, fileName) {
     u8arr[n] = bstr.charCodeAt(n);
   }
 
-  return new File([u8arr], fileName, { type: mime });
+  return new File([u8arr], fileName, {
+    type: mime,
+    lastModified: new Date().getTime()
+  });
 }
 
 export function getMediaUrl(hash) {

@@ -6,11 +6,12 @@
     "build": "npm run build:contract && npm run build:web",
     "build:contract": "(cd ./contract && ./build.sh)",
     "build:web": "rm -rf ./dist && parcel build src/index.html --public-url ./",
-    "dev:deploy:contract": "yarn build:contract && near dev-deploy",
-    "clean:deploy:contract": "yarn build:contract && rm -rf ./neardev && near dev-deploy",
+
+    "dev:deploy:contract": "yarn build:contract && rm -rf ./neardev && near dev-deploy",
     "deploy:contract": "CONTRACT_ID=$(<neardev/dev-account) && near deploy --accountId $CONTRACT_ID",
+
     "prestart": "npm run build:contract && npm run dev:deploy:contract",
-    "start": "rm -rf ./dist && env-cmd -f ./neardev/dev-account.env parcel src/index.html",
+    "start": "rm -rf ./dist && parcel src/index.html",
     "dev": "nodemon --watch contract/src -e rs --exec \"npm run start\""
   },
   "devDependencies": {

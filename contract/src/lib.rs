@@ -2,11 +2,12 @@
 // use std::str::FromStr;
 // use std::string::ParseError;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, setup_alloc};
+use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, setup_alloc, assert_one_yocto};
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::json_types::U128;
+use std::collections::HashMap;
 
 mod utils;
 
@@ -89,13 +90,16 @@ pub enum StorageKeys {
 pub struct Contract {
     // owner_id: AccountId,
     management_accounts: Vec<AccountId>,
+
     performers: UnorderedMap<PerformerId, Performer>,
-    facility: LookupMap<TokenId, Facility>,
+    performer_facilities: LookupMap<PerformerId, Vec<TokenId>>,
+
     facility_count: u32,
+    facility: LookupMap<TokenId, Facility>,
     facility_by_region: LookupMap<u8, Vec<TokenId>>,
     facility_investors: LookupMap<TokenId, Vec<FacilityInvestment>>,
-    investor_facilities: LookupMap<AccountId, Vec<TokenId>>,
     facility_proposals: LookupMap<TokenId, Vec<FacilityProposal>>,
+    investor_facilities: LookupMap<AccountId, Vec<TokenId>>,
 }
 
 impl Default for Contract {
@@ -103,13 +107,16 @@ impl Default for Contract {
         Self {
             // owner_id: env::predecessor_account_id(),
             management_accounts: vec![],
+
             performers: UnorderedMap::new(StorageKeys::Performers),
+            performer_facilities: LookupMap::new(StorageKeys::Performers),
+
             facility_count: 0,
             facility: LookupMap::new(StorageKeys::Facility),
             facility_by_region: LookupMap::new(StorageKeys::FacilityByRegion),
             facility_investors: LookupMap::new(StorageKeys::FacilityInvestors),
-            investor_facilities: LookupMap::new(StorageKeys::InvestorFacilities),
             facility_proposals: LookupMap::new(StorageKeys::FacilityProposals),
+            investor_facilities: LookupMap::new(StorageKeys::InvestorFacilities),
         }
     }
 }
@@ -202,6 +209,19 @@ impl Contract {
             investor_facilities.push(token_id.to_string());
         }
         self.investor_facilities.insert(&account_id, &investor_facilities);
+
+        // If user already voted, check proposal & update facility status
+        let proposals = self.facility_proposals.get(&token_id).unwrap_or(vec![]);
+
+        let mut user_voted_performer = None;
+        for proposal in &proposals {
+            if proposal.votes.contains(&account_id) {
+                user_voted_performer = Some(proposal.performer_id.to_string());
+            }
+        }
+        if user_voted_performer.is_some() {
+            self.check_facility_status_by_voting(facility, user_voted_performer.unwrap());
+        }
     }
 
     pub fn get_facility_investment(&self, token_id: TokenId) -> Vec<FacilityInvestment> {
@@ -277,5 +297,86 @@ impl Contract {
         facility.total_proposals += 1;
         self.facility.remove(&facility_id);
         self.facility.insert(&facility_id, &facility);
+    }
+
+    pub fn get_all_performers(&self) -> HashMap<PerformerId, Performer> {
+        self.performers.iter().collect()
+    }
+
+    // Change facility status if much requirements: enough budget and 51% votes by invested amount
+    fn check_facility_status_by_voting(&mut self, mut facility: Facility, performer_id: PerformerId) {
+        let proposals = self.facility_proposals.get(&facility.token_id).unwrap_or(vec![]);
+        let facility_investors = self.facility_investors.get(&facility.token_id).unwrap_or(vec![]);
+
+        for proposal in &proposals {
+            // Need to cover estimated budget
+            if proposal.estimate_amount <= facility.total_invested {
+                let mut votes_total_invest = 0;
+                for user_id in &proposal.votes {
+                    for investor in &facility_investors {
+                        if investor.user_id == user_id.to_string() {
+                            votes_total_invest += investor.amount;
+                        }
+                    }
+                }
+
+                // Need 51% votes
+                if votes_total_invest >= (facility.total_invested * 51) / 100 {
+                    self.facility.remove(&facility.token_id);
+
+                    facility.status = FacilityStatus::InProgress;
+                    facility.performer = Some(performer_id.to_string());
+                    self.facility.insert(&facility.token_id, &facility);
+
+                    // add facility to performer list
+                    let mut performer_facilities = self.performer_facilities.get(&performer_id).unwrap_or(vec![]);
+                    performer_facilities.push(facility.token_id.to_string());
+                    self.performer_facilities.insert(&performer_id, &performer_facilities);
+                }
+            }
+        }
+    }
+
+    #[payable]
+    pub fn vote_for_performer(&mut self, performer_id: PerformerId, facility_id: TokenId) {
+        assert_one_yocto();
+        let user_id = env::predecessor_account_id();
+        let facility = self.facility.get(&facility_id).unwrap();
+        if facility.status != FacilityStatus::Fundraising {
+            panic!("Voting closed.");
+        }
+
+        // Check if user is investor
+        let mut is_investor = false;
+        let facility_investors = self.facility_investors.get(&facility_id).unwrap_or(vec![]);
+        for investor in &facility_investors {
+            if investor.user_id == user_id.to_string() {
+                is_investor = true;
+            }
+        }
+        if !is_investor {
+            panic!("You can't vote.");
+        }
+
+        // Check if user already vote
+        let proposals = self.facility_proposals.get(&facility_id).unwrap_or(vec![]);
+        let proposals = proposals.into_iter().map(|mut proposal| {
+            if proposal.votes.contains(&user_id) {
+                panic!("You already voted.");
+            }
+            // Add user vote
+            if proposal.performer_id == performer_id {
+                proposal.votes.push(user_id.to_string());
+            }
+            proposal
+        }).collect();
+        self.facility_proposals.insert(&facility_id, &proposals);
+
+        self.check_facility_status_by_voting(facility, performer_id);
+    }
+
+    pub fn get_performer_facilities(&self, account_id: PerformerId) -> Vec<Facility> {
+        let performer_facilities = self.performer_facilities.get(&account_id).unwrap_or(vec![]);
+        performer_facilities.iter().map(|token_id| self.facility.get(&token_id).unwrap()).collect()
     }
 }

@@ -10,7 +10,8 @@ import { Loader } from '../components/basic/Loader';
 export const User = () => {
   const currentUser = useSelector(state => state.user.account);
   const [isReady, setIsReady] = useState(false);
-  const [userFacilities, setUserFacilities] = useState("");
+  const [investorFacilities, setInvestorFacilities] = useState([]);
+  const [performerFacilities, setPerformerFacilities] = useState([]);
 
   // Register performer form
   const [performerName, setPerformerName] = useState("");
@@ -19,16 +20,24 @@ export const User = () => {
   // const logoInput = React.createRef();
   // const [performerLogo, setPerformerLogo] = useState("");
 
-  const loadUserFacilities = async () => {
+  const loadInvestorFacilities = async () => {
     const facilities = await window.contract.get_investor_facilities({
       account_id: currentUser.id
     });
-    setUserFacilities(facilities);
+    setInvestorFacilities(facilities);
     setIsReady(true);
   }
 
+  const loadPerformerFacilities = async () => {
+    const facilities = await window.contract.get_performer_facilities({
+      account_id: currentUser.id
+    });
+    setPerformerFacilities(facilities);
+  }
+
   useEffect(() => {
-    loadUserFacilities();
+    loadInvestorFacilities();
+    loadPerformerFacilities();
   }, [currentUser]);
 
   const registerPerformer = async (event) => {
@@ -48,10 +57,12 @@ export const User = () => {
     }
   }
 
-  const InfoField = ({ title, value, newLine, valueClass }) => (
-    <div className={`mb-2 ${newLine ? "" : "flex flex-row"}`}>
+  const InfoField = ({ title, value, valueClass }) => (
+    <div className={`mb-2 flex flex-row`}>
       <div className="font-medium w-36">{title}:</div>
-      <div className={valueClass}>{value}</div>
+      <div className={`w-3/4 ${valueClass}`}>
+        {value}
+      </div>
     </div>
   );
 
@@ -62,12 +73,13 @@ export const User = () => {
 
         <Container className="mt-4">
           <div className="flex flex-row mt-8">
-            <div className="w-2/3 border-r pr-10">
-              <h3 className="text-xl font-semibold mb-4 pl-4">My Investments</h3>
+
+            <div className="w-7/12 border-r pr-10">
+              <h3 className="text-xl font-semibold mb-4 pl-4 pt-2">My Investments</h3>
               {isReady ? (
                 <div>
-                  {userFacilities.length > 0 ?
-                    userFacilities.map(facility => (
+                  {investorFacilities.length > 0 ?
+                    investorFacilities.map(facility => (
                       <div className="transition hover:bg-gray-50 pl-4 border-b border-dashed last:border-b-0"
                            key={facility.token_id}>
                         <OneFacility facility={facility} />
@@ -80,32 +92,54 @@ export const User = () => {
                 <Loader />
               )}
             </div>
-            <div className="w-1/3 ml-10">
-              <h3 className="text-xl font-semibold mb-4">Performer Account</h3>
+
+            <div className="w-5/12 ml-10">
+              <h3 className="mb-4 flex flex-row justify-between font-semibold">
+                <span className="text-xl pt-2">Performer Account</span>
+                {currentUser.performer && (
+                  <div className={`text-sm border rounded-lg px-4 py-2
+                  ${currentUser.performer.is_validated ? "bg-green-100" : "bg-gray-50"}`}>
+                    Verification:
+                    {currentUser.performer.is_validated ? (
+                      <span className="text-green-500 ml-2">Verified</span>
+                    ) : (
+                      <span className="text-gray-500 ml-2">Pending</span>
+                    )}
+                  </div>
+                )}
+              </h3>
 
               {currentUser.performer ? (
-                <div className="mt-8">
+                <div className="mt-6">
                   <InfoField title="Company Name"
                              value={currentUser.performer.name} />
                   <InfoField title="Phone"
                              value={currentUser.performer.phone} />
                   <InfoField title="Description"
-                             value={currentUser.performer.description}
-                             valueClass="mt-1"
-                             newLine />
-                  <InfoField title="Verification"
-                             valueClass={`font-medium ${currentUser.performer.is_validated ? "text-green-500" : "text-gray-500"}`}
-                             value={currentUser.performer.is_validated ? "Verified" : "Pending"} />
+                             value={currentUser.performer.description} />
                   {
                     currentUser.performer.rating > 0 && (
                       <InfoField title="Rating (1-10)"
                                  valueClass={`font-medium ${currentUser.performer.rating > 5 ? "text-green-500" : "text-red-500"}`}
                                  value={currentUser.performer.rating} />
                     )}
+                  <hr className="my-6" />
 
+                  <h3 className="text-lg font-medium pt-2">My Facilities</h3>
+                  <div className="pb-6">
+                    {performerFacilities.length > 0 ?
+                      performerFacilities.map(facility => (
+                        <div className="transition hover:bg-gray-50 border-b border-dashed last:border-b-0"
+                             key={facility.token_id}>
+                          <OneFacility facility={facility} />
+                        </div>
+                      )) : (
+                        <div className="text-gray-500">*No facilities</div>
+                      )}
+                  </div>
                 </div>
               ) : (
-                <form onSubmit={registerPerformer}>
+                <form onSubmit={registerPerformer} className="max-w-[480px]">
                   <div className="text-gray-500 text-sm">
                     To start work on the restoration of cultural heritage, you need to provide additional information
                     about the company (or private entrepreneur) and pass verification.

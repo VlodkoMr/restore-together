@@ -7,12 +7,12 @@ export const OneFacility = ({ facility }) => {
   return (
     <Link className="relative flex flex-row py-4 last:border-b-0"
           to={`/facility/${facility.token_id}`}>
-      <img src={getMediaUrl(facility.media)} alt="" className="facility-image rounded-xl mr-6" />
+      <img src={getMediaUrl(facility.media)} className="facility-image rounded-xl mr-6 mt-4 xl:mt-0" alt="photo" />
       <div>
-        <h4 className="text-lg font-medium my-2 whitespace-nowrap text-ellipsis overflow-hidden facility-title">
+        <h4 className="text-lg font-medium mb-1 xl:mb-2 whitespace-nowrap text-ellipsis overflow-hidden facility-title">
           {facility.title}
         </h4>
-        <div className="text-sm text-gray-600 flex flex-row">
+        <div className="text-sm text-gray-600 block xl:flex xl:flex-row">
           <div className="w-48">
             <p>Status: {statusConfig[facility.status]}</p>
             <p>Type: {facilityTypeConfig[facility.facility_type]}</p>
@@ -21,8 +21,7 @@ export const OneFacility = ({ facility }) => {
             {facility.total_invested > 0 && (
               <>
                 <p>Total Invested: {convertFromYocto(facility.total_invested, 1)} NEAR</p>
-                {/*<p>My investments: {facility.total_invested} NEAR</p>*/}
-                <p>Proposals: {facility.total_investors}</p>
+                <p>Investors: {facility.total_investors}</p>
               </>
             )}
           </div>
