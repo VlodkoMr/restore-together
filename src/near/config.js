@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME || 'restore-together'
+const CONTRACT_NAME = process.env.CONTRACT_NAME || 'dev-1652887927787-96556246819628'
 
 function getConfig(env) {
   console.log('CONTRACT_NAME', CONTRACT_NAME)

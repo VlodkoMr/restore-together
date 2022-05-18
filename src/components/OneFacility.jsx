@@ -9,19 +9,19 @@ export const OneFacility = ({ facility }) => {
           to={`/facility/${facility.token_id}`}>
       <img src={getMediaUrl(facility.media)} className="facility-image rounded-xl mr-6 mt-4 xl:mt-0" alt="photo" />
       <div>
-        <h4 className="text-lg font-medium mb-1 xl:mb-2 whitespace-nowrap text-ellipsis overflow-hidden facility-title">
+        <h4 className="text-lg font-medium mb-2 xl:mb-2 whitespace-nowrap text-ellipsis overflow-hidden facility-title">
           {facility.title}
         </h4>
         <div className="text-sm text-gray-600 block xl:flex xl:flex-row">
           <div className="w-48">
+            <p className="mb-0.5">{facilityTypeConfig[facility.facility_type]}</p>
             <p>Status: {statusConfig[facility.status]}</p>
-            <p>Type: {facilityTypeConfig[facility.facility_type]}</p>
           </div>
-          <div>
+          <div className="pl-8">
             {facility.total_invested > 0 && (
               <>
-                <p>Total Invested: {convertFromYocto(facility.total_invested, 1)} NEAR</p>
-                <p>Investors: {facility.total_investors}</p>
+                <p className="mb-0.5">Total Invested: <b>{convertFromYocto(facility.total_invested, 1)} NEAR</b></p>
+                <p>Investors: <b>{facility.total_investors}</b></p>
               </>
             )}
           </div>

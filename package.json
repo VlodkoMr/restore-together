@@ -6,12 +6,12 @@
     "build": "npm run build:contract && npm run build:web",
     "build:contract": "(cd ./contract && ./build.sh)",
     "build:web": "rm -rf ./dist && parcel build src/index.html --public-url ./",
-
     "dev:deploy:contract": "yarn build:contract && rm -rf ./neardev && near dev-deploy",
-    "deploy:contract": "CONTRACT_ID=$(<neardev/dev-account) && near deploy --accountId $CONTRACT_ID",
-
+    "dev:build:web": "rm -rf ./dist && NODE_ENV=development parcel build src/index.html --public-url ./",
+    "deploy:contract": "yarn build:contract && CONTRACT_ID=$(<neardev/dev-account) && near deploy --accountId $CONTRACT_ID",
     "prestart": "npm run build:contract && npm run dev:deploy:contract",
-    "start": "rm -rf ./dist && parcel src/index.html",
+    "start": "rm -rf ./parcel-cache && env-cmd -f ./neardev/dev-account.env parcel src/index.html --open",
+    "local": "NODE_ENV=local parcel src/index.html --open",
     "dev": "nodemon --watch contract/src -e rs --exec \"npm run start\""
   },
   "devDependencies": {
@@ -52,7 +52,8 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "not ios_saf < 13"
     ],
     "development": [
       "last 1 chrome version",

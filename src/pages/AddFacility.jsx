@@ -88,6 +88,7 @@ export const AddFacility = () => {
           });
           setNewItem(item);
           setIsReady(true);
+          resetForm();
         } else {
           // Failed
           step = 2;
@@ -219,7 +220,7 @@ export const AddFacility = () => {
         checkStorageDeposit(true).then(() => {
           uploadMediaToIPFS().then(media => {
             const GAS = convertToTera("200");
-            const DEPOSIT = convertToYocto("0.1");
+            const DEPOSIT = 1;
             const tokenId = `${region}-${facilityType}-${new Date().getTime()}`;
 
             localStorage.setItem('step', "3");
@@ -252,8 +253,6 @@ export const AddFacility = () => {
       localStorage.removeItem('addFacilityId');
       localStorage.removeItem('step');
       navigate("/add-facility");
-
-      setCurrentStep(1);
       localStorage.setItem('step', "1");
     }
 
@@ -340,7 +339,7 @@ export const AddFacility = () => {
 
                     <div className="mb-4">
                       <FormLabel>
-                        Set Location<sup className="text-red-400">*</sup>
+                        Set Location (click on map)<sup className="text-red-400">*</sup>
                       </FormLabel>
                       <div className="h-[180px]">
                         <AddFacilityMap centerCoord={regionsCoordConfig[region]}
@@ -360,8 +359,13 @@ export const AddFacility = () => {
                     </div>
 
                     {!isLoading ? (
-                      <div className="text-right">
-                        <Button title="Next" onClick={() => saveStep1()} />
+                      <div className="flex">
+                        <div className="w-2/3 text-sm text-gray-400">
+                          You need to deposit 0.25 NEAR. Deposit will be returned to your wallet in 10 minutes.
+                        </div>
+                        <div className="w-1/3 text-right">
+                          <Button title="Next" onClick={() => saveStep1()} />
+                        </div>
                       </div>
                     ) : (
                       <Loader />
@@ -426,7 +430,10 @@ export const AddFacility = () => {
                   </Link>
 
                   <div className="mt-8 text-center">
-                    <Button title="Add New Facility" noIcon onClick={() => resetForm()} />
+                    <Button title="Add New Facility" noIcon onClick={() => {
+                      resetForm();
+                      setCurrentStep(1);
+                    }} />
                   </div>
                 </>
               )}

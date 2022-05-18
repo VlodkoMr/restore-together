@@ -56,7 +56,7 @@ export const FacilityDetailsFundraising = ({ facility, facilityProposals, facili
                        key={proposal.performer_id}
           />
         )) : (
-          <div className="text-gray-500">
+          <div className="text-gray-500 text-sm">
             *No Proposals
           </div>
         )
@@ -65,7 +65,7 @@ export const FacilityDetailsFundraising = ({ facility, facilityProposals, facili
       {
         canAddProposal() && (
           <>
-            <h3 className="font-medium mb-2 mt-10">Add Proposal</h3>
+            <h3 className="font-medium mb-2 mt-10">Add your proposal:</h3>
             {
               currentUser.performer ? (
                 <MyProposalForm facility_id={facility.token_id} key={facility.token_id} />

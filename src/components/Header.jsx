@@ -33,6 +33,7 @@ export const Header = ({ color, width }) => {
           <NavLink to="/">Home</NavLink>
           <NavLink to="/facility">Facilities</NavLink>
           <NavLink to="/add-facility">Add Facility</NavLink>
+          <NavLink to="/my">My Account</NavLink>
           <NavLink to="/about">About</NavLink>
         </div>
 
@@ -40,11 +41,13 @@ export const Header = ({ color, width }) => {
           {currentUser.id ? (
             <>
               <div className="mt-2 flex flex-row place-content-end">
-                <NavLink to="/my" className="pt-0.5 font-medium hover:text-red-400">{currentUser.id}</NavLink>
+                <Link to="/my" className="pt-0.5 font-medium hover:text-red-400 w-48 overflow-hidden text-ellipsis">
+                  {currentUser.id}
+                </Link>
                 <img src={logoutIcon}
                      alt="logout"
                      title="Logout"
-                     className="w-6 h-6 ml-6 cursor-pointer hover:opacity-80 transition"
+                     className="w-6 h-6 ml-4 cursor-pointer hover:opacity-80 transition"
                      onClick={logout} />
               </div>
             </>

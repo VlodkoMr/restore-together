@@ -11,7 +11,6 @@ import {
 import { FacilityDetails } from './pages/FacilityDetails';
 import { initContract } from './near/utils';
 
-import './global.css'
 import { useDispatch } from 'react-redux';
 import { setUserAccountId, setUserIsManager, setUserPerformer } from './store/userSlice';
 

@@ -125,11 +125,9 @@ impl Default for Contract {
 impl Contract {
     #[payable]
     pub fn add_facility(&mut self, id: String, title: String, region: u8, facility_type: u8, media: String, lat: String, lng: String, description: String) {
+        assert_one_yocto();
         // self.assert_contract_owner(self.owner_id.to_string());
         let account_id = env::predecessor_account_id();
-        if env::attached_deposit() != Contract::convert_to_yocto("0.1") {
-            panic!("Please attach o.1 NEAR to create new Facility")
-        }
         if self.facility.contains_key(&id) {
             panic!("Facility ID already exists");
         }
@@ -273,7 +271,9 @@ impl Contract {
         self.performers.insert(&account_id, &performer);
     }
 
+    #[payable]
     pub fn add_facility_proposal(&mut self, facility_id: TokenId, text: String, time: u32, budget: U128) {
+        assert_one_yocto();
         let account_id = env::predecessor_account_id();
         let mut proposals = self.facility_proposals.get(&facility_id).unwrap_or(vec![]);
 

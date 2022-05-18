@@ -51,6 +51,8 @@ body {
     width: 160px;
     height: 120px;
     object-fit: cover;
+    background: rgb(232, 232, 232);
+    background: linear-gradient(180deg, rgba(232, 232, 232, 0.3057816876750701) 0%, rgba(223, 223, 223, 1) 100%);
 }
 
 @media all and (max-width: 1200px) {

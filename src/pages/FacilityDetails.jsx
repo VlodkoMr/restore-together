@@ -135,18 +135,24 @@ export const FacilityDetails = () => {
 
             <Container className="flex flex-row mt-4 pt-2">
               <div className="w-9/12 mr-14">
-                <h1 className="text-2xl font-medium mt-1">{facility.title}</h1>
+                <h1 className="flex flex-row justify-between mt-1">
+                  <div className="text-2xl font-medium">{facility.title}</div>
+                  <div className="mt-2">
+                    {facility.total_invested > 0 && (
+                      <>
+                        <span className="text-gray-500 text-sm">Total Invested:</span>
+                        <b className="text-red-500 ml-1 text-xl">
+                          {convertFromYocto(facility.total_invested, 1)} NEAR
+                        </b>
+                      </>
+                    )}
+                  </div>
+                </h1>
 
                 <div className="text-gray-500 text-sm">
                   {facilityTypeConfig[facility.facility_type]}
                   <span className="mx-2">·</span>
-                  Stage: <b>{statusConfig[facility.status]}</b>
-                  {facility.total_invested > 0 && (
-                    <>
-                      <span className="mx-2">·</span>
-                      Total Invested: <b>{convertFromYocto(facility.total_invested, 1)} NEAR</b>
-                    </>
-                  )}
+                  Stage: {statusConfig[facility.status]}
                 </div>
                 <p className="mt-5" style={{ whiteSpace: "pre-wrap" }}>{facility.description}</p>
 
@@ -175,7 +181,7 @@ export const FacilityDetails = () => {
 
               <div className="w-3/12 min-w-[320px]">
                 <div className="border rounded-xl shadow-md mt-2 overflow-hidden">
-                  <img src={getMediaUrl(facility.media)} alt="" className="w-full shadow-md" />
+                  <img src={getMediaUrl(facility.media)} alt="" className="w-full shadow-md max-h-64 object-cover" />
 
                   <div className="p-5">
                     <h3 className="text-lg uppercase font-medium text-center mb-5">My Investment</h3>

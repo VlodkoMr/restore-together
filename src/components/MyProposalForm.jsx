@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button } from './basic/Button';
-import tmpLogo from '../assets/images/tmp.jpg';
-import { convertToYocto } from '../near/utils';
+import { convertToTera, convertToYocto } from '../near/utils';
 
 export const MyProposalForm = ({ facility_id }) => {
   const [proposalText, setProposalText] = useState("");
@@ -23,7 +22,7 @@ export const MyProposalForm = ({ facility_id }) => {
         text: proposalText,
         time: parseInt(proposalTime),
         budget: convertToYocto(proposalBudget),
-      })
+      }, convertToTera("100"), 1);
     }
   };
 
@@ -34,10 +33,10 @@ export const MyProposalForm = ({ facility_id }) => {
       {/*  <img src={tmpLogo} alt="" width="w-full" className="rounded-full mt-1" />*/}
       {/*</div>*/}
       <div className="w-full relative">
-        <textarea className="border p-2 w-full mb-1"
-                  placeholder="Describe your proposal"
+        <textarea className="border p-2 w-full mb-1 h-20"
+                  placeholder="Describe your proposal: what work will be done to restore or maintain, what experience you have, provide time planning and financial estimate details."
                   value={proposalText}
-                  onChange={(e) => setProposalText(e.target.value)}>
+                  onChange={(e) => setProposalText(e.target.value)}>ʼ
         </textarea>
 
         <div className="flex flex-row justify-between">

@@ -64,7 +64,7 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, filterItems, goog
                   <a href={`/facility/${activeLocation.token_id}`}>
                     <img src={getMediaUrl(activeLocation.media)} alt="" className="w-64 h-48 object-cover" />
                   </a>
-                  <h1 className="w-64 px-4 py-3 text-sm font-normal">
+                  <h1 className="w-64 px-4 py-3 text-sm font-medium">
                     <a className="block hover:text-gray-600"
                        href={`/facility/${activeLocation.token_id}`}>{activeLocation.title}</a>
                   </h1>

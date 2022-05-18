@@ -97,17 +97,25 @@ export const User = () => {
               <h3 className="mb-4 flex flex-row justify-between font-semibold">
                 <span className="text-xl pt-2">Performer Account</span>
                 {currentUser.performer && (
-                  <div className={`text-sm border rounded-lg px-4 py-2
-                  ${currentUser.performer.is_validated ? "bg-green-100" : "bg-gray-50"}`}>
-                    Verification:
-                    {currentUser.performer.is_validated ? (
-                      <span className="text-green-500 ml-2">Verified</span>
-                    ) : (
-                      <span className="text-gray-500 ml-2">Pending</span>
-                    )}
-                  </div>
+                  <>
+                    <div className={`text-sm border rounded-lg px-4 py-2
+                    ${currentUser.performer.is_validated ? "bg-green-100" : "bg-gray-50"}`}>
+                      Verification:
+                      {currentUser.performer.is_validated ? (
+                        <span className="text-green-500 ml-2">Verified</span>
+                      ) : (
+                        <span className="text-gray-500 ml-2">Pending</span>
+                      )}
+                    </div>
+                  </>
                 )}
               </h3>
+
+              {currentUser.performer && !currentUser.performer.is_validated && (
+                <p className="text-sm text-red-500 font-medium">
+                  Please wait, your account will be verified for greater investor confidence.
+                </p>
+              )}
 
               {currentUser.performer ? (
                 <div className="mt-6">
@@ -134,7 +142,7 @@ export const User = () => {
                           <OneFacility facility={facility} />
                         </div>
                       )) : (
-                        <div className="text-gray-500">*No facilities</div>
+                        <div className="text-gray-500 mt-4">*No facilities</div>
                       )}
                   </div>
                 </div>
@@ -142,8 +150,7 @@ export const User = () => {
                 <form onSubmit={registerPerformer} className="max-w-[480px]">
                   <div className="text-gray-500 text-sm">
                     To start work on the restoration of cultural heritage, you need to provide additional information
-                    about the company (or private entrepreneur) and pass verification.
-                    Your request requires 0.1 NEAR for this verification.
+                    about the company (or private entrepreneur).
                   </div>
                   <div className="mt-6">
                     <div className="mb-3">
@@ -172,8 +179,14 @@ export const User = () => {
                                     onChange={(e) => setPerformerDescription(e.target.value)}>
                       </FormTextarea>
                     </div>
-                    <div className="text-right">
-                      <Button title="Create Account" />
+                    <div className="flex flex-row">
+                      <div className="w-1/2 text-sm text-gray-500">
+                        *Your request requires 0.1 NEAR for this verification.
+                      </div>
+                      <div className="text-right w-1/2">
+                        <Button title="Create Account" noIcon />
+                      </div>
+
                     </div>
                   </div>
                 </form>
