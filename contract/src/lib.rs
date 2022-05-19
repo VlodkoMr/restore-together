@@ -2,7 +2,7 @@
 // use std::str::FromStr;
 // use std::string::ParseError;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, log, setup_alloc, assert_one_yocto};
+use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, setup_alloc, assert_one_yocto};
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
@@ -435,14 +435,12 @@ impl Contract {
             let start_execution = u64::from(facility.start_execution.unwrap());
             let claim_time_seconds = u64::from(active_proposal.unwrap().estimate_time) * 60 * 60 * 24;
 
-            let rest_amount = facility.total_invested / 2;
-            let claimed_half_amount = claimed - rest_amount;
-
-            let one_sec_reward = rest_amount / u128::from(claim_time_seconds);
+            let linear_unlock_amount = facility.total_invested / 2;
+            let one_sec_reward = linear_unlock_amount / u128::from(claim_time_seconds);
             let seconds_from_start = u128::from((env::block_timestamp() - start_execution) / 1_000_000_000);
-
             let unlocked = seconds_from_start * one_sec_reward;
-            return unlocked - claimed_half_amount;
+
+            return linear_unlock_amount + unlocked - claimed;
         } else {
             panic!("Proposal Not found");
         }
@@ -452,7 +450,7 @@ impl Contract {
         let facility = self.facility.get(&facility_id).unwrap();
         let claimed = self.performer_facility_claimed.get(&facility_id).unwrap_or(0);
         if claimed == 0 {
-            return (claimed, facility.total_invested / 2);
+            return (0, facility.total_invested / 2);
         }
         (claimed, self.linear_claim_amount(&facility_id))
     }
@@ -477,10 +475,21 @@ impl Contract {
         }
 
         if can_claim > 0 {
-            self.performer_facility_claimed.insert(&facility_id, &can_claim);
+            self.performer_facility_claimed.insert(&facility_id, &(claimed + can_claim));
             Promise::new(env::predecessor_account_id()).transfer(can_claim);
         } else {
             panic!("No tokens to Claim");
         }
+    }
+
+    pub fn performer_set_completed(&mut self, facility_id: TokenId) {
+        let mut facility = self.facility.get(&facility_id).unwrap();
+        if facility.performer != Some(env::predecessor_account_id()) {
+            panic!("You don't have access to this Facility");
+        }
+
+        self.facility.remove(&facility_id);
+        facility.status = FacilityStatus::Completed;
+        self.facility.insert(&facility_id, &facility);
     }
 }

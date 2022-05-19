@@ -66,6 +66,12 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
     });
   }
 
+  const setCompletedStatus = async () => {
+    window.contract.performer_set_completed({
+      facility_id: facility.token_id
+    });
+  }
+
   const startUpdateProgress = () => {
     localStorage.setItem('showUpdatePopup', '1');
     checkStorageDeposit(true).then(() => {
@@ -112,37 +118,61 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
       {facility.performer === currentUser.id ? (
         <>
           <div className="flex flex-row">
-            <div className="w-4/12">
-              <h3 className="text-xl font-medium mb-2">Finances</h3>
-              <p>
-                Available: <b>{convertFromYocto(canClaimAmount, 2)}
-                /
-                {convertFromYocto(facility.total_invested)} NEAR
-              </b>
-              </p>
-              <p>Claimed: <b>{convertFromYocto(claimedAmount)} NEAR</b></p>
-              <div className="mt-4">
-                <Button title="Claim Tokens"
-                        noIcon
-                        className="border border-blue-400 text-blue-500 bg-blue-50/40 hover:border-blue-500 hover:text-blue-600"
-                        onClick={() => claimTokens()} />
-              </div>
-            </div>
+            {
+              canClaimAmount > 0 && (
+                <div className="w-4/12">
+                  <h3 className="text-xl font-medium mb-2">Finances</h3>
+                  <p>
+                    Available: <b>{convertFromYocto(canClaimAmount, 2)}
+                    /
+                    {convertFromYocto(facility.total_invested)} NEAR
+                  </b>
+                  </p>
+                  <p>Claimed: <b>{convertFromYocto(claimedAmount)} NEAR</b></p>
+                  <div className="mt-4">
+                    <Button title="Claim Tokens"
+                            noIcon
+                            className="border border-blue-400 text-blue-500 bg-blue-50/40 hover:border-blue-500 hover:text-blue-600"
+                            onClick={() => claimTokens()} />
+                  </div>
+                </div>
+              )
+            }
+
             <div className="w-8/12 ml-10">
               <h3 className="text-xl font-medium mb-2">Work Progress</h3>
-              <div className="mr-10">
-                <p className="text-gray-500 mb-4">
-                  Please, upload your work results and change status to get payments
-                  and increase your rating.
-                </p>
-                <Button title="Update execution progress"
-                        onClick={() => startUpdateProgress()}
-                        noIcon
-                        className="border border-blue-400 text-blue-500 bg-blue-50/40 hover:border-blue-500 hover:text-blue-600" />
-                <p className="text-gray-400 mt-1">
-                  <small>*You need to deposit 0.25 NEAR that will be returned in 10 minutes.</small>
-                </p>
-              </div>
+
+              {
+                facility.status === "InProgress" ? (
+                  <div className="mr-10">
+                    <p className="text-gray-500 mb-4">
+                      Please, upload your work results and change status to get payments
+                      and increase your rating.
+                    </p>
+                    <Button title="Update execution progress"
+                            onClick={() => startUpdateProgress()}
+                            noIcon
+                            className="border border-blue-400 text-blue-500 bg-blue-50/40 hover:border-blue-500 hover:text-blue-600" />
+
+                    {executionProgress.length > 0 && (
+                      <Button title="Completed"
+                              onClick={() => setCompletedStatus()}
+                              noIcon
+                              className="ml-4 border border-red-400 text-red-400 bg-red-50/40 hover:border-red-500 hover:text-red-600"
+                      />
+                    )}
+
+                    <p className="text-gray-400 mt-1">
+                      <small>*You need to deposit 0.25 NEAR that will be returned in 10 minutes.</small>
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    Status: <b>{facility.status}</b>
+                  </div>
+                )
+              }
+
             </div>
           </div>
         </>

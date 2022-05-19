@@ -162,17 +162,14 @@ export const FacilityDetails = () => {
 
                 <hr className="my-6 block" />
                 {
-                  facility.status === "Fundraising" && (
+                  facility.status === "Fundraising" ? (
                     <FacilityDetailsFundraising
                       facility={facility}
                       facilityProposals={facilityProposals}
                       facilityInvestments={facilityInvestments}
                       allPerformers={allPerformers}
                     />
-                  )
-                }
-                {
-                  facility.status === "InProgress" && (
+                  ) : (
                     <FacilityDetailsInProgress
                       facility={facility}
                       facilityProposals={facilityProposals}
