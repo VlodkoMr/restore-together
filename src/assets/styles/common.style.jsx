@@ -36,10 +36,12 @@ export const NavLink = styled(ReactNavLink).attrs((props) => ({
     ease-in-out
     duration-200
     rounded-xl
-    hover:text-red-400
+    hover:text-blue-400
     cursor-pointer`,
 }))`
-&.active{ text-decoration: underline }`;
+&.active{ 
+  text-decoration: underline; 
+ }`;
 
 export const Btn = styled.button`
 `;

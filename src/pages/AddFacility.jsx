@@ -212,14 +212,14 @@ export const AddFacility = () => {
       <div className="w-1/3 z-10 relative cursor-default">
         <div
           className={`border-2 rounded-full w-12 h-12 mx-auto pt-2 text-xl text-center 
-        ${currentStep >= step ? "font-medium text-red-500 bg-red-100 border-red-400" : "text-gray-300 bg-gray-100"}`}>{step}</div>
+        ${currentStep >= step ? "font-medium text-blue-500 bg-blue-100 border-blue-400" : "text-gray-300 bg-gray-100"}`}>{step}</div>
       </div>
     )
 
     const StepDescription = ({ step, text }) => (
       <div className="w-1/3">
         <div
-          className={`text-center text-sm mt-1 font-medium ${currentStep >= step ? "text-red-500" : "text-gray-300"}`}>{text}</div>
+          className={`text-center text-sm mt-1 font-medium ${currentStep >= step ? "text-blue-500" : "text-gray-300"}`}>{text}</div>
       </div>
     )
 
@@ -240,7 +240,7 @@ export const AddFacility = () => {
             <>
               <div className="mb-5">
                 <div className="flex flex-row relative">
-                  <div className="absolute h-1 left-16 right-16 bg-red-400 top-6 z-0">&nbsp;</div>
+                  <div className="absolute h-1 left-16 right-16 bg-blue-400 top-6 z-0">&nbsp;</div>
                   <div className={`absolute h-1 right-16 ${stepLineMap[currentStep]} bg-gray-200 top-6 z-0`}>&nbsp;</div>
                   <StepCircle step={1} />
                   <StepCircle step={2} />
@@ -258,7 +258,7 @@ export const AddFacility = () => {
                   <form onSubmit={(e) => e.preventDefault()}>
                     <div className="mb-3">
                       <FormLabel>
-                        Title<sup className="text-red-400">*</sup>
+                        Title<sup className="text-blue-400">*</sup>
                       </FormLabel>
                       <FormInput type="text"
                                  value={title}
@@ -267,7 +267,7 @@ export const AddFacility = () => {
                     <div className="flex flex-row relative z-10">
                       <div className="mb-4 w-1/2 mr-8">
                         <FormLabel>
-                          Region<sup className="text-red-400">*</sup>
+                          Region<sup className="text-blue-400">*</sup>
                         </FormLabel>
                         <Dropdown border
                                   title="Select Region"
@@ -278,7 +278,7 @@ export const AddFacility = () => {
                       </div>
                       <div className="mb-4 w-1/2">
                         <FormLabel>
-                          Facility Type<sup className="text-red-400">*</sup>
+                          Facility Type<sup className="text-blue-400">*</sup>
                         </FormLabel>
                         <Dropdown border
                                   title="Select facility type"
@@ -291,7 +291,7 @@ export const AddFacility = () => {
 
                     <div className="mb-4">
                       <FormLabel>
-                        Set Location (click on map)<sup className="text-red-400">*</sup>
+                        Set Location (click on map)<sup className="text-blue-400">*</sup>
                       </FormLabel>
                       <div className="h-[180px]">
                         <AddFacilityMap centerCoord={regionsCoordConfig[region]}
@@ -301,7 +301,7 @@ export const AddFacility = () => {
                     </div>
                     <div className="mb-4">
                       <FormLabel>
-                        Describe facility details<sup className="text-red-400">*</sup>
+                        Describe facility details<sup className="text-blue-400">*</sup>
                       </FormLabel>
                       <FormTextarea
                         value={description}
@@ -329,7 +329,7 @@ export const AddFacility = () => {
                 {currentStep === 2 && (
                   <form onSubmit={(e) => e.preventDefault()}>
                     <div className="mb-4">
-                      <FormLabel>Current Photo<sup className="text-red-400">*</sup></FormLabel>
+                      <FormLabel>Current Photo<sup className="text-blue-400">*</sup></FormLabel>
                       <FormInput type="file"
                                  accept="image/*"
                                  className="text-sm"

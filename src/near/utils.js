@@ -27,7 +27,9 @@ export async function initContract() {
       'get_investor_facilities',
       'get_facility_proposals',
       'get_all_performers',
-      'get_performer_facilities'
+      'get_performer_facilities',
+      'get_execution_progress',
+      'get_available_tokens_amount',
     ],
     changeMethods: [
       'add_facility',
@@ -35,7 +37,8 @@ export async function initContract() {
       'add_facility_proposal',
       'create_performer_account',
       'vote_for_performer',
-      'add_execution_progress'
+      'add_execution_progress',
+      'performer_claim_tokens',
     ],
   });
 }

@@ -76,6 +76,10 @@ export const FacilityDetails = () => {
     return `${facility.lat},${facility.lng}`;
   }
 
+  const isMyInvestments = () => {
+    return facilityInvestments.filter(item => item.user_id === currentUser.id).length > 0
+  }
+
   const userTotalInvested = () => {
     let result = new Big(0);
     facilityInvestments
@@ -110,23 +114,23 @@ export const FacilityDetails = () => {
               <OneFacilityMap centerCoord={getFacilityCoordString()} locations={[facility]} />
             </div>
 
-            <div className="bg-gray-50 border-b text-sm text-gray-500">
+            <div className="bg-gray-50 border-b text-sm text-gray-400">
               <Container className="relative">
                 <div className="py-3">
-                  <Link className="hover:underline hover:text-red-400" to="/">Home</Link> &raquo;
-                  <Link className="hover:underline hover:text-red-400 ml-1" to="/facility">Facilities</Link> &raquo;
-                  <Link className="hover:underline hover:text-red-400 ml-1"
+                  <Link className="hover:underline hover:text-blue-400" to="/">Home</Link> &raquo;
+                  <Link className="hover:underline hover:text-blue-400 ml-1" to="/facility">Facilities</Link> &raquo;
+                  <Link className="hover:underline hover:text-blue-400 ml-1"
                         to={`/facility?region=${facility.region}`}>{regionsConfig[facility.region]}</Link>
                 </div>
 
                 <div className="absolute right-6 top-2">
-                  <FacebookShareButton url="/">
+                  <FacebookShareButton url="/" className="opacity-70 hover:opacity-100 transition">
                     <FacebookIcon size={28} round={true} />
                   </FacebookShareButton>
-                  <TwitterShareButton url="/" className="mx-1.5">
+                  <TwitterShareButton url="/" className="opacity-70 hover:opacity-100 transition mx-1.5">
                     <TwitterIcon size={28} round={true} />
                   </TwitterShareButton>
-                  <TelegramShareButton url="/">
+                  <TelegramShareButton url="/" className="opacity-70 hover:opacity-100 transition">
                     <TelegramIcon size={28} round={true} />
                   </TelegramShareButton>
                 </div>
@@ -140,8 +144,8 @@ export const FacilityDetails = () => {
                   <div className="mt-2">
                     {facility.total_invested > 0 && (
                       <>
-                        <span className="text-gray-500 text-sm">Total Invested:</span>
-                        <b className="text-red-500 ml-1 text-xl">
+                        <span className="text-gray-400 text-sm">Total Invested:</span>
+                        <b className="text-gray-500 ml-1 text-xl">
                           {convertFromYocto(facility.total_invested, 1)} NEAR
                         </b>
                       </>
@@ -149,14 +153,14 @@ export const FacilityDetails = () => {
                   </div>
                 </h1>
 
-                <div className="text-gray-500 text-sm">
+                <div className="text-gray-400 text-sm">
                   {facilityTypeConfig[facility.facility_type]}
                   <span className="mx-2">·</span>
                   Stage: {statusConfig[facility.status]}
                 </div>
                 <p className="mt-5" style={{ whiteSpace: "pre-wrap" }}>{facility.description}</p>
 
-                <hr className="my-5 block" />
+                <hr className="my-6 block" />
                 {
                   facility.status === "Fundraising" && (
                     <FacilityDetailsFundraising
@@ -176,7 +180,6 @@ export const FacilityDetails = () => {
                     />
                   )
                 }
-
               </div>
 
               <div className="w-3/12 min-w-[320px]">
@@ -188,14 +191,18 @@ export const FacilityDetails = () => {
 
                     <div className="text-sm my-3">
                       {
-                        facilityInvestments
+                        !isMyInvestments() ? (
+                          <div className="text-sm text-gray-400 text-center">
+                            *no investments
+                          </div>
+                        ) : facilityInvestments
                           .filter(item => item.user_id === currentUser.id)
                           .map((item, index) => (
                             <div className="flex flex-row my-2 mx-5" key={item.timestamp}>
                               <div className="w-1/2">{index + 1}. {timestampToDate(item.timestamp)}</div>
                               <div className="w-1/2 text-right">
                                 <div>{convertFromYocto(item.amount)} NEAR</div>
-                                {/*<div className="text-red-500">cancel</div>*/}
+                                {/*<div className="text-blue-500">cancel</div>*/}
                               </div>
                             </div>
                           ))
@@ -203,12 +210,12 @@ export const FacilityDetails = () => {
                     </div>
 
                     {
-                      facility.status !== 'Completed' && (
+                      facility.status === 'Fundraising' && (
                         <div className="m-5 text-center flex flex-row">
                           <input type="number"
                                  min="0.1"
                                  step="0.1"
-                                 className="p-2.5 border rounded-l-lg text-base border-r-transparent focus:outline-0 inline-block w-full"
+                                 className="p-2.5 border rounded-l-lg text-base border-blue-400 border-r-transparent focus:outline-0 inline-block w-full"
                                  onChange={(e) => setInvestAmount(e.target.value)}
                                  placeholder="NEAR Amount" />
                           <Button title="Invest" noIcon roundedClass="rounded-r-lg" onClick={() => handleInvest()} />
@@ -216,17 +223,24 @@ export const FacilityDetails = () => {
                       )
                     }
 
-                    <hr />
-                    <div className="flex flex-row m-5 mb-0 font-medium">
-                      <div className="w-1/2">Total</div>
-                      <div className="w-1/2 text-right">
-                        {userTotalInvested() > 0 ? (
-                          <>{convertFromYocto(userTotalInvested(), 1)} NEAR</>
-                        ) : (
-                          <>0 NEAR</>
-                        )}
-                      </div>
-                    </div>
+                    {
+                      isMyInvestments() && (
+                        <>
+                          <hr />
+                          <div className="flex flex-row m-5 mb-0 font-medium">
+                            <div className="w-1/2">Total</div>
+                            <div className="w-1/2 text-right">
+                              {userTotalInvested() > 0 ? (
+                                <>{convertFromYocto(userTotalInvested(), 1)} NEAR</>
+                              ) : (
+                                <>0 NEAR</>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                      )
+                    }
+
                   </div>
                 </div>
               </div>

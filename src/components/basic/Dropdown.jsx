@@ -30,8 +30,8 @@ export default function Dropdown({ title, options, selected, border, onSelect })
           {options?.map((option, index) => (
             <Menu.Item key={index}>
               <div
-                className={`text-black hover:bg-red-500 hover:text-white transition ${
-                  selected === option.id && "bg-red-600"
+                className={`text-black hover:bg-blue-500 hover:text-white transition ${
+                  selected === option.id && "bg-blue-600"
                 }`}
               >
                 <button

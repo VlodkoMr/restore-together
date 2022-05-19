@@ -2,7 +2,7 @@
 // use std::str::FromStr;
 // use std::string::ParseError;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, setup_alloc, assert_one_yocto};
+use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, log, setup_alloc, assert_one_yocto};
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
@@ -41,6 +41,7 @@ pub struct Facility {
     pub total_investors: u32,
     pub total_proposals: u32,
     pub is_validated: bool,
+    pub start_execution: Option<Timestamp>,
     pub performer: Option<PerformerId>,
 }
 
@@ -88,6 +89,7 @@ pub struct FacilityProposal {
 pub enum StorageKeys {
     Performers,
     Facility,
+    PerformerFacilityClaimed,
     FacilityByRegion,
     FacilityInvestors,
     InvestorFacilities,
@@ -103,6 +105,7 @@ pub struct Contract {
 
     performers: UnorderedMap<PerformerId, Performer>,
     performer_facilities: LookupMap<PerformerId, Vec<TokenId>>,
+    performer_facility_claimed: LookupMap<TokenId, Balance>,
 
     facility_count: u32,
     facility: LookupMap<TokenId, Facility>,
@@ -121,6 +124,7 @@ impl Default for Contract {
 
             performers: UnorderedMap::new(StorageKeys::Performers),
             performer_facilities: LookupMap::new(StorageKeys::Performers),
+            performer_facility_claimed: LookupMap::new(StorageKeys::PerformerFacilityClaimed),
 
             facility_count: 0,
             facility: LookupMap::new(StorageKeys::Facility),
@@ -159,6 +163,7 @@ impl Contract {
             total_investors: 0,
             total_proposals: 0,
             is_validated: false,
+            start_execution: None,
             performer: None,
         };
         self.facility.insert(&id, &facility);
@@ -410,7 +415,72 @@ impl Contract {
         self.facility_execution_progress.insert(&facility_id, &progress);
     }
 
-    pub fn get_execution_progress(&self) -> Vec<FacilityExecutionProgress> {
+    pub fn get_execution_progress(&self, facility_id: TokenId) -> Vec<FacilityExecutionProgress> {
         self.facility_execution_progress.get(&facility_id).unwrap_or(vec![])
+    }
+
+    fn linear_claim_amount(&self, facility_id: &TokenId) -> u128 {
+        let facility = self.facility.get(facility_id).unwrap();
+        let claimed = self.performer_facility_claimed.get(facility_id).unwrap_or(0);
+
+        let mut active_proposal = None;
+        let proposals = self.facility_proposals.get(facility_id).unwrap_or(vec![]);
+        for proposal in &proposals {
+            if &proposal.performer_id == facility.performer.as_ref().unwrap() {
+                active_proposal = Some(proposal);
+            }
+        }
+
+        if active_proposal.is_some() {
+            let start_execution = u64::from(facility.start_execution.unwrap());
+            let claim_time_seconds = u64::from(active_proposal.unwrap().estimate_time) * 60 * 60 * 24;
+
+            let rest_amount = facility.total_invested / 2;
+            let claimed_half_amount = claimed - rest_amount;
+
+            let one_sec_reward = rest_amount / u128::from(claim_time_seconds);
+            let seconds_from_start = u128::from((env::block_timestamp() - start_execution) / 1_000_000_000);
+
+            let unlocked = seconds_from_start * one_sec_reward;
+            return unlocked - claimed_half_amount;
+        } else {
+            panic!("Proposal Not found");
+        }
+    }
+
+    pub fn get_available_tokens_amount(&self, facility_id: TokenId) -> (Balance, Balance) {
+        let facility = self.facility.get(&facility_id).unwrap();
+        let claimed = self.performer_facility_claimed.get(&facility_id).unwrap_or(0);
+        if claimed == 0 {
+            return (claimed, facility.total_invested / 2);
+        }
+        (claimed, self.linear_claim_amount(&facility_id))
+    }
+
+    pub fn performer_claim_tokens(&mut self, facility_id: TokenId) {
+        let mut facility = self.facility.get(&facility_id).unwrap();
+        if facility.performer != Some(env::predecessor_account_id()) {
+            panic!("You don't have access to Claim");
+        }
+
+        let claimed = self.performer_facility_claimed.get(&facility_id).unwrap_or(0);
+        let can_claim;
+        if claimed == 0 {
+            can_claim = facility.total_invested / 2;
+
+            // Start linear unlock
+            self.facility.remove(&facility_id);
+            facility.start_execution = Some(env::block_timestamp());
+            self.facility.insert(&facility_id, &facility);
+        } else {
+            can_claim = self.linear_claim_amount(&facility_id);
+        }
+
+        if can_claim > 0 {
+            self.performer_facility_claimed.insert(&facility_id, &can_claim);
+            Promise::new(env::predecessor_account_id()).transfer(can_claim);
+        } else {
+            panic!("No tokens to Claim");
+        }
     }
 }

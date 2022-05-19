@@ -128,7 +128,7 @@ export const User = () => {
                   {
                     currentUser.performer.rating > 0 && (
                       <InfoField title="Rating (1-10)"
-                                 valueClass={`font-medium ${currentUser.performer.rating > 5 ? "text-green-500" : "text-red-500"}`}
+                                 valueClass={`font-medium ${currentUser.performer.rating > 5 ? "text-green-500" : "text-blue-500"}`}
                                  value={currentUser.performer.rating} />
                     )}
                   <hr className="my-6" />
@@ -154,7 +154,7 @@ export const User = () => {
                   </div>
                   <div className="mt-6">
                     <div className="mb-3">
-                      <FormLabel>Company Name<sup className="text-red-400">*</sup></FormLabel>
+                      <FormLabel>Company Name<sup className="text-blue-400">*</sup></FormLabel>
                       <FormInput type="text"
                                  value={performerName}
                                  onChange={(e) => setPerformerName(e.target.value)} />
@@ -166,14 +166,14 @@ export const User = () => {
                     {/*             onChange={() => uploadImage()}/>*/}
                     {/*</div>*/}
                     <div className="mb-3">
-                      <FormLabel>Phone<sup className="text-red-400">*</sup></FormLabel>
+                      <FormLabel>Phone<sup className="text-blue-400">*</sup></FormLabel>
                       <FormInput type="text"
                                  value={performerPhone}
                                  placeholder="+380"
                                  onChange={(e) => setPerformerPhone(e.target.value)} />
                     </div>
                     <div className="mb-3">
-                      <FormLabel>Description<sup className="text-red-400">*</sup></FormLabel>
+                      <FormLabel>Description<sup className="text-blue-400">*</sup></FormLabel>
                       <FormTextarea value={performerDescription}
                                     placeholder="Describe your experience, sphere of activity and works."
                                     onChange={(e) => setPerformerDescription(e.target.value)}>

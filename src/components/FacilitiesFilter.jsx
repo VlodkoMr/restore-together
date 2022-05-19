@@ -118,7 +118,7 @@ export const FacilitiesFilter = ({ size }) => {
         {size !== "sm" && (
           <Link to={getFacilityUrl(region, facility, status)}>
             <button type="button"
-                    className={`absolute right-2.5 text-white bg-red-500 transition hover:bg-red-600 hover:text-white focus:ring-4 items-center
+                    className={`absolute right-2.5 text-white bg-blue-500 transition hover:bg-blue-600 hover:text-white focus:ring-4 items-center
                   focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-3 text-center inline-flex top-2.5`}>
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd"

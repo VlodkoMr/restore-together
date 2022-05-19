@@ -33,7 +33,8 @@ export const OneProposal = ({
   }
 
   return (
-    <div className="shadow border border-gray-100 rounded-lg px-8 py-6 relative mb-3">
+    <div className={`shadow border border-gray-100 rounded-lg px-8 py-6 relative mb-3 
+    ${proposal.performer_id == currentUser.id ? "bg-orange-50/40" : ""}`}>
       <div
         className="flex flex-row"
         key={proposal.performer_id}>
@@ -71,13 +72,13 @@ export const OneProposal = ({
               <>
                 {!userVotedPerformer ? (
                   <button onClick={() => addVote()}
-                          className="text-sm mt-3 border-2 border-red-500 text-red-600 px-4 py-1 rounded-md font-medium hover:bg-red-50 transition">
+                          className="text-sm mt-3 border-2 border-blue-500 text-blue-600 px-4 py-1 rounded-md font-medium hover:bg-blue-50 transition">
                     + VOTE
                   </button>
                 ) : (
                   <>
                     {userVotedPerformer === proposal.performer_id && (
-                      <div className="text-red-600 font-medium mt-2">VOTED</div>
+                      <div className="text-blue-600 font-medium mt-2">VOTED</div>
                     )}
                   </>
 
@@ -108,7 +109,7 @@ export const OneProposal = ({
         <div>
           {!companyDetailsVisible && (
             <span onClick={() => setCompanyDetailsVisible(true)}
-                  className="text-red-500 underline cursor-pointer">
+                  className="text-blue-500 underline cursor-pointer">
               read more
             </span>
           )}

@@ -80,7 +80,7 @@ export const Facilities = () => {
                       <p>No facilities in {regionsConfig[region]}</p>
                     )}
                     <Link to="/add-facility" state={{ region: region }}
-                          className="block underline mt-0.5 hover:text-red-500">
+                          className="block underline mt-0.5 hover:text-blue-500">
                       Add new facility
                     </Link>
                   </Container>
@@ -90,7 +90,7 @@ export const Facilities = () => {
                   facilityList.length > 0 && facilityList.filter(filterItems).length > 0 ? (
                     facilityList.filter(filterItems).map(facility => (
                       <Container
-                        className={`border-b transition hover:bg-gray-50 ${highLight === facility.token_id ? "bg-gray-50" : ""}`}
+                        className={`border-b transition hover:bg-blue-50/30 ${highLight === facility.token_id ? "bg-gray-50" : ""}`}
                         key={facility.token_id}>
                         <OneFacility facility={facility} />
                       </Container>

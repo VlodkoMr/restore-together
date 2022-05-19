@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import logoIcon from "../assets/images/logo2.png";
 import logoutIcon from "../assets/images/logout.png";
+import logoutWhiteIcon from "../assets/images/logout-white.png";
 import logoWhiteIcon from "../assets/images/logo-white2.png";
 import { Button } from './basic/Button';
 import { Container, Link, NavLink } from '../assets/styles/common.style';
@@ -41,10 +42,11 @@ export const Header = ({ color, width }) => {
           {currentUser.id ? (
             <>
               <div className="mt-2 flex flex-row place-content-end">
-                <Link to="/my" className="pt-0.5 font-medium hover:text-red-400 w-48 overflow-hidden text-ellipsis">
+                <Link to="/my"
+                      className="pt-0.5 font-medium hover:text-blue-400 w-48 overflow-hidden text-ellipsis">
                   {currentUser.id}
                 </Link>
-                <img src={logoutIcon}
+                <img src={color === "dark" ? logoutIcon : logoutWhiteIcon}
                      alt="logout"
                      title="Logout"
                      className="w-6 h-6 ml-4 cursor-pointer hover:opacity-80 transition"
@@ -53,8 +55,8 @@ export const Header = ({ color, width }) => {
             </>
           ) : (
             <Button title="LogIn" onClick={login}
-                    className={`border-red-400 bg-transparent hover:border-red-500
-                    ${color === "dark" ? "text-red-400 hover:text-red-500 " : ""}`} />
+                    className={`border-blue-400 bg-transparent hover:border-blue-500
+                    ${color === "dark" ? "text-blue-400 hover:text-blue-500 " : ""}`} />
           )}
         </div>
       </Container>
