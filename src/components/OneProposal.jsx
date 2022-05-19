@@ -52,7 +52,7 @@ export const OneProposal = ({
               totalUserInvestment && (
                 <>
                   <span className="mx-1.5">·</span>
-                  Votes: {investedVotesPct()}%
+                  Votes: {investedVotesPct() || 0}%
                 </>
               )
             }

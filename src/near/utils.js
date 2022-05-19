@@ -1,6 +1,7 @@
 import Big from "big.js";
 import { connect, Contract, keyStores, WalletConnection } from 'near-api-js'
 import getConfig from './config'
+import { init } from '@textile/near-storage';
 
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 
@@ -33,7 +34,8 @@ export async function initContract() {
       'add_investment',
       'add_facility_proposal',
       'create_performer_account',
-      'vote_for_performer'
+      'vote_for_performer',
+      'add_execution_progress'
     ],
   });
 }
@@ -95,3 +97,63 @@ export const convertToTera = (amount) => {
     .times(10 ** 12)
     .toFixed();
 };
+
+export const checkStorageDeposit = async (redirect = false) => {
+  const storage = await init(window.walletConnection.account());
+  const isDeposit = await storage.hasDeposit();
+  if (redirect && !isDeposit) {
+    await storage.addDeposit();
+  }
+  return isDeposit;
+}
+
+export const resizeFileImage = (file) => {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+
+      setTimeout(() => {
+        const MAX_WIDTH = 500;
+        const MAX_HEIGHT = 500;
+        const canvas = document.createElement("canvas");
+        let ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL(file.type));
+      }, 300);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+export const uploadMediaToIPFS = (media) => {
+  return new Promise(async (resolve, reject) => {
+    const storage = await init(window.walletConnection.account());
+    const file = dataURLtoFile(media, `${+new Date()}.jpg`);
+    const { id, cid } = await storage.store(file);
+    if (id.length && cid && cid["/"].length) {
+      resolve(cid["/"]);
+    }
+    reject();
+  })
+}

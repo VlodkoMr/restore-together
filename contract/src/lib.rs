@@ -54,6 +54,15 @@ pub struct FacilityInvestment {
 
 #[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
 #[serde(crate = "near_sdk::serde")]
+pub struct FacilityExecutionProgress {
+    pub performer_id: PerformerId,
+    pub media: String,
+    pub description: String,
+    pub timestamp: Timestamp,
+}
+
+#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[serde(crate = "near_sdk::serde")]
 pub struct Performer {
     pub id: PerformerId,
     pub name: String,
@@ -83,6 +92,7 @@ pub enum StorageKeys {
     FacilityInvestors,
     InvestorFacilities,
     FacilityProposals,
+    FacilityExecutionProgress,
 }
 
 #[near_bindgen]
@@ -99,6 +109,7 @@ pub struct Contract {
     facility_by_region: LookupMap<u8, Vec<TokenId>>,
     facility_investors: LookupMap<TokenId, Vec<FacilityInvestment>>,
     facility_proposals: LookupMap<TokenId, Vec<FacilityProposal>>,
+    facility_execution_progress: LookupMap<TokenId, Vec<FacilityExecutionProgress>>,
     investor_facilities: LookupMap<AccountId, Vec<TokenId>>,
 }
 
@@ -116,6 +127,7 @@ impl Default for Contract {
             facility_by_region: LookupMap::new(StorageKeys::FacilityByRegion),
             facility_investors: LookupMap::new(StorageKeys::FacilityInvestors),
             facility_proposals: LookupMap::new(StorageKeys::FacilityProposals),
+            facility_execution_progress: LookupMap::new(StorageKeys::FacilityExecutionProgress),
             investor_facilities: LookupMap::new(StorageKeys::InvestorFacilities),
         }
     }
@@ -378,5 +390,27 @@ impl Contract {
     pub fn get_performer_facilities(&self, account_id: PerformerId) -> Vec<Facility> {
         let performer_facilities = self.performer_facilities.get(&account_id).unwrap_or(vec![]);
         performer_facilities.iter().map(|token_id| self.facility.get(&token_id).unwrap()).collect()
+    }
+
+    #[payable]
+    pub fn add_execution_progress(&mut self, media: String, description: String, facility_id: TokenId) {
+        let performer = env::predecessor_account_id();
+        let facility = self.facility.get(&facility_id).unwrap();
+        if facility.performer.unwrap() != performer {
+            panic!("You don't have permission for this facility");
+        }
+        let mut progress = self.facility_execution_progress.get(&facility_id).unwrap_or(vec![]);
+        let new_progress = FacilityExecutionProgress {
+            performer_id: performer.to_string(),
+            media,
+            description,
+            timestamp: env::block_timestamp(),
+        };
+        progress.push(new_progress);
+        self.facility_execution_progress.insert(&facility_id, &progress);
+    }
+
+    pub fn get_execution_progress(&self) -> Vec<FacilityExecutionProgress> {
+        self.facility_execution_progress.get(&facility_id).unwrap_or(vec![])
     }
 }

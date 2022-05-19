@@ -139,7 +139,7 @@ export const User = () => {
                       performerFacilities.map(facility => (
                         <div className="transition hover:bg-gray-50 border-b border-dashed last:border-b-0"
                              key={facility.token_id}>
-                          <OneFacility facility={facility} />
+                          <OneFacility facility={facility} size="small" />
                         </div>
                       )) : (
                         <div className="text-gray-500 mt-4">*No facilities</div>

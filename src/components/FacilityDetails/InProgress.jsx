@@ -2,23 +2,95 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { OneProposal } from '../OneProposal';
 import { MyProposalForm } from '../MyProposalForm';
-import { FormInput, FormLabel, Link } from '../../assets/styles/common.style';
-import { convertFromYocto } from '../../near/utils';
+import { FormInput, FormLabel, FormTextarea, Link } from '../../assets/styles/common.style';
+import {
+  checkStorageDeposit,
+  convertFromYocto,
+  convertToTera,
+  resizeFileImage,
+  uploadMediaToIPFS
+} from '../../near/utils';
 import Big from 'big.js';
 import { Button } from '../basic/Button';
+import { Popup } from '../basic/Popup';
+import { Loader } from '../basic/Loader';
 
 export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerformers }) => {
   const currentUser = useSelector(state => state.user.account);
   const [proposal, setProposal] = useState();
-  // const [currentPerformer, setCurrentPerformer] = useState();
+  const [executionProgress, setExecutionProgress] = useState("");
+  const [progressPopupVisible, setProgressPopupVisible] = useState(false);
+
+  // Execution Progress form
+  const photoInput = React.createRef();
+  const [media, setMedia] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
+    if (localStorage.getItem('showUpdatePopup')) {
+      localStorage.removeItem('showUpdatePopup');
+      setDescription(localStorage.getItem('temporaryDescription') || "");
+      setProgressPopupVisible(true);
+    }
+
     facilityProposals.map(proposal => {
       if (proposal.performer_id === facility.performer) {
         setProposal(proposal);
       }
-    })
+    });
+
+    loadExecutionProgress();
   }, []);
+
+  const loadExecutionProgress = async () => {
+    let progress = await window.contract.get_execution_progress({
+      facility_id: facility.token_id
+    });
+    setExecutionProgress(progress);
+    console.log(progress)
+  }
+
+  const startUpdateProgress = () => {
+    localStorage.setItem('showUpdatePopup', '1');
+    checkStorageDeposit(true).then(() => {
+      setProgressPopupVisible(true);
+    });
+  }
+
+  const resizeImage = () => {
+    let file = photoInput.current.files[0];
+    resizeFileImage(file).then(result => {
+      setMedia(result);
+    });
+  }
+
+  const addExecutionProgress = () => {
+    if (description.length < 10) {
+      alert("Please fill Description details")
+    } else {
+      setIsLoading(true);
+      localStorage.setItem('temporaryDescription', description);
+      localStorage.setItem('showUpdatePopup', "1");
+      checkStorageDeposit(true).then(() => {
+        localStorage.removeItem('showUpdatePopup');
+        localStorage.removeItem('temporaryDescription');
+
+        uploadMediaToIPFS(media).then(mediaURL => {
+          const GAS = convertToTera("200");
+          const DEPOSIT = 1;
+
+          window.contract.add_execution_progress({
+            media: mediaURL,
+            description,
+            facility_id: facility.token_id,
+          }, GAS, DEPOSIT);
+        });
+      }).catch(() => {
+        alert("Upload to IPFS failed.")
+      });
+    }
+  }
 
   return (
     <>
@@ -38,32 +110,15 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
               <div className="mr-10">
                 <p className="text-gray-500 mb-4">
                   Please, upload your work results and change status to get payments
-                  and increase your rating:
+                  and increase your rating.
                 </p>
-                <Button title="Update execution progress" noIcon className="border border-red-400 text-red-500" />
-                {/*<form className="mt-4">*/}
-                {/*  <div className="mb-3">*/}
-                {/*    <FormLabel>*/}
-                {/*      Description<sup className="text-red-400">*</sup>*/}
-                {/*    </FormLabel>*/}
-                {/*    <FormInput type="text"*/}
-                {/*      // value={title}*/}
-                {/*      // onChange={(e) => setTitle(e.target.value)}*/}
-                {/*    />*/}
-                {/*  </div>*/}
-                {/*  <div className="mb-3">*/}
-                {/*    <FormLabel>Current Photo<sup className="text-red-400">*</sup></FormLabel>*/}
-                {/*    <FormInput type="file"*/}
-                {/*               accept="image/*"*/}
-                {/*               className="text-sm"*/}
-                {/*      // ref={photoInput}*/}
-                {/*      // onChange={() => resizeImage()}*/}
-                {/*    />*/}
-                {/*  </div>*/}
-                {/*  <div className="mt-2">*/}
-                {/*    <Button title="Add " noIcon />*/}
-                {/*  </div>*/}
-                {/*</form>*/}
+                <Button title="Update execution progress"
+                        onClick={() => startUpdateProgress()}
+                        noIcon
+                        className="border border-red-400 text-red-500" />
+                <p className="text-red-500 mt-1">
+                  <small>*You need to deposit 0.25 NEAR that will be returned in 10 minutes.</small>
+                </p>
               </div>
             </div>
           </div>
@@ -83,7 +138,45 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
         </>
       )}
 
+      <Popup
+        title="Update Execution Progress"
+        popupVisible={progressPopupVisible}
+        setPopupVisible={setProgressPopupVisible}
+      >
+        <form className="mt-2 w-3/4 block mx-auto" onSubmit={(e) => e.preventDefault()}>
+          <div className="mb-3">
+            <FormLabel className="text-left">
+              Photo<sup className="text-red-400">*</sup>
+            </FormLabel>
+            <FormInput type="file"
+                       accept="image/*"
+                       className="text-sm"
+                       ref={photoInput}
+                       onChange={() => resizeImage()}
+            />
+          </div>
 
+          <div className="mb-3">
+            <FormLabel className="text-left">
+              Description<sup className="text-red-400">*</sup>
+            </FormLabel>
+            <FormTextarea
+              placeholder="Provide work and progress details"
+              value={description}
+              maxlength={500}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          <div className="mt-2 text-right">
+            {!isLoading ? (
+              <Button title="Save" onClick={() => addExecutionProgress()} />
+            ) : (
+              <Loader />
+            )}
+          </div>
+        </form>
+      </Popup>
     </>
   );
 };

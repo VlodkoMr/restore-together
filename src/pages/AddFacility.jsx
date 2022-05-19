@@ -13,10 +13,15 @@ import {
 import { useLocation } from 'react-router-dom';
 import { defaultRegion, facilityTypeConfig, regionsConfig, regionsCoordConfig, statusConfig } from '../near/content';
 import { Button } from '../components/basic/Button';
-import { init } from '@textile/near-storage';
 import { Loader } from '../components/basic/Loader';
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { convertToTera, convertToYocto, dataURLtoFile, getMediaUrl } from '../near/utils';
+import {
+  checkStorageDeposit,
+  convertToTera,
+  convertToYocto,
+  getMediaUrl,
+  resizeFileImage, uploadMediaToIPFS
+} from '../near/utils';
 
 export const AddFacility = () => {
     const navigate = useNavigate();
@@ -121,64 +126,11 @@ export const AddFacility = () => {
       }
     }
 
-    const checkStorageDeposit = async (redirect = false) => {
-      const storage = await init(window.walletConnection.account());
-      const isDeposit = await storage.hasDeposit();
-      if (redirect && !isDeposit) {
-        await storage.addDeposit();
-      }
-      return isDeposit;
-    }
-
     const resizeImage = () => {
       let file = photoInput.current.files[0];
-      const reader = new FileReader();
-
-      reader.onload = function (e) {
-        const img = document.createElement("img");
-        img.src = e.target.result;
-
-        setTimeout(() => {
-          const MAX_WIDTH = 500;
-          const MAX_HEIGHT = 500;
-          const canvas = document.createElement("canvas");
-          let ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0);
-
-          let width = img.width;
-          let height = img.height;
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, width, height);
-          setMedia(canvas.toDataURL(file.type));
-        }, 300);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    const uploadMediaToIPFS = () => {
-      return new Promise(async (resolve, reject) => {
-        const storage = await init(window.walletConnection.account());
-        const file = dataURLtoFile(media, `${+new Date()}.jpg`);
-        const { id, cid } = await storage.store(file);
-        if (id.length && cid && cid["/"].length) {
-          resolve(cid["/"]);
-        }
-        reject();
-      })
+      resizeFileImage(file).then(result => {
+        setMedia(result);
+      });
     }
 
     const saveStep1 = async () => {
@@ -218,7 +170,7 @@ export const AddFacility = () => {
       } else {
         setIsLoading(true);
         checkStorageDeposit(true).then(() => {
-          uploadMediaToIPFS().then(media => {
+          uploadMediaToIPFS(media).then(mediaURL => {
             const GAS = convertToTera("200");
             const DEPOSIT = 1;
             const tokenId = `${region}-${facilityType}-${new Date().getTime()}`;
@@ -229,7 +181,7 @@ export const AddFacility = () => {
             window.contract.add_facility({
               id: tokenId,
               title,
-              media,
+              media: mediaURL,
               description,
               region: parseInt(region),
               facility_type: parseInt(facilityType),
@@ -354,6 +306,7 @@ export const AddFacility = () => {
                       <FormTextarea
                         value={description}
                         maxLength="300"
+                        placeholder="Describe short story, current stage and requirements."
                         onChange={(e) => setDescription(e.target.value)}>
                       </FormTextarea>
                     </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import logoIcon from "../assets/images/logo.png";
+import logoIcon from "../assets/images/logo2.png";
 import logoutIcon from "../assets/images/logout.png";
-import logoWhiteIcon from "../assets/images/logo-white.png";
+import logoWhiteIcon from "../assets/images/logo-white2.png";
 import { Button } from './basic/Button';
 import { Container, Link, NavLink } from '../assets/styles/common.style';
 import { login, logout } from '../near/utils';
