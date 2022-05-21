@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "license": "UNLICENSED",
   "scripts": {
-    "build": "npm run build:contract && npm run build:web",
-    "build:contract": "(cd ./contract && ./build.sh)",
+    "build": "npm run build:contracts && npm run build:web",
+    "build:contracts": "(cd ./contracts && ./build.sh)",
     "build:web": "rm -rf ./dist && NODE_ENV=production parcel build src/index.html --public-url ./",
-    "dev:deploy:contract": "yarn build:contract && rm -rf ./neardev && near dev-deploy",
+    "dev:deploy:contract": "yarn build:contracts && rm -rf ./neardev && ./deploy-dev.sh",
     "dev:build:web": "rm -rf ./dist && NODE_ENV=development parcel build src/index.html --public-url ./",
-    "deploy:contract": "yarn build:contract && CONTRACT_ID=$(<neardev/dev-account) && near deploy --accountId $CONTRACT_ID",
-    "prestart": "npm run build:contract && npm run dev:deploy:contract",
+    "deploy:contract": "yarn build:contracts && CONTRACT_ID=$(<neardev/dev-account) && near deploy --accountId $CONTRACT_ID",
+    "prestart": "npm run build:contracts && npm run dev:deploy:contract",
     "start": "rm -rf ./parcel-cache && env-cmd -f ./neardev/dev-account.env parcel src/index.html --open",
     "local": "NODE_ENV=local parcel src/index.html --open",
-    "dev": "nodemon --watch contract/src -e rs --exec \"npm run start\""
+    "dev": "nodemon --watch contracts/ -e rs --exec \"npm run start\""
   },
   "devDependencies": {
     "env-cmd": "~10.1.0",

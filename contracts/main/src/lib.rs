@@ -102,6 +102,7 @@ pub enum StorageKeys {
 pub struct Contract {
     // owner_id: AccountId,
     management_accounts: Vec<AccountId>,
+    contract_nft: AccountId,
 
     performers: UnorderedMap<PerformerId, Performer>,
     performer_facilities: LookupMap<PerformerId, Vec<TokenId>>,
@@ -121,6 +122,7 @@ impl Default for Contract {
         Self {
             // owner_id: env::predecessor_account_id(),
             management_accounts: vec![],
+            contract_nft: format!("nft.{}", env::current_account_id()),
 
             performers: UnorderedMap::new(StorageKeys::Performers),
             performer_facilities: LookupMap::new(StorageKeys::Performers),
@@ -491,5 +493,24 @@ impl Contract {
         self.facility.remove(&facility_id);
         facility.status = FacilityStatus::Completed;
         self.facility.insert(&facility_id, &facility);
+    }
+
+    pub fn mint_investor_nft(&self) {
+        let metadata: JsonValue = json!({
+                "token_id": token_id,
+                "receiver_id": env::p,
+                "token_metadata": {
+                    "title": title,
+                    "media": media_url,
+                    "copies": 1
+                }
+            });
+
+        return Promise::new(self.contract_nft.to_string()).function_call(
+            b"nft_mint".to_vec(),
+            zombies_metadata[0].to_string().as_bytes().to_vec(),
+            mint_deposit,
+            mint_gas,
+        );
     }
 }

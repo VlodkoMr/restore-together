@@ -1,14 +1,20 @@
 [package]
-name = "main"
+name = "restore_together"
 version = "0.1.0"
+authors = ["Near Inc <hello@near.org>"]
 edition = "2018"
-
-[lib]
-crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 near-sdk = "3.1.0"
 near-contract-standards = "3.2.0"
+nft = { path = "./nft" }
+main = { path = "./main" }
+
+[dev-dependencies]
+near-sdk-sim = "3.1.0"
+
+[workspace]
+members = ["main", "nft"]
 
 [profile.release]
 codegen-units = 1
@@ -17,6 +23,3 @@ lto = true
 debug = false
 panic = "abort"
 overflow-checks = true
-
-[workspace]
-members = []

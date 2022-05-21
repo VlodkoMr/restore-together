@@ -11,7 +11,7 @@
 .idea
 .parcel-cache
 
-contract/target/
+contracts/target/
 .cargo
 
 src/__mocks__
