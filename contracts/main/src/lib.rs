@@ -1,15 +1,14 @@
-// use std::fmt;
-// use std::str::FromStr;
-// use std::string::ParseError;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, setup_alloc, assert_one_yocto};
+use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, Gas, serde_json::json, setup_alloc, assert_one_yocto};
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
 use near_sdk::json_types::U128;
 use std::collections::HashMap;
+use near_sdk::serde_json::Value as JsonValue;
 
 mod utils;
+mod internal;
 
 setup_alloc!();
 
@@ -93,6 +92,7 @@ pub enum StorageKeys {
     FacilityByRegion,
     FacilityInvestors,
     InvestorFacilities,
+    InvestorNft,
     FacilityProposals,
     FacilityExecutionProgress,
 }
@@ -115,6 +115,10 @@ pub struct Contract {
     facility_proposals: LookupMap<TokenId, Vec<FacilityProposal>>,
     facility_execution_progress: LookupMap<TokenId, Vec<FacilityExecutionProgress>>,
     investor_facilities: LookupMap<AccountId, Vec<TokenId>>,
+
+    investor_nft_count: u32,
+    investor_nft: LookupMap<AccountId, Vec<TokenId>>,
+
 }
 
 impl Default for Contract {
@@ -135,6 +139,9 @@ impl Default for Contract {
             facility_proposals: LookupMap::new(StorageKeys::FacilityProposals),
             facility_execution_progress: LookupMap::new(StorageKeys::FacilityExecutionProgress),
             investor_facilities: LookupMap::new(StorageKeys::InvestorFacilities),
+
+            investor_nft_count: 0,
+            investor_nft: LookupMap::new(StorageKeys::InvestorNft),
         }
     }
 }
@@ -197,15 +204,9 @@ impl Contract {
         let account_id = env::predecessor_account_id();
 
         let mut facility = self.facility.get(&token_id).unwrap();
-        let investors = self.facility_investors.get(&token_id).unwrap_or(vec![]);
         facility.total_invested += deposit;
 
-        let mut investor_exists = false;
-        for item in &investors {
-            if item.user_id == account_id.to_string() {
-                investor_exists = true;
-            }
-        }
+        let investor_exists = self.is_facility_investor(&token_id, &account_id);
         if !investor_exists {
             facility.total_investors += 1;
         }
@@ -366,13 +367,7 @@ impl Contract {
         }
 
         // Check if user is investor
-        let mut is_investor = false;
-        let facility_investors = self.facility_investors.get(&facility_id).unwrap_or(vec![]);
-        for investor in &facility_investors {
-            if investor.user_id == user_id.to_string() {
-                is_investor = true;
-            }
-        }
+        let is_investor = self.is_facility_investor(&facility_id, &user_id);
         if !is_investor {
             panic!("You can't vote.");
         }
@@ -495,22 +490,44 @@ impl Contract {
         self.facility.insert(&facility_id, &facility);
     }
 
-    pub fn mint_investor_nft(&self) {
-        let metadata: JsonValue = json!({
-                "token_id": token_id,
-                "receiver_id": env::p,
-                "token_metadata": {
-                    "title": title,
-                    "media": media_url,
-                    "copies": 1
-                }
-            });
+    pub fn mint_investor_nft(&mut self, facility_id: TokenId, media_url: String) -> JsonValue {
+        let facility = self.facility.get(&facility_id).unwrap();
+        let user_id = env::predecessor_account_id();
 
-        return Promise::new(self.contract_nft.to_string()).function_call(
+        // Check investor
+        let is_investor = self.is_facility_investor(&facility_id, &user_id);
+        if !is_investor {
+            panic!("You can't mint NFT.");
+        }
+
+        let mut investor_nft_list = self.investor_nft.get(&facility_id).unwrap_or(vec![]);
+        if investor_nft_list.contains(&facility_id) {
+            panic!("You already mint NFT for this facility");
+        }
+
+        investor_nft_list.push(facility_id.to_string());
+        self.investor_nft.insert(&facility_id, &investor_nft_list);
+        self.investor_nft_count += 1;
+
+        // Create new NFT
+        let metadata: JsonValue = json!({
+            "token_id": self.investor_nft_count,
+            "receiver_id": user_id.to_string(),
+            "token_metadata": {
+                "title": facility.title,
+                "media": media_url,
+                "copies": 1
+            }
+        });
+
+        let mint_gas: Gas = self.to_tera(80);
+        Promise::new(self.contract_nft.to_string()).function_call(
             b"nft_mint".to_vec(),
-            zombies_metadata[0].to_string().as_bytes().to_vec(),
-            mint_deposit,
+            metadata.to_string().as_bytes().to_vec(),
+            env::attached_deposit(),
             mint_gas,
         );
+
+        metadata
     }
 }

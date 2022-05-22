@@ -15,9 +15,9 @@ impl Contract {
     }
 
     // Convert u64 to yocto NEAR Gas
-    // pub(crate) fn to_tera(&self, tokens: u64) -> Gas {
-    //     tokens * 10u128.pow(12) as u64
-    // }
+    pub(crate) fn to_tera(&self, tokens: u64) -> Gas {
+        tokens * 10u128.pow(12) as u64
+    }
 
     // Check contract owner
     // pub(crate) fn assert_contract_owner(&self, owner_id: AccountId) {
