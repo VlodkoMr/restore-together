@@ -102,6 +102,12 @@ export const FacilityDetails = () => {
       }, convertToTera("80"), deposit);
     }
   }
+  const claimNFT = async () => {
+    await window.contract.mint_investor_nft({
+      facility_id: id,
+      media_url: facility.media
+    }, convertToTera("120"), 1)
+  }
 
   return (
     <>
@@ -216,6 +222,14 @@ export const FacilityDetails = () => {
                                  onChange={(e) => setInvestAmount(e.target.value)}
                                  placeholder="NEAR Amount" />
                           <Button title="Invest" noIcon roundedClass="rounded-r-lg" onClick={() => handleInvest()} />
+                        </div>
+                      )
+                    }
+
+                    {
+                      isMyInvestments() && facility.status === 'Completed' && (
+                        <div className="text-center my-3">
+                          <Button title="Claim MY NFT" noIcon onClick={() => claimNFT()} />
                         </div>
                       )
                     }

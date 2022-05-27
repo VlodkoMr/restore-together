@@ -3,7 +3,7 @@ use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::json_types::U128;
+use near_sdk::json_types::{U128};
 use std::collections::HashMap;
 use near_sdk::serde_json::Value as JsonValue;
 
@@ -100,7 +100,7 @@ pub enum StorageKeys {
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Contract {
-    // owner_id: AccountId,
+    // pub owner_id: AccountId,
     management_accounts: Vec<AccountId>,
     contract_nft: AccountId,
 
@@ -416,33 +416,6 @@ impl Contract {
         self.facility_execution_progress.get(&facility_id).unwrap_or(vec![])
     }
 
-    fn linear_claim_amount(&self, facility_id: &TokenId) -> u128 {
-        let facility = self.facility.get(facility_id).unwrap();
-        let claimed = self.performer_facility_claimed.get(facility_id).unwrap_or(0);
-
-        let mut active_proposal = None;
-        let proposals = self.facility_proposals.get(facility_id).unwrap_or(vec![]);
-        for proposal in &proposals {
-            if &proposal.performer_id == facility.performer.as_ref().unwrap() {
-                active_proposal = Some(proposal);
-            }
-        }
-
-        if active_proposal.is_some() {
-            let start_execution = u64::from(facility.start_execution.unwrap());
-            let claim_time_seconds = u64::from(active_proposal.unwrap().estimate_time) * 60 * 60 * 24;
-
-            let linear_unlock_amount = facility.total_invested / 2;
-            let one_sec_reward = linear_unlock_amount / u128::from(claim_time_seconds);
-            let seconds_from_start = u128::from((env::block_timestamp() - start_execution) / 1_000_000_000);
-            let unlocked = seconds_from_start * one_sec_reward;
-
-            return linear_unlock_amount + unlocked - claimed;
-        } else {
-            panic!("Proposal Not found");
-        }
-    }
-
     pub fn get_available_tokens_amount(&self, facility_id: TokenId) -> (Balance, Balance) {
         let facility = self.facility.get(&facility_id).unwrap();
         let claimed = self.performer_facility_claimed.get(&facility_id).unwrap_or(0);
@@ -490,6 +463,7 @@ impl Contract {
         self.facility.insert(&facility_id, &facility);
     }
 
+    #[payable]
     pub fn mint_investor_nft(&mut self, facility_id: TokenId, media_url: String) -> JsonValue {
         let facility = self.facility.get(&facility_id).unwrap();
         let user_id = env::predecessor_account_id();

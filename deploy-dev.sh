@@ -11,7 +11,7 @@ fi
 # near deploy --accountId "$CONTRACT_ID" --wasmFile out/main.wasm
 # or use dev-deploy:
 
-near dev-deploy out/main.wasm
+near dev-deploy out/main.wasm --accountId "$NEAR_ID"
 
 CONTRACT_ID=$(<neardev/dev-account)
 
