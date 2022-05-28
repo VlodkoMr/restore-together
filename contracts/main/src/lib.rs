@@ -1,5 +1,5 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, Gas, serde_json::json, setup_alloc, assert_one_yocto};
+use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, log, Gas, serde_json::json, setup_alloc, assert_one_yocto, ext_contract};
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
@@ -11,6 +11,16 @@ mod utils;
 mod internal;
 
 setup_alloc!();
+
+#[ext_contract(ext_self)]
+pub trait ExtSelf {
+    fn callback_near_wrapped(
+        performer_id: String,
+        memo_title: String,
+        votes_total_invest: Balance,
+        estimate_time: u32,
+    );
+}
 
 type PerformerId = AccountId;
 
@@ -328,6 +338,8 @@ impl Contract {
         let proposals = self.facility_proposals.get(&facility.token_id).unwrap_or(vec![]);
         let facility_investors = self.facility_investors.get(&facility.token_id).unwrap_or(vec![]);
 
+        // check status
+
         for proposal in &proposals {
             // Need to cover estimated budget
             if proposal.estimate_amount <= facility.total_invested {
@@ -352,9 +364,57 @@ impl Contract {
                     let mut performer_facilities = self.performer_facilities.get(&performer_id).unwrap_or(vec![]);
                     performer_facilities.push(facility.token_id.to_string());
                     self.performer_facilities.insert(&performer_id, &performer_facilities);
+
+                    // wrap NEAR tokens and create stream
+                    pub const XCC_GAS: Gas = 30_000_000_000_000;
+                    Promise::new("wrap.testnet".to_string()).function_call(
+                        b"near_deposit".to_vec(),
+                        json!({}).to_string().as_bytes().to_vec(),
+                        votes_total_invest,
+                        XCC_GAS,
+                    ).then(
+                        ext_self::callback_near_wrapped(
+                            performer_id.to_string(),
+                            facility.title.to_string(),
+                            votes_total_invest,
+                            proposal.estimate_time,
+                            &env::current_account_id(),
+                            0,
+                            XCC_GAS * 2,
+                        )
+                    );
                 }
             }
         }
+    }
+
+    #[private]
+    pub fn callback_near_wrapped(
+        &mut self,
+        performer_id: String, memo_title: String, votes_total_invest: Balance, estimate_time: u32,
+    ) {
+        let msg = json!({
+            "Create":  json!({
+                "request": json!({
+                    "owner_id": env::current_account_id(),
+                    "receiver_id": performer_id.to_string(),
+                    "tokens_per_sec": "100000000000000000000",
+                })
+            }),
+        });
+
+        pub const XCC_GAS: Gas = 30_000_000_000_000;
+        Promise::new("wrap.testnet".to_string()).function_call(
+            b"ft_transfer_call".to_vec(),
+            json!({
+                "amount": votes_total_invest.to_string(),
+                "receiver_id": performer_id.to_string(),
+                "memo": memo_title.to_string(),
+                "msg": msg.to_string(),
+            }).to_string().as_bytes().to_vec(),
+            1,
+            XCC_GAS,
+        );
     }
 
     #[payable]

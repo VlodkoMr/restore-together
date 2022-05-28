@@ -99,7 +99,7 @@ export const FacilityDetails = () => {
       const deposit = convertToYocto(investAmount);
       await window.contract.add_investment({
         token_id: id
-      }, convertToTera("80"), deposit);
+      }, convertToTera("280"), deposit);
     }
   }
   const claimNFT = async () => {

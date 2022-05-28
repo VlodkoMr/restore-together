@@ -19,7 +19,7 @@ export const OneProposal = ({
     await window.contract.vote_for_performer({
       performer_id: proposal.performer_id,
       facility_id: facility.token_id
-    }, convertToTera("100"), 1);
+    }, convertToTera("290"), 1);
   }
 
   const investedVotesPct = () => {
