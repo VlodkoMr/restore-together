@@ -408,7 +408,7 @@ impl Contract {
             b"ft_transfer_call".to_vec(),
             json!({
                 "amount": votes_total_invest.to_string(),
-                "receiver_id": performer_id.to_string(),
+                "receiver_id": "streaming-r-v2.dcversus.testnet".to_string(),
                 "memo": memo_title.to_string(),
                 "msg": msg.to_string(),
             }).to_string().as_bytes().to_vec(),
