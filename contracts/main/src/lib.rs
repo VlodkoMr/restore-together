@@ -365,6 +365,8 @@ impl Contract {
                     performer_facilities.push(facility.token_id.to_string());
                     self.performer_facilities.insert(&performer_id, &performer_facilities);
 
+                    log!("votes_total_invest = {}", votes_total_invest.to_string());
+
                     // wrap NEAR tokens and create stream
                     pub const XCC_GAS: Gas = 30_000_000_000_000;
                     Promise::new("wrap.testnet".to_string()).function_call(
