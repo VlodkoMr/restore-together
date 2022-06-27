@@ -53,7 +53,7 @@ export const User = () => {
         name: performerName,
         phone: performerPhone,
         description: performerDescription,
-      }, convertToTera("80"), convertToYocto("0.1"));
+      }, convertToTera("80"), convertToYocto("0.25"));
     }
   }
 
@@ -181,7 +181,7 @@ export const User = () => {
                     </div>
                     <div className="flex flex-row">
                       <div className="w-1/2 text-sm text-gray-500">
-                        *Your request requires 0.1 NEAR for this verification.
+                        *Your request requires 0.25 NEAR for this verification.
                       </div>
                       <div className="text-right w-1/2">
                         <Button title="Create Account" noIcon />

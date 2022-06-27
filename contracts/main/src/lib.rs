@@ -281,7 +281,7 @@ impl Contract {
         assert!(name.len() > 2, "Please fill Company Name");
         assert!(phone.len() > 5, "Please fill Company Phone");
         assert!(description.len() > 9, "Please fill Description");
-        assert_eq!(env::attached_deposit(), Contract::convert_to_yocto("0.1"), "Please attach 0.1 NEAR for registration");
+        assert_eq!(env::attached_deposit(), Contract::convert_to_yocto("0.25"), "Please attach 0.25 NEAR for registration");
 
         let account_id = env::predecessor_account_id();
         match self.performers.get(&account_id) {
@@ -547,11 +547,11 @@ impl Contract {
 
         // Create new NFT
         let metadata: JsonValue = json!({
-            "token_id": self.investor_nft_count,
+            "token_id": self.investor_nft_count.to_string(),
             "receiver_id": user_id.to_string(),
             "token_metadata": {
                 "title": facility.title,
-                "media": media_url,
+                "media": media_url.to_string(),
                 "copies": 1
             }
         });

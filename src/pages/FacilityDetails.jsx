@@ -103,10 +103,11 @@ export const FacilityDetails = () => {
     }
   }
   const claimNFT = async () => {
+    console.log(facility.media)
     await window.contract.mint_investor_nft({
       facility_id: id,
       media_url: facility.media
-    }, convertToTera("120"), 1)
+    }, convertToTera("120"), convertToYocto("0.0075"))
   }
 
   return (
