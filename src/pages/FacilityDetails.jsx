@@ -5,6 +5,7 @@ import { facilityTypeConfig, regionsConfig, statusConfig } from '../near/content
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '../components/basic/Button';
 import OneFacilityMap from '../components/OneFacilityMap';
+import nftMinted from '../assets/images/verify.png';
 import { useParams } from "react-router-dom";
 
 import {
@@ -20,15 +21,15 @@ import { FacilityDetailsFundraising } from '../components/FacilityDetails/Fundra
 import { FacilityDetailsInProgress } from '../components/FacilityDetails/InProgress';
 
 export const FacilityDetails = () => {
-  const dispatch = useDispatch();
-  const currentUser = useSelector(state => state.user.account);
   let { id } = useParams();
+  const currentUser = useSelector(state => state.user.account);
   const [facility, setFacility] = useState();
   const [facilityInvestments, setFacilityInvestments] = useState([]);
   const [facilityProposals, setFacilityProposals] = useState([]);
   const [isReady, setIsReady] = useState();
   const [investAmount, setInvestAmount] = useState("");
   const [allPerformers, setAllPerformers] = useState({});
+  const [isInvestorNftMinted, setIsInvestorNftMinted] = useState(false);
 
   const facilityPromise = new Promise(async (resolve) => {
     let result = await window.contract.get_facility_by_id({
@@ -54,16 +55,24 @@ export const FacilityDetails = () => {
     let result = await window.contract.get_all_performers();
     resolve(result);
   });
+  const isInvestorNftMintedPromise = new Promise(async (resolve) => {
+    let result = await window.contract.is_investor_nft_minted({
+      facility_id: id,
+      account_id: currentUser.id
+    });
+    resolve(result);
+  });
 
   const loadFacilityData = async () => {
     setIsReady(false);
 
-    Promise.all([facilityPromise, facilityInvestmentPromise, facilityProposalsPromise, allPerformersPromise]).then(result => {
+    Promise.all([facilityPromise, facilityInvestmentPromise, facilityProposalsPromise, allPerformersPromise, isInvestorNftMintedPromise]).then(result => {
       console.log(result)
       setFacility(result[0]);
       setFacilityInvestments(result[1]);
       setFacilityProposals(result[2]);
       setAllPerformers(result[3]);
+      setIsInvestorNftMinted(result[4]);
       setIsReady(true);
     });
   }
@@ -103,7 +112,6 @@ export const FacilityDetails = () => {
     }
   }
   const claimNFT = async () => {
-    console.log(facility.media)
     await window.contract.mint_investor_nft({
       facility_id: id,
       media_url: facility.media
@@ -230,7 +238,14 @@ export const FacilityDetails = () => {
                     {
                       isMyInvestments() && facility.status === 'Completed' && (
                         <div className="text-center my-3">
-                          <Button title="Claim MY NFT" noIcon onClick={() => claimNFT()} />
+                          {!isInvestorNftMinted ? (
+                            <Button title="Claim MY NFT" noIcon onClick={() => claimNFT()} />
+                          ) : (
+                            <div className="text-center text-gray-500 my-6">
+                              <img src={nftMinted} alt="minted" className="w-5 h-5 inline align-middle mr-2" />
+                              Your unique NFT Minted.
+                            </div>
+                          )}
                         </div>
                       )
                     }

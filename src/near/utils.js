@@ -30,6 +30,7 @@ export async function initContract() {
       'get_performer_facilities',
       'get_execution_progress',
       'get_available_tokens_amount',
+      'is_investor_nft_minted'
     ],
     changeMethods: [
       'add_facility',

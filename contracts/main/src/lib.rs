@@ -525,6 +525,11 @@ impl Contract {
         self.facility.insert(&facility_id, &facility);
     }
 
+    pub fn is_investor_nft_minted(&self, facility_id: TokenId, account_id: AccountId) -> bool {
+        let investor_nft_list = self.investor_nft.get(&account_id).unwrap_or(vec![]);
+        investor_nft_list.contains(&facility_id)
+    }
+
     #[payable]
     pub fn mint_investor_nft(&mut self, facility_id: TokenId, media_url: String) -> JsonValue {
         let facility = self.facility.get(&facility_id).unwrap();
@@ -536,13 +541,13 @@ impl Contract {
             panic!("You can't mint NFT.");
         }
 
-        let mut investor_nft_list = self.investor_nft.get(&facility_id).unwrap_or(vec![]);
+        let mut investor_nft_list = self.investor_nft.get(&user_id).unwrap_or(vec![]);
         if investor_nft_list.contains(&facility_id) {
             panic!("You already mint NFT for this facility");
         }
 
         investor_nft_list.push(facility_id.to_string());
-        self.investor_nft.insert(&facility_id, &investor_nft_list);
+        self.investor_nft.insert(&user_id, &investor_nft_list);
         self.investor_nft_count += 1;
 
         // Create new NFT
