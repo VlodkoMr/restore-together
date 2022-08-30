@@ -39,7 +39,7 @@ export const About = () => {
         </p>
         <p className="pb-20">
           <b>Project financial details.</b><br />
-          Everyone can offer a facility for support or restore, but should pay 0.1 NEAR to avoid spam and cheat
+          Everyone can offer a facility for support or restore, but should pay 0.25 NEAR to avoid spam and cheat
           requests.
           We take 0.1% fee of all transactions that will be paid for moderators that check all information.
         </p>

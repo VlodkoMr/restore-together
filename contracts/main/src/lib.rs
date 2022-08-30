@@ -1,5 +1,5 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, Gas, serde_json::json, setup_alloc, assert_one_yocto};
+use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, log, Gas, serde_json::json, setup_alloc, assert_one_yocto, ext_contract};
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
@@ -11,6 +11,16 @@ mod utils;
 mod internal;
 
 setup_alloc!();
+
+#[ext_contract(ext_self)]
+pub trait ExtSelf {
+    fn callback_near_wrapped(
+        performer_id: String,
+        memo_title: String,
+        votes_total_invest: Balance,
+        estimate_time: u32,
+    );
+}
 
 type PerformerId = AccountId;
 
@@ -271,7 +281,7 @@ impl Contract {
         assert!(name.len() > 2, "Please fill Company Name");
         assert!(phone.len() > 5, "Please fill Company Phone");
         assert!(description.len() > 9, "Please fill Description");
-        assert_eq!(env::attached_deposit(), Contract::convert_to_yocto("0.1"), "Please attach 0.1 NEAR for registration");
+        assert_eq!(env::attached_deposit(), Contract::convert_to_yocto("0.25"), "Please attach 0.25 NEAR for registration");
 
         let account_id = env::predecessor_account_id();
         match self.performers.get(&account_id) {
@@ -328,6 +338,8 @@ impl Contract {
         let proposals = self.facility_proposals.get(&facility.token_id).unwrap_or(vec![]);
         let facility_investors = self.facility_investors.get(&facility.token_id).unwrap_or(vec![]);
 
+        // check status
+
         for proposal in &proposals {
             // Need to cover estimated budget
             if proposal.estimate_amount <= facility.total_invested {
@@ -352,9 +364,59 @@ impl Contract {
                     let mut performer_facilities = self.performer_facilities.get(&performer_id).unwrap_or(vec![]);
                     performer_facilities.push(facility.token_id.to_string());
                     self.performer_facilities.insert(&performer_id, &performer_facilities);
+
+                    log!("votes_total_invest = {}", votes_total_invest.to_string());
+
+                    // wrap NEAR tokens and create stream
+                    pub const XCC_GAS: Gas = 30_000_000_000_000;
+                    Promise::new("wrap.testnet".to_string()).function_call(
+                        b"near_deposit".to_vec(),
+                        json!({}).to_string().as_bytes().to_vec(),
+                        votes_total_invest,
+                        XCC_GAS,
+                    ).then(
+                        ext_self::callback_near_wrapped(
+                            performer_id.to_string(),
+                            facility.title.to_string(),
+                            votes_total_invest,
+                            proposal.estimate_time,
+                            &env::current_account_id(),
+                            0,
+                            XCC_GAS * 2,
+                        )
+                    );
                 }
             }
         }
+    }
+
+    #[private]
+    pub fn callback_near_wrapped(
+        &mut self,
+        performer_id: String, memo_title: String, votes_total_invest: Balance, estimate_time: u32,
+    ) {
+        let msg = json!({
+            "Create":  json!({
+                "request": json!({
+                    "owner_id": env::current_account_id(),
+                    "receiver_id": performer_id.to_string(),
+                    "tokens_per_sec": "100000000000000000000",
+                })
+            }),
+        });
+
+        pub const XCC_GAS: Gas = 30_000_000_000_000;
+        Promise::new("wrap.testnet".to_string()).function_call(
+            b"ft_transfer_call".to_vec(),
+            json!({
+                "amount": votes_total_invest.to_string(),
+                "receiver_id": "streaming-r-v2.dcversus.testnet".to_string(),
+                "memo": memo_title.to_string(),
+                "msg": msg.to_string(),
+            }).to_string().as_bytes().to_vec(),
+            1,
+            XCC_GAS,
+        );
     }
 
     #[payable]
@@ -463,6 +525,11 @@ impl Contract {
         self.facility.insert(&facility_id, &facility);
     }
 
+    pub fn is_investor_nft_minted(&self, facility_id: TokenId, account_id: AccountId) -> bool {
+        let investor_nft_list = self.investor_nft.get(&account_id).unwrap_or(vec![]);
+        investor_nft_list.contains(&facility_id)
+    }
+
     #[payable]
     pub fn mint_investor_nft(&mut self, facility_id: TokenId, media_url: String) -> JsonValue {
         let facility = self.facility.get(&facility_id).unwrap();
@@ -474,22 +541,22 @@ impl Contract {
             panic!("You can't mint NFT.");
         }
 
-        let mut investor_nft_list = self.investor_nft.get(&facility_id).unwrap_or(vec![]);
+        let mut investor_nft_list = self.investor_nft.get(&user_id).unwrap_or(vec![]);
         if investor_nft_list.contains(&facility_id) {
             panic!("You already mint NFT for this facility");
         }
 
         investor_nft_list.push(facility_id.to_string());
-        self.investor_nft.insert(&facility_id, &investor_nft_list);
+        self.investor_nft.insert(&user_id, &investor_nft_list);
         self.investor_nft_count += 1;
 
         // Create new NFT
         let metadata: JsonValue = json!({
-            "token_id": self.investor_nft_count,
+            "token_id": self.investor_nft_count.to_string(),
             "receiver_id": user_id.to_string(),
             "token_metadata": {
                 "title": facility.title,
-                "media": media_url,
+                "media": media_url.to_string(),
                 "copies": 1
             }
         });
