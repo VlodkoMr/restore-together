@@ -2,19 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Header } from '../components/Header';
 import { Container, Link, Wrapper } from '../assets/styles/common.style';
 import { FacilitiesFilter } from '../components/FacilitiesFilter';
-import { defaultRegion, facilityTypeConfig, regionsConfig, regionsCoordConfig, statusConfig } from '../near/content';
+import { defaultRegion, regionsConfig, regionsCoordConfig } from '../near/content';
 import FacilitiesMap from '../components/FacilitiesMap';
 import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFacility, setRegion, setStatus } from '../store/facilityFilterSlice';
 import { Loader } from '../components/basic/Loader';
-import { getMediaUrl } from '../near/utils';
 import { OneFacility } from '../components/OneFacility';
+import { transformFacility } from '../near/utils';
 
 export const Facilities = () => {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
-
   const region = useSelector(state => state.facility.filter.region);
   const [centerCoord, setCenterCoord] = useState(regionsCoordConfig[defaultRegion]);
   const [facilityList, setFacilityList] = useState([]);
@@ -25,9 +24,10 @@ export const Facilities = () => {
     const result = await window.contract.get_region_facility({
       region: parseInt(currentRegion)
     });
-    console.log('result', result);
 
-    setFacilityList(result);
+    const items = result.map(item => transformFacility(item));
+
+    setFacilityList(items);
     setIsReady(true);
   }
 

@@ -1,57 +1,61 @@
 import React, { useState, useEffect } from "react";
-import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { googleAPIKey } from '../near/content';
 
 function AddFacilityMap({ centerCoord, google, markerLocation, setMarkerLocation }) {
   const [center, setCenter] = useState();
+  const [zoom, setZoom] = React.useState(14);
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: googleAPIKey
+  });
+
+  const onLoad = React.useCallback(function callback(map) {
+    if (center) {
+      const bounds = new window.google.maps.LatLngBounds(center);
+      map.fitBounds(bounds);
+      setTimeout(() => setZoom(12), 300);
+    }
+  }, [center]);
 
   useEffect(() => {
     if (centerCoord) {
       let coord = centerCoord.split(",");
       setCenter({
-        lat: coord[0],
-        lng: coord[1]
+        lat: parseFloat(coord[0]),
+        lng: parseFloat(coord[1])
       })
     }
   }, [centerCoord]);
 
-  const onMapClicked = (props, e, marker) => {
+  const onMapClicked = (props) => {
     setMarkerLocation({
-      lat: marker.latLng.lat(),
-      lng: marker.latLng.lng(),
+      lat: parseFloat(props.latLng.lat()),
+      lng: parseFloat(props.latLng.lng()),
     });
-    // setCenter({
-    //   lat: marker.latLng.lat(),
-    //   lng: marker.latLng.lng()
-    // });
   };
 
   return (
     <>
-      {center && (
-        <Map
+      {center && isLoaded && (
+        <GoogleMap
           google={google}
-          containerStyle={{
+          mapContainerStyle={{
             width: '472px',
             height: '180px'
           }}
           center={center}
-          initialCenter={center}
-          disableDefaultUI={true}
-          zoomControl={true}
-          fullscreenControl={true}
-          zoom={12}
+          onLoad={onLoad}
+          zoom={zoom}
           onClick={onMapClicked}
         >
-          {markerLocation && (
+          {markerLocation.lat && (
             <Marker position={markerLocation} />
           )}
-        </Map>
+        </GoogleMap>
       )}
     </>
   )
 }
 
-export default GoogleApiWrapper({
-  apiKey: googleAPIKey
-})(AddFacilityMap)
+export default React.memo(AddFacilityMap)

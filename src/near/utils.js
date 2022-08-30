@@ -162,3 +162,9 @@ export const uploadMediaToIPFS = (media) => {
     reject();
   })
 }
+
+export const transformFacility = (item) => {
+  item.lat = parseFloat(item.lat);
+  item.lng = parseFloat(item.lng);
+  return item;
+}

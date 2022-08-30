@@ -16,6 +16,7 @@ function getConfig(env) {
       }
     case 'development':
     case 'testnet':
+    case 'local':
       return {
         networkId: 'testnet',
         nodeUrl: 'https://rpc.testnet.near.org',
@@ -33,14 +34,14 @@ function getConfig(env) {
         helperUrl: 'https://helper.betanet.near.org',
         explorerUrl: 'https://explorer.betanet.near.org',
       }
-    case 'local':
-      return {
-        networkId: process.env.NEAR_CLI_LOCALNET_NETWORK_ID || "local",
-        nodeUrl: process.env.NEAR_NODE_URL || "http://localhost:3030",
-        keyPath: process.env.NEAR_CLI_LOCALNET_KEY_PATH || `${process.env.HOME}/.near/validator_key.json`,
-        walletUrl: process.env.NEAR_WALLET_URL || "http://localhost:4000/wallet",
-        contractName: CONTRACT_NAME,
-      }
+    // case 'local':
+    //   return {
+    //     networkId: process.env.NEAR_CLI_LOCALNET_NETWORK_ID || "local",
+    //     nodeUrl: process.env.NEAR_NODE_URL || "http://localhost:3030",
+    //     keyPath: process.env.NEAR_CLI_LOCALNET_KEY_PATH || `${process.env.HOME}/.near/validator_key.json`,
+    //     walletUrl: process.env.NEAR_WALLET_URL || "http://localhost:4000/wallet",
+    //     contractName: CONTRACT_NAME,
+    //   }
     case 'test':
     case 'ci':
       return {

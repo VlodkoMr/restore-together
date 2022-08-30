@@ -1,7 +1,7 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './App'
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
+import App from './App'
 import store from "./store";
 
 if (process.env.NODE_ENV !== "production") {
@@ -11,9 +11,10 @@ if (process.env.NODE_ENV !== "production") {
   };
 }
 
-ReactDOM.render(
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
   <Provider store={store}>
     <App />
-  </Provider>,
-  document.querySelector('#root')
-)
+  </Provider>
+);

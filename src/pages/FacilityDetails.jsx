@@ -7,14 +7,14 @@ import { Button } from '../components/basic/Button';
 import OneFacilityMap from '../components/OneFacilityMap';
 import { useParams } from "react-router-dom";
 
-import {
-  FacebookIcon,
-  FacebookShareButton, TelegramIcon,
-  TelegramShareButton, TwitterIcon,
-  TwitterShareButton,
-} from "react-share";
+// import {
+//   FacebookIcon,
+//   FacebookShareButton, TelegramIcon,
+//   TelegramShareButton, TwitterIcon,
+//   TwitterShareButton,
+// } from "react-share";
 import { Loader } from '../components/basic/Loader';
-import { convertFromYocto, convertToTera, convertToYocto, getMediaUrl, timestampToDate } from '../near/utils';
+import { convertFromYocto, convertToTera, convertToYocto, getMediaUrl, timestampToDate, transformFacility } from '../near/utils';
 import Big from 'big.js';
 import { FacilityDetailsFundraising } from '../components/FacilityDetails/Fundraising';
 import { FacilityDetailsInProgress } from '../components/FacilityDetails/InProgress';
@@ -29,6 +29,15 @@ export const FacilityDetails = () => {
   const [isReady, setIsReady] = useState();
   const [investAmount, setInvestAmount] = useState("");
   const [allPerformers, setAllPerformers] = useState({});
+
+  const style = {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    borderRadius: 3,
+    border: 0,
+    color: 'white',
+    padding: '0 30px',
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  };
 
   const facilityPromise = new Promise(async (resolve) => {
     let result = await window.contract.get_facility_by_id({
@@ -60,7 +69,7 @@ export const FacilityDetails = () => {
 
     Promise.all([facilityPromise, facilityInvestmentPromise, facilityProposalsPromise, allPerformersPromise]).then(result => {
       console.log(result)
-      setFacility(result[0]);
+      setFacility(transformFacility(result[0]));
       setFacilityInvestments(result[1]);
       setFacilityProposals(result[2]);
       setAllPerformers(result[3]);
@@ -130,15 +139,15 @@ export const FacilityDetails = () => {
                 </div>
 
                 <div className="absolute right-6 top-2">
-                  <FacebookShareButton url="/" className="opacity-70 hover:opacity-100 transition">
-                    <FacebookIcon size={28} round={true} />
-                  </FacebookShareButton>
-                  <TwitterShareButton url="/" className="opacity-70 hover:opacity-100 transition mx-1.5">
-                    <TwitterIcon size={28} round={true} />
-                  </TwitterShareButton>
-                  <TelegramShareButton url="/" className="opacity-70 hover:opacity-100 transition">
-                    <TelegramIcon size={28} round={true} />
-                  </TelegramShareButton>
+                  {/*<FacebookShareButton url="/" className="opacity-70 hover:opacity-100 transition">*/}
+                  {/*  <FacebookIcon size={28} round={true} />*/}
+                  {/*</FacebookShareButton>*/}
+                  {/*<TwitterShareButton url="/" className="opacity-70 hover:opacity-100 transition mx-1.5">*/}
+                  {/*  <TwitterIcon size={28} round={true} />*/}
+                  {/*</TwitterShareButton>*/}
+                  {/*<TelegramShareButton url="/" className="opacity-70 hover:opacity-100 transition">*/}
+                  {/*  <TelegramIcon size={28} round={true} />*/}
+                  {/*</TelegramShareButton>*/}
                 </div>
               </Container>
             </div>
