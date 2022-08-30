@@ -57,6 +57,7 @@ export const FacilityDetails = () => {
         facility_id: id,
         account_id: currentUser.id
       });
+      console.log('isInvestorNftMintedPromise result', result)
       resolve(result);
     } else {
       resolve();
