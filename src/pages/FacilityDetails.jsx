@@ -1,22 +1,18 @@
+import Big from 'big.js';
 import React, { useState, useEffect } from "react";
 import { Header } from '../components/Header';
 import { Container, Link, Wrapper } from '../assets/styles/common.style';
 import { facilityTypeConfig, regionsConfig, statusConfig } from '../near/content';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button } from '../components/basic/Button';
 import OneFacilityMap from '../components/OneFacilityMap';
 import nftMinted from '../assets/images/verify.png';
+import twitterIcon from '../assets/images/twitter.png';
+import telegramIcon from '../assets/images/telegram.png';
+import discordIcon from '../assets/images/discord.png';
 import { useParams } from "react-router-dom";
-
-// import {
-//   FacebookIcon,
-//   FacebookShareButton, TelegramIcon,
-//   TelegramShareButton, TwitterIcon,
-//   TwitterShareButton,
-// } from "react-share";
 import { Loader } from '../components/basic/Loader';
 import { convertFromYocto, convertToTera, convertToYocto, getMediaUrl, timestampToDate, transformFacility } from '../near/utils';
-import Big from 'big.js';
 import { FacilityDetailsFundraising } from '../components/FacilityDetails/Fundraising';
 import { FacilityDetailsInProgress } from '../components/FacilityDetails/InProgress';
 
@@ -147,16 +143,16 @@ export const FacilityDetails = () => {
                         to={`/facility?region=${facility.region}`}>{regionsConfig[facility.region]}</Link>
                 </div>
 
-                <div className="absolute right-6 top-2">
-                  {/*<FacebookShareButton url="/" className="opacity-70 hover:opacity-100 transition">*/}
-                  {/*  <FacebookIcon size={28} round={true} />*/}
-                  {/*</FacebookShareButton>*/}
-                  {/*<TwitterShareButton url="/" className="opacity-70 hover:opacity-100 transition mx-1.5">*/}
-                  {/*  <TwitterIcon size={28} round={true} />*/}
-                  {/*</TwitterShareButton>*/}
-                  {/*<TelegramShareButton url="/" className="opacity-70 hover:opacity-100 transition">*/}
-                  {/*  <TelegramIcon size={28} round={true} />*/}
-                  {/*</TelegramShareButton>*/}
+                <div className="absolute right-6 top-2 flex">
+                  <a href="https://twitter.com/Ukraine_restore" target="_blank">
+                    <img src={twitterIcon} alt="" className="w-7 h-7 grayscale hover:grayscale-0 opacity-70" />
+                  </a>
+                  {/*<a href="" target="_blank" className="ml-2">*/}
+                  {/*  <img src={telegramIcon} alt="" className="w-7 h-7 grayscale hover:grayscale-0 opacity-60" />*/}
+                  {/*</a>*/}
+                  <a href="https://discord.gg/WhCMVPbEyZ" target="_blank" className="ml-2">
+                    <img src={discordIcon} alt="" className="w-7 h-7 grayscale hover:grayscale-0 opacity-80" />
+                  </a>
                 </div>
               </Container>
             </div>
