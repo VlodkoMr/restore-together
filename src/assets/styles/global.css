@@ -79,6 +79,10 @@ body {
     display: none !important;
 }
 
+.gmnoprint {
+    display: none;
+}
+
 /*.lrContainers {*/
 /*  width: 200px;*/
 /*  justify-content: end;*/

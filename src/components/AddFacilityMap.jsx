@@ -47,6 +47,11 @@ function AddFacilityMap({ centerCoord, google, markerLocation, setMarkerLocation
           center={center}
           onLoad={onLoad}
           zoom={zoom}
+          options={{
+            controlSize: true,
+            fullscreenControl: true,
+            clickableIcons: false
+          }}
           onClick={onMapClicked}
         >
           {markerLocation.lat && (

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from 'react-redux';
 import { OneProposal } from '../OneProposal';
-import { MyProposalForm } from '../MyProposalForm';
 import { FormInput, FormLabel, FormTextarea, Link } from '../../assets/styles/common.style';
 import {
-  checkStorageDeposit,
   convertFromYocto,
-  convertToTera, getMediaUrl,
-  resizeFileImage, timestampToDate,
+  convertToTera,
+  getMediaUrl,
+  resizeFileImage,
+  timestampToDate,
   uploadMediaToIPFS
 } from '../../near/utils';
 import Big from 'big.js';
@@ -74,9 +74,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
 
   const startUpdateProgress = () => {
     localStorage.setItem('showUpdatePopup', '1');
-    checkStorageDeposit(true).then(() => {
-      setProgressPopupVisible(true);
-    });
+    setProgressPopupVisible(true);
   }
 
   const resizeImage = () => {
@@ -93,22 +91,18 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
       setIsLoading(true);
       localStorage.setItem('temporaryDescription', description);
       localStorage.setItem('showUpdatePopup', "1");
-      checkStorageDeposit(true).then(() => {
-        localStorage.removeItem('showUpdatePopup');
-        localStorage.removeItem('temporaryDescription');
+      localStorage.removeItem('showUpdatePopup');
+      localStorage.removeItem('temporaryDescription');
 
-        uploadMediaToIPFS(media).then(mediaURL => {
-          const GAS = convertToTera("200");
-          const DEPOSIT = 1;
+      uploadMediaToIPFS(media).then(mediaURL => {
+        const GAS = convertToTera("200");
+        const DEPOSIT = 1;
 
-          window.contract.add_execution_progress({
-            media: mediaURL,
-            description,
-            facility_id: facility.token_id,
-          }, GAS, DEPOSIT);
-        });
-      }).catch(() => {
-        alert("Upload to IPFS failed.")
+        window.contract.add_execution_progress({
+          media: mediaURL,
+          description,
+          facility_id: facility.token_id,
+        }, GAS, DEPOSIT);
       });
     }
   }

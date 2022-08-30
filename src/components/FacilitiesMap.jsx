@@ -38,7 +38,6 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, filterItems, goog
     });
     setShowingInfoWindow(true);
     setActiveLocation(item);
-
   };
 
   const onMapClicked = () => {
@@ -61,6 +60,10 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, filterItems, goog
           center={center}
           zoom={zoom}
           onClick={onMapClicked}
+          options={{
+            mapTypeControl: false,
+            clickableIcons: false
+          }}
         >
           {locations.filter(filterItems).map(item => (
             <Marker position={item}

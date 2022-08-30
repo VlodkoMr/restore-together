@@ -1,7 +1,7 @@
 import Big from "big.js";
 import { connect, Contract, keyStores, WalletConnection } from 'near-api-js'
 import getConfig from './config'
-import { init } from '@textile/near-storage';
+import { NFTStorage, File } from 'nft.storage'
 
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 
@@ -104,15 +104,6 @@ export const convertToTera = (amount) => {
     .toFixed();
 };
 
-export const checkStorageDeposit = async (redirect = false) => {
-  const storage = await init(window.walletConnection.account());
-  const isDeposit = await storage.hasDeposit();
-  if (redirect && !isDeposit) {
-    await storage.addDeposit();
-  }
-  return isDeposit;
-}
-
 export const resizeFileImage = (file) => {
   return new Promise(resolve => {
     const reader = new FileReader();
@@ -154,11 +145,16 @@ export const resizeFileImage = (file) => {
 
 export const uploadMediaToIPFS = (media) => {
   return new Promise(async (resolve, reject) => {
-    const storage = await init(window.walletConnection.account());
-    const file = dataURLtoFile(media, `${+new Date()}.jpg`);
-    const { id, cid } = await storage.store(file);
-    if (id.length && cid && cid["/"].length) {
-      resolve(cid["/"]);
+    const name = `${+new Date()}.jpg`;
+    const image = dataURLtoFile(media, name);
+    const nftStorage = new NFTStorage({ token: process.env.NFT_STORAGE_KEY })
+    const token = await nftStorage.store({
+      image,
+      name,
+      description: "Restore Together",
+    });
+    if (token.url) {
+      resolve(token.data.image.pathname.replace('//', ''));
     }
     reject();
   })

@@ -16,11 +16,11 @@ import { Button } from '../components/basic/Button';
 import { Loader } from '../components/basic/Loader';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import {
-  checkStorageDeposit,
   convertToTera,
   convertToYocto,
   getMediaUrl,
-  resizeFileImage, uploadMediaToIPFS
+  resizeFileImage,
+  uploadMediaToIPFS
 } from '../near/utils';
 
 export const AddFacility = () => {
@@ -82,7 +82,9 @@ export const AddFacility = () => {
     }, []);
 
     const loadCurrentStep = async () => {
+      console.log('loadCurrentStep')
       let step = parseInt(localStorage.getItem('step')) || 1;
+      console.log('step', step)
       setCurrentStep(step);
 
       if (step === 3) {
@@ -103,24 +105,16 @@ export const AddFacility = () => {
       }
 
       if (step === 2) {
-        checkStorageDeposit().then(result => {
-          if (result) {
-            // load data from local storage
-            let data = JSON.parse(localStorage.getItem('addFacility'));
-            setTitle(data.title);
-            setDescription(data.description);
-            setRegion(data.region);
-            setFacilityType(data.facilityType);
-            setMarkerLocation({
-              lat: data.lat,
-              lng: data.lng
-            });
-          } else {
-            setCurrentStep(1);
-            localStorage.setItem('step', "1");
-          }
-          setIsReady(true);
-        })
+        let data = JSON.parse(localStorage.getItem('addFacility'));
+        setTitle(data.title);
+        setDescription(data.description);
+        setRegion(data.region);
+        setFacilityType(data.facilityType);
+        setMarkerLocation({
+          lat: data.lat,
+          lng: data.lng
+        });
+        setIsReady(true);
       } else {
         setIsReady(true);
       }
@@ -157,10 +151,8 @@ export const AddFacility = () => {
           lat: markerLocation.lat,
           lng: markerLocation.lng
         }));
-        checkStorageDeposit(true).then(() => {
-          setCurrentStep(2);
-          setIsLoading(false);
-        });
+        setCurrentStep(2);
+        setIsLoading(false);
       }
     }
 
@@ -169,28 +161,24 @@ export const AddFacility = () => {
         alert("Please upload current Facility Photo");
       } else {
         setIsLoading(true);
-        checkStorageDeposit(true).then(() => {
-          uploadMediaToIPFS(media).then(mediaURL => {
-            const GAS = convertToTera("200");
-            const DEPOSIT = 1;
-            const tokenId = `${region}-${facilityType}-${new Date().getTime()}`;
+        uploadMediaToIPFS(media).then(mediaURL => {
+          const GAS = convertToTera("200");
+          const DEPOSIT = 1;
+          const tokenId = `${region}-${facilityType}-${new Date().getTime()}`;
 
-            localStorage.setItem('step', "3");
-            localStorage.setItem('addFacilityId', tokenId);
+          localStorage.setItem('step', "3");
+          localStorage.setItem('addFacilityId', tokenId);
 
-            window.contract.add_facility({
-              id: tokenId,
-              title,
-              media: mediaURL,
-              description,
-              region: parseInt(region),
-              facility_type: parseInt(facilityType),
-              lat: markerLocation.lat.toString(),
-              lng: markerLocation.lng.toString()
-            }, GAS, DEPOSIT);
-          });
-        }).catch(() => {
-          alert("Upload to IPFS failed.")
+          window.contract.add_facility({
+            id: tokenId,
+            title,
+            media: mediaURL,
+            description,
+            region: parseInt(region),
+            facility_type: parseInt(facilityType),
+            lat: markerLocation.lat.toString(),
+            lng: markerLocation.lng.toString()
+          }, GAS, DEPOSIT);
         });
       }
     }
@@ -314,7 +302,6 @@ export const AddFacility = () => {
                     {!isLoading ? (
                       <div className="flex">
                         <div className="w-2/3 text-sm text-gray-400">
-                          You need to deposit 0.25 NEAR. Deposit will be returned to your wallet in 10 minutes.
                         </div>
                         <div className="w-1/3 text-right">
                           <Button title="Next" onClick={() => saveStep1()} />
