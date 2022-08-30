@@ -78,7 +78,7 @@ impl Contract {
             NFTContractMetadata {
                 spec: "nft-1.0.0".to_string(),
                 name: "Restore Ukraine Together".to_string(),
-                symbol: "RUT".to_string(),
+                symbol: "UKR".to_string(),
                 icon: Some(TOKEN_IMAGE_ICON.to_string()),
                 base_uri: None,
                 reference: None,

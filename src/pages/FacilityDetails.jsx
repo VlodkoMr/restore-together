@@ -8,7 +8,6 @@ import { Button } from '../components/basic/Button';
 import OneFacilityMap from '../components/OneFacilityMap';
 import nftMinted from '../assets/images/verify.png';
 import twitterIcon from '../assets/images/twitter.png';
-import telegramIcon from '../assets/images/telegram.png';
 import discordIcon from '../assets/images/discord.png';
 import { useParams } from "react-router-dom";
 import { Loader } from '../components/basic/Loader';
@@ -26,15 +25,6 @@ export const FacilityDetails = () => {
   const [investAmount, setInvestAmount] = useState("");
   const [allPerformers, setAllPerformers] = useState({});
   const [isInvestorNftMinted, setIsInvestorNftMinted] = useState(false);
-
-  const style = {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-    borderRadius: 3,
-    border: 0,
-    color: 'white',
-    padding: '0 30px',
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-  };
 
   const facilityPromise = new Promise(async (resolve) => {
     let result = await window.contract.get_facility_by_id({
@@ -60,19 +50,23 @@ export const FacilityDetails = () => {
     let result = await window.contract.get_all_performers();
     resolve(result);
   });
+
   const isInvestorNftMintedPromise = new Promise(async (resolve) => {
-    let result = await window.contract.is_investor_nft_minted({
-      facility_id: id,
-      account_id: currentUser.id
-    });
-    resolve(result);
+    if (currentUser.id) {
+      let result = await window.contract.is_investor_nft_minted({
+        facility_id: id,
+        account_id: currentUser.id
+      });
+      resolve(result);
+    } else {
+      resolve();
+    }
   });
 
   const loadFacilityData = async () => {
     setIsReady(false);
 
     Promise.all([facilityPromise, facilityInvestmentPromise, facilityProposalsPromise, allPerformersPromise, isInvestorNftMintedPromise]).then(result => {
-      console.log(result)
       setFacility(transformFacility(result[0]));
       setFacilityInvestments(result[1]);
       setFacilityProposals(result[2]);
@@ -165,7 +159,7 @@ export const FacilityDetails = () => {
                     {facility.total_invested > 0 && (
                       <>
                         <span className="text-gray-400 text-sm">Total Invested:</span>
-                        <b className="text-gray-500 ml-1 text-xl">
+                        <b className="text-gray-500 ml-1 text-xl font-medium">
                           {convertFromYocto(facility.total_invested, 1)} NEAR
                         </b>
                       </>

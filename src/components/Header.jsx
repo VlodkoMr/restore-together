@@ -34,7 +34,11 @@ export const Header = ({ color, width }) => {
           <NavLink to="/">Home</NavLink>
           <NavLink to="/facility">Facilities</NavLink>
           <NavLink to="/add-facility">Add Facility</NavLink>
-          <NavLink to="/my">My Account</NavLink>
+          {currentUser.id && (
+            <>
+              <NavLink to="/my">My Account</NavLink>
+            </>
+          )}
           <NavLink to="/about">About</NavLink>
         </div>
 

@@ -340,7 +340,6 @@ impl Contract {
         let facility_investors = self.facility_investors.get(&facility.token_id).unwrap_or(vec![]);
 
         // check status
-
         for proposal in &proposals {
             // Need to cover estimated budget
             if proposal.estimate_amount <= facility.total_invested {
@@ -426,20 +425,20 @@ impl Contract {
         let user_id = env::predecessor_account_id();
         let facility = self.facility.get(&facility_id).unwrap();
         if facility.status != FacilityStatus::Fundraising {
-            panic!("Voting closed.");
+            panic!("Voting period ends.");
         }
 
         // Check if user is investor
         let is_investor = self.is_facility_investor(&facility_id, &user_id);
         if !is_investor {
-            panic!("You can't vote.");
+            panic!("You can't vote, no investments.");
         }
 
         // Check if user already vote
         let proposals = self.facility_proposals.get(&facility_id).unwrap_or(vec![]);
         let proposals = proposals.into_iter().map(|mut proposal| {
             if proposal.votes.contains(&user_id) {
-                panic!("You already voted.");
+                panic!("Sorry, you already voted.");
             }
             // Add user vote
             if proposal.performer_id == performer_id {

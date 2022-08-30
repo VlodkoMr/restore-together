@@ -37,11 +37,16 @@ export const About = () => {
           In the case when a contractor does not provide such information or doesn't supply defined results/quality,
           investors may vote to suspend funding (that affects performer rating) and can choose another performer.
         </p>
-        <p className="pb-20">
+        <p className="pb-4">
           <b>Project financial details.</b><br />
           Everyone can offer a facility for support or restore, but should pay 0.25 NEAR to avoid spam and cheat
           requests.
-          We take 0.1% fee of all transactions that will be paid for moderators that check all information.
+          We take 1% fee of all transactions that will be paid for moderators that check all information.
+        </p>
+        <hr />
+        <p className="pb-20 pt-4">
+          Also we launched separate project - NFT Collection of 9999 unique NFTs to support ordinary people to rebuild their homes:
+          <a href="https://nft.restore-together.in.ua/" target="_blank" className="text-blue-500 ml-2">nft.restore-together.in.ua</a>
         </p>
       </Container>
     </Wrapper>

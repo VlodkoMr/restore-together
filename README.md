@@ -12,7 +12,7 @@ to deploy the project on a live system.
 ### Prerequisites
 
 ```
-NodeJS 14+
+NodeJS 16+
 NEAR-CLI
 ```
 

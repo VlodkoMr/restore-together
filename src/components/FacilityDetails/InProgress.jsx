@@ -98,6 +98,8 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
         const GAS = convertToTera("200");
         const DEPOSIT = 1;
 
+        console.log('mediaURL', mediaURL);
+
         window.contract.add_execution_progress({
           media: mediaURL,
           description,
@@ -117,15 +119,18 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                 <div className="w-4/12">
                   <h3 className="text-xl font-medium mb-2">Finances</h3>
                   <p>
-                    Available: <b>{convertFromYocto(canClaimAmount, 2)}
+                    Available: <b className="font-medium">
+                    <span className="text-xl">{convertFromYocto(canClaimAmount, 2)}</span>
                     /
                     {convertFromYocto(facility.total_invested)} NEAR
                   </b>
                   </p>
-                  <p>Claimed: <b>{convertFromYocto(claimedAmount)} NEAR</b></p>
+                  <p>Claimed: <b className="font-medium">{convertFromYocto(claimedAmount)} NEAR</b></p>
+
                   <div className="mt-4">
                     <Button title="Claim Tokens"
                             noIcon
+                            disabled={parseFloat(convertFromYocto(canClaimAmount, 2)) === 0}
                             className="border border-blue-400 text-blue-500 bg-blue-50/40 hover:border-blue-500 hover:text-blue-600"
                             onClick={() => claimTokens()} />
                   </div>
@@ -155,10 +160,6 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                               className="ml-4 border border-red-400 text-red-400 bg-red-50/40 hover:border-red-500 hover:text-red-600"
                       />
                     )}
-
-                    <p className="text-gray-400 mt-1">
-                      <small>*You need to deposit 0.25 NEAR that will be returned in 10 minutes.</small>
-                    </p>
                   </div>
                 ) : (
                   <div>
@@ -188,7 +189,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
       {
         executionProgress.length > 0 && (
           <>
-            <h3 className="mt-8 font-medium text-lg">Execution Progress</h3>
+            <h3 className="mt-12 font-medium text-xl">Execution Progress</h3>
             <div className="mt-2 mb-8 grid xl:grid-cols-3 lg:grid-cols-2 gap-6">
               {
                 executionProgress.map((result, index) => (
@@ -199,7 +200,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                       />
                       <div className="text-sm p-6">
                         <b>{timestampToDate(result.timestamp)}</b>
-                        <p className="mt-2 max-h-24 overflow-y-scroll">{result.description}</p>
+                        <p className="mt-2 max-h-24 overflow-y-auto">{result.description}</p>
                       </div>
                     </div>
                   )
