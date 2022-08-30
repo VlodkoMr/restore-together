@@ -163,7 +163,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                   </div>
                 ) : (
                   <div>
-                    Status: <b>{facility.status}</b>
+                    Status: <b className="text-lg font-medium">{facility.status}</b>
                   </div>
                 )
               }

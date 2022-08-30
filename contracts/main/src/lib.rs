@@ -531,7 +531,9 @@ impl Contract {
     }
 
     #[payable]
-    pub fn mint_investor_nft(&mut self, facility_id: TokenId, media_url: String) -> JsonValue {
+    pub fn mint_investor_nft(&mut self, facility_id: TokenId) -> JsonValue {
+        assert_eq!(env::attached_deposit(), Contract::convert_to_yocto("0.009"), "Requires attached 0.009 NEAR");
+
         let facility = self.facility.get(&facility_id).unwrap();
         let user_id = env::predecessor_account_id();
 
@@ -550,13 +552,16 @@ impl Contract {
         self.investor_nft.insert(&user_id, &investor_nft_list);
         self.investor_nft_count += 1;
 
+        let rand_image = self.random_in_range(0, 1000);
+        let media_url = format!("https://ipfs.io/ipfs/bafybeibvsvj2hoecsyqlgstt6b5j6p2rtaebasdnv5kb44jvlidoy6366u/{}.png", rand_image.to_string());
+
         // Create new NFT
         let metadata: JsonValue = json!({
             "token_id": self.investor_nft_count.to_string(),
             "receiver_id": user_id.to_string(),
             "token_metadata": {
                 "title": facility.title,
-                "media": media_url.to_string(),
+                "media": media_url,
                 "copies": 1
             }
         });

@@ -112,9 +112,8 @@ export const FacilityDetails = () => {
   }
   const claimNFT = async () => {
     await window.contract.mint_investor_nft({
-      facility_id: id,
-      media_url: facility.media
-    }, convertToTera("120"), convertToYocto("0.0075"))
+      facility_id: id
+    }, convertToTera("160"), convertToYocto("0.009"))
   }
 
   return (
@@ -201,75 +200,71 @@ export const FacilityDetails = () => {
                     <h3 className="text-lg uppercase font-medium text-center mb-5">My Investment</h3>
 
                     <div className="text-sm my-3">
-                      {
-                        !isMyInvestments() ? (
-                          <div className="text-sm text-gray-400 text-center">
-                            *no investments
-                          </div>
-                        ) : facilityInvestments
-                          .filter(item => item.user_id === currentUser.id)
-                          .map((item, index) => (
-                            <div className="flex flex-row my-2 mx-5" key={item.timestamp}>
-                              <div className="w-1/2">{index + 1}. {timestampToDate(item.timestamp)}</div>
-                              <div className="w-1/2 text-right">
-                                <div>{convertFromYocto(item.amount)} NEAR</div>
-                                {/*<div className="text-blue-500">cancel</div>*/}
-                              </div>
+                      {!isMyInvestments() ? (
+                        <div className="text-sm text-gray-400 text-center">
+                          *no investments
+                        </div>
+                      ) : facilityInvestments
+                        .filter(item => item.user_id === currentUser.id)
+                        .map((item, index) => (
+                          <div className="flex flex-row my-2 mx-5" key={item.timestamp}>
+                            <div className="w-1/2">{index + 1}. {timestampToDate(item.timestamp)}</div>
+                            <div className="w-1/2 text-right">
+                              <div>{convertFromYocto(item.amount)} NEAR</div>
+                              {/*<div className="text-blue-500">cancel</div>*/}
                             </div>
-                          ))
-                      }
+                          </div>
+                        ))}
                     </div>
 
-                    {
-                      facility.status === 'Fundraising' && (
-                        <div className="m-5 text-center flex flex-row">
-                          <input type="number"
-                                 min="0.1"
-                                 step="0.1"
-                                 className="p-2.5 border rounded-l-lg text-base border-blue-400 border-r-transparent focus:outline-0 inline-block w-full"
-                                 onChange={(e) => setInvestAmount(e.target.value)}
-                                 placeholder="NEAR Amount" />
-                          <Button title="Invest" noIcon roundedClass="rounded-r-lg" onClick={() => handleInvest()} />
-                        </div>
-                      )
-                    }
+                    {facility.status === 'Fundraising' && (
+                      <div className="m-5 text-center flex flex-row">
+                        <input type="number"
+                               min="0.1"
+                               step="0.1"
+                               className="p-2.5 border rounded-l-lg text-base border-blue-400 border-r-transparent focus:outline-0 inline-block w-full"
+                               onChange={(e) => setInvestAmount(e.target.value)}
+                               placeholder="NEAR Amount" />
+                        <Button title="Invest" noIcon roundedClass="rounded-r-lg" onClick={() => handleInvest()} />
+                      </div>
+                    )}
 
-                    {
-                      isMyInvestments() && facility.status === 'Completed' && (
-                        <div className="text-center my-3">
-                          {!isInvestorNftMinted ? (
-                            <Button title="Claim MY NFT" noIcon onClick={() => claimNFT()} />
-                          ) : (
-                            <div className="text-center text-gray-500 my-6">
-                              <img src={nftMinted} alt="minted" className="w-5 h-5 inline align-middle mr-2" />
-                              Your unique NFT Minted.
-                            </div>
-                          )}
-                        </div>
-                      )
-                    }
-
-                    {
-                      isMyInvestments() && (
-                        <>
-                          <hr />
-                          <div className="flex flex-row m-5 mb-0 font-medium">
-                            <div className="w-1/2">Total</div>
-                            <div className="w-1/2 text-right">
-                              {userTotalInvested() > 0 ? (
-                                <>{convertFromYocto(userTotalInvested(), 1)} NEAR</>
-                              ) : (
-                                <>0 NEAR</>
-                              )}
-                            </div>
+                    {isMyInvestments() && (
+                      <>
+                        <hr />
+                        <div className="flex flex-row m-5 mb-0 font-medium">
+                          <div className="w-1/2">Total</div>
+                          <div className="w-1/2 text-right">
+                            {userTotalInvested() > 0 ? (
+                              <>{convertFromYocto(userTotalInvested(), 1)} NEAR</>
+                            ) : (
+                              <>0 NEAR</>
+                            )}
                           </div>
-                        </>
-                      )
-                    }
-
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
+
+
+                {isMyInvestments() && (
+                  <div className="border rounded-xl shadow-md mt-4 overflow-hidden text-center p-5">
+                    {!isInvestorNftMinted ? (
+                      <div>
+                        <p className="mb-4">You can claim your NFT as investor that support Ukraine!</p>
+                        <Button title="Claim MY NFT" noIcon onClick={() => claimNFT()} />
+                      </div>
+                    ) : (
+                      <div className="text-center text-gray-500 my-6">
+                        <img src={nftMinted} alt="minted" className="w-5 h-5 inline align-middle mr-2" />
+                        Your unique NFT Minted.
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
+
             </Container>
           </>
         ) : (
