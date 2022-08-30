@@ -160,7 +160,8 @@ impl Default for Contract {
 impl Contract {
     #[payable]
     pub fn add_facility(&mut self, id: String, title: String, region: u8, facility_type: u8, media: String, lat: String, lng: String, description: String) {
-        assert_one_yocto();
+        assert_eq!(env::attached_deposit(), Contract::convert_to_yocto("0.1"), "Requires attached deposit of exactly 0.1 NEAR");
+
         // self.assert_contract_owner(self.owner_id.to_string());
         let account_id = env::predecessor_account_id();
         if self.facility.contains_key(&id) {

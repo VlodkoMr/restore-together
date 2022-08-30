@@ -163,7 +163,7 @@ export const AddFacility = () => {
         setIsLoading(true);
         uploadMediaToIPFS(media).then(mediaURL => {
           const GAS = convertToTera("200");
-          const DEPOSIT = 1;
+          const DEPOSIT = convertToYocto("0.1");
           const tokenId = `${region}-${facilityType}-${new Date().getTime()}`;
 
           localStorage.setItem('step', "3");

@@ -6,7 +6,7 @@
     "build": "npm run build:contracts && npm run build:web",
     "build:contracts": "(cd ./contracts && ./build.sh)",
     "build:web": "rm -rf ./dist && NODE_ENV=production parcel build src/index.html --public-url ./",
-    "dev:deploy:contract": "CONTRACT_ID=$(<neardev/dev-account) && near deploy --accountId $CONTRACT_ID",
+    "dev:deploy:contract": "npm run build:contracts && CONTRACT_ID=$(<neardev/dev-account) && near deploy --accountId $CONTRACT_ID",
     "dev:deploy:clear": "yarn build:contracts && rm -rf ./neardev && ./deploy-dev.sh",
     "dev:build:web": "rm -rf ./dist && NODE_ENV=development parcel build src/index.html --public-url ./",
     "deploy:contract": "yarn build:contracts && CONTRACT_ID=$(<neardev/dev-account) && near deploy --accountId $CONTRACT_ID",
