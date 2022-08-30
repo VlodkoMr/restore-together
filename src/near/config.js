@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.CONTRACT_NAME || 'dev-1652968071009-72818308400146'
+const CONTRACT_NAME = process.env.CONTRACT_ID;
 
 function getConfig(env) {
   console.log('CONTRACT_NAME', CONTRACT_NAME)
