@@ -6,7 +6,7 @@ export const OneFacility = ({ facility, size }) => {
 
   return (
     <Link className="relative flex flex-row py-4 bg-white last:border-b-0 w-full shadow-lg rounded-xl p-4 mb-4 border
-     transition border-gray-100 hover:bg-gray-50/70"
+     transition border-gray-200 hover:bg-gray-50/70"
           to={`/facility/${facility.token_id}`}>
       <img src={getMediaUrl(facility.media)} className="facility-image rounded-lg mr-6 mt-4 xl:mt-0" alt="photo" />
       <div className="w-full">

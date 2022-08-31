@@ -5,6 +5,7 @@ import React from "react";
 import { Header } from '../components/Header';
 import { Link, Wrapper } from '../assets/styles/common.style';
 import { FacilitiesFilter } from '../components/FacilitiesFilter';
+import { Footer } from '../components/Footer';
 
 export const Homepage = () => {
   return (
@@ -32,8 +33,8 @@ export const Homepage = () => {
           </p>
         </div>
 
+        <Footer />
       </Wrapper>
-
     </>
   );
 };

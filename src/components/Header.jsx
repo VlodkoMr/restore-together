@@ -53,8 +53,8 @@ export const Header = ({ color, width }) => {
                     noIcon
                     className={`bg-transparent 
                     ${color === "dark"
-                      ? "text-blue-400 border-blue-400 hover:text-blue-500"
-                      : "hover:border-blue-300 hover:text-blue-300"}`}
+                      ? "text-main border-main hover:text-main/90"
+                      : "hover:border-mainLight hover:text-mainLight"}`}
             />
 
             <div className="mt-0 flex flex-row place-content-end">
@@ -63,15 +63,15 @@ export const Header = ({ color, width }) => {
                       ? ""
                       : "text-gray-200 hover:text-white"
                     }`}>
-                <small className="opacity-50 inline-block">My Account</small>
+                <small className="text-gray-400 inline-block">My Account</small>
                 <span>{currentUser.id}</span>
               </Link>
               <img src={color === "dark" ? logoutIcon : logoutWhiteIcon}
                    alt="logout"
                    title="Logout"
-                   className={`w-9 h-9 ml-4 mt-1 cursor-pointer transition ${color === "dark"
-                     ? "opacity-80 hover:opacity-90"
-                     : "opacity-50 hover:opacity-60"}`}
+                   className={`w-9 h-9 grayscale hover:grayscale-0 ml-4 mt-1 cursor-pointer transition ${color === "dark"
+                     ? "opacity-50 hover:opacity-70"
+                     : "opacity-40 hover:opacity-60"}`}
                    onClick={logout} />
             </div>
           </div>
@@ -79,8 +79,8 @@ export const Header = ({ color, width }) => {
           <Button title="LogIn"
                   onClick={login}
                   className={`bg-transparent mt-1 ${color === "dark"
-                    ? "text-blue-400 border-blue-400 hover:text-blue-500"
-                    : "hover:border-blue-400 hover:text-blue-400"}`}
+                    ? "text-main border-main hover:text-main/90"
+                    : "hover:border-mainLight hover:text-mainLight"}`}
           />
         )}
       </div>

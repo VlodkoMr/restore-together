@@ -39,8 +39,8 @@ export const Button = ({
         }
          ${
           secondary
-            ? "border-blue-400 text-blue-400 hover:text-blue-500 hover:border-blue-500"
-            : className ? className : "border-transparent bg-blue-500 hover:bg-blue-600"
+            ? "border-main text-main hover:text-main hover:border-main/90"
+            : className ? className : "border-transparent bg-main hover:bg-main/90"
         } `}
         onClick={() => {
           if (!disabled && onClick) {

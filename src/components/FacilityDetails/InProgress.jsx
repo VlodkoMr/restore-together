@@ -131,7 +131,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                     <Button title="Claim Tokens"
                             noIcon
                             disabled={parseFloat(convertFromYocto(canClaimAmount, 2)) === 0}
-                            className="border border-blue-400 text-blue-500 bg-blue-50/40 hover:border-blue-500 hover:text-blue-600"
+                            className="border border-main text-main bg-blue-50/40 hover:border-main hover:text-main/90"
                             onClick={() => claimTokens()} />
                   </div>
                 </div>
@@ -151,7 +151,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                     <Button title="Update execution progress"
                             onClick={() => startUpdateProgress()}
                             noIcon
-                            className="border border-blue-400 text-blue-500 bg-blue-50/40 hover:border-blue-500 hover:text-blue-600" />
+                            className="border border-main text-main bg-blue-50/40 hover:border-main/90 hover:text-main/90" />
 
                     {executionProgress.length > 0 && (
                       <Button title="Completed"
@@ -219,7 +219,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
         <form className="mt-2 w-3/4 block mx-auto" onSubmit={(e) => e.preventDefault()}>
           <div className="mb-3">
             <FormLabel className="text-left">
-              Photo<sup className="text-blue-400">*</sup>
+              Photo<sup className="text-red-300">*</sup>
             </FormLabel>
             <FormInput type="file"
                        accept="image/*"
@@ -231,7 +231,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
 
           <div className="mb-3">
             <FormLabel className="text-left">
-              Description<sup className="text-blue-400">*</sup>
+              Description<sup className="text-red-300">*</sup>
             </FormLabel>
             <FormTextarea
               placeholder="Provide work and progress details"

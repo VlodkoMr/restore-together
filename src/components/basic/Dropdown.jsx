@@ -19,7 +19,7 @@ export default function Dropdown({ title, options, selected, border, onSelect })
       <Menu.Button
         className={`flex items-center justify-between py-2 pl-3 pr-4 text-gray-700 
         hover:bg-gray-50 min-w-[140px] xl:min-w-[200px] ${border ? "border min-w-[220px]" : "border-0 md:p-0 md:w-auto"}
-        md:hover:bg-transparent md:hover:text-blue-700`}>
+        md:hover:bg-transparent md:hover:text-main`}>
         {getTitle()}
         <ChevronDownIcon className={`-mr-1 ml-2 h-5 w-5`} aria-hidden="true" />
       </Menu.Button>
@@ -30,8 +30,8 @@ export default function Dropdown({ title, options, selected, border, onSelect })
           {options?.map((option, index) => (
             <Menu.Item key={index}>
               <div
-                className={`text-black hover:bg-blue-500 hover:text-white transition ${
-                  selected === option.id && "bg-blue-600"
+                className={`text-black hover:bg-main hover:text-white transition ${
+                  selected === option.id && "bg-main"
                 }`}
               >
                 <button

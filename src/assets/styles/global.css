@@ -84,127 +84,21 @@ body {
 }
 
 .active {
-    @apply text-blue-500 border-b-2 border-blue-400;
+    @apply text-main border-b-2 border-main;
     padding-bottom: 2px;
     pointer-events: none;
 }
 
 .text-white .active {
-    @apply text-blue-300 border-b-2 border-blue-300;
+    @apply text-mainLight border-b-2 border-mainLight;
 }
 
-/*.lrContainers {*/
-/*  width: 200px;*/
-/*  justify-content: end;*/
-/*  display: flex;*/
-/*  align-items: center;*/
-/*}*/
+.mint-nft-block {
+    background: url("../../assets/images/ua-flag.png") no-repeat right bottom;
+    background-size: 20%;
+}
 
-/*.topBanner {*/
-/*  display: flex;*/
-/*  justify-content: space-between;*/
-/*  align-items: center;*/
-/*  width: 93%;*/
-/*  padding: 30px 60px;*/
-/*}*/
-
-/*.logo {*/
-/*  width: 9vw;*/
-/*  height: calc(9vw * 0.3)*/
-/*}*/
-
-/*.tabContent {*/
-/*  width: 100%;*/
-/*  display: flex;*/
-/*  justify-content: center;*/
-/*}*/
-
-/*.searchFields {*/
-/*  width: 800px;*/
-/*  background-color: white;*/
-/*  height: 65px;*/
-/*  border-radius: 100px;*/
-/*  display: flex;*/
-/*  justify-content: space-evenly;*/
-/*  align-items: center;*/
-/*  padding-left: 30px;*/
-/*}*/
-
-/*.text-white {*/
-/*  color: white;*/
-/*}*/
-
-/*.ml-5 {*/
-/*  margin-left: 5px;*/
-/*}*/
-
-/*.tabs {*/
-/*  color: white;*/
-/*  font-weight: 500;*/
-/*  display: flex;*/
-/*  justify-content: center;*/
-/*  gap: 35px;*/
-/*  font-size: 16px;*/
-/*}*/
-
-/*.selected {*/
-/*  padding-bottom: 5px;*/
-/*  border-bottom: 2px solid white;*/
-/*}*/
-
-/*.inputs {*/
-/*  font-size: 12px;*/
-/*  font-weight: bold;*/
-/*  margin-top: 10px;*/
-/*  width: 208px;*/
-/*}*/
-
-/*.inputLabel {*/
-/*  margin-left: 5px;*/
-/*}*/
-
-
-/*.vl {*/
-/*  position: relative;*/
-/*  top: 15;*/
-/*  height: 20%;*/
-/*  background-color: rgb(228, 228, 228);*/
-/*  width: 1.5px;*/
-/*  margin-right: 20px;*/
-/*  padding-bottom: 15px;*/
-/*}*/
-
-/*.searchButton {*/
-/*  background-color: #EB4E5F;*/
-/*  padding: 10px;*/
-/*  border-radius: 50%;*/
-/*  transition: transform .4s;*/
-/*}*/
-
-/*.searchButton:hover {*/
-/*  transform: scale(1.1);*/
-/*  cursor: pointer;*/
-/*}*/
-
-/*.homeDescription {*/
-/*  color: white;*/
-/*  margin-top: 40px;*/
-/*  text-align: center;*/
-/*  font-weight: 500;*/
-/*}*/
-
-/*.homeDescription p {*/
-/*  line-height: 14px;*/
-/*}*/
-
-/*.title {*/
-/*  font-weight: bold;*/
-/*  font-size: 30px;*/
-/*  margin-bottom: 15px;*/
-/*}*/
-
-/*.text {*/
-/*  font-weight: 600;*/
-/*  margin-bottom: 25px;*/
-/*}*/
-
+footer {
+    background: rgb(0, 0, 0);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%);
+}

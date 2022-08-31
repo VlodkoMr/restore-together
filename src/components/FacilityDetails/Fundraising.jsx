@@ -44,7 +44,7 @@ export const FacilityDetailsFundraising = ({ facility, facilityProposals, facili
 
   return (
     <>
-      <h3 className="text-xl font-medium mb-2">Proposals</h3>
+      <h3 className="text-xl font-medium mb-2">Performer Proposals</h3>
       {
         facilityProposals.length > 0 ? facilityProposals.map(proposal => (
           <OneProposal proposal={proposal}
@@ -71,8 +71,9 @@ export const FacilityDetailsFundraising = ({ facility, facilityProposals, facili
                 <MyProposalForm facility_id={facility.token_id} key={facility.token_id} />
               ) : (
                 <>
-                  <p className="text-gray-500 pb-10">To add new proposal, please register{" "}
-                    <Link to="/my" className="underline">Performer Account</Link>.</p>
+                  <p className="text-gray-500 pb-10 text-sm">To add new proposal, please register{" "}
+                    <Link to="/my" className="underline">Performer Account</Link>.
+                  </p>
                 </>
               )
             }

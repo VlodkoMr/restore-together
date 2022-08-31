@@ -34,7 +34,7 @@ export const OneProposal = ({
 
   return (
     <div className={`shadow border border-gray-100 rounded-lg px-8 py-6 relative mb-3 
-    ${proposal.performer_id == currentUser.id ? "bg-orange-50/40" : ""}`}>
+    ${proposal.performer_id == currentUser.id ? "bg-yellow-100/10" : "bg-gray-50/50"}`}>
       <div
         className="flex flex-row"
         key={proposal.performer_id}>
@@ -46,8 +46,7 @@ export const OneProposal = ({
             <span className="mr-4">{allPerformers[proposal.performer_id].name}</span>
           </p>
           <small className="text-gray-500 mt-2">
-            Estimate Time: <b>{proposal.estimate_time} days</b>
-            <span className="mx-1.5">·</span>
+            Estimate Time: <b className="mr-4">{proposal.estimate_time} days</b>
             Budget: <b>{convertFromYocto(proposal.estimate_amount, 1)} NEAR</b>
             {
               totalUserInvestment && (
@@ -72,13 +71,13 @@ export const OneProposal = ({
               <>
                 {!userVotedPerformer ? (
                   <button onClick={() => addVote()}
-                          className="text-sm mt-3 border-2 border-blue-500 text-blue-600 px-4 py-1 rounded-md font-medium hover:bg-blue-50 transition">
+                          className="text-sm mt-3 border-2 border-main text-main px-4 py-1 rounded-md font-medium hover:bg-blue-50 transition">
                     + VOTE
                   </button>
                 ) : (
                   <>
                     {userVotedPerformer === proposal.performer_id && (
-                      <div className="text-blue-600 font-medium mt-2">VOTED</div>
+                      <div className="text-main font-medium mt-2">VOTED</div>
                     )}
                   </>
 
@@ -109,7 +108,7 @@ export const OneProposal = ({
         <div>
           {!companyDetailsVisible && (
             <span onClick={() => setCompanyDetailsVisible(true)}
-                  className="text-blue-500 underline cursor-pointer">
+                  className="text-mainLight underline cursor-pointer">
               read more
             </span>
           )}

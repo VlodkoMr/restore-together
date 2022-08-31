@@ -200,14 +200,14 @@ export const AddFacility = () => {
       <div className="w-1/3 z-10 relative cursor-default">
         <div
           className={`border-2 rounded-full w-12 h-12 mx-auto pt-2 text-xl text-center 
-        ${currentStep >= step ? "font-medium text-blue-500 bg-blue-100 border-blue-400" : "text-gray-300 bg-gray-100"}`}>{step}</div>
+        ${currentStep >= step ? "font-medium text-main bg-blue-100 border-mainLight" : "text-gray-300 bg-gray-100"}`}>{step}</div>
       </div>
     )
 
     const StepDescription = ({ step, text }) => (
       <div className="w-1/3">
         <div
-          className={`text-center text-sm mt-1 font-medium ${currentStep >= step ? "text-blue-500" : "text-gray-300"}`}>{text}</div>
+          className={`text-center text-sm mt-1 font-medium ${currentStep >= step ? "text-main" : "text-gray-300"}`}>{text}</div>
       </div>
     )
 
@@ -246,7 +246,7 @@ export const AddFacility = () => {
                   <form onSubmit={(e) => e.preventDefault()}>
                     <div className="mb-3">
                       <FormLabel>
-                        Title<sup className="text-blue-400">*</sup>
+                        Title<sup className="text-red-300">*</sup>
                       </FormLabel>
                       <FormInput type="text"
                                  value={title}
@@ -255,7 +255,7 @@ export const AddFacility = () => {
                     <div className="flex flex-row relative z-10">
                       <div className="mb-4 w-1/2 mr-8">
                         <FormLabel>
-                          Region<sup className="text-blue-400">*</sup>
+                          Region<sup className="text-red-300">*</sup>
                         </FormLabel>
                         <Dropdown border
                                   title="Select Region"
@@ -266,7 +266,7 @@ export const AddFacility = () => {
                       </div>
                       <div className="mb-4 w-1/2">
                         <FormLabel>
-                          Facility Type<sup className="text-blue-400">*</sup>
+                          Facility Type<sup className="text-red-300">*</sup>
                         </FormLabel>
                         <Dropdown border
                                   title="Select facility type"
@@ -279,7 +279,7 @@ export const AddFacility = () => {
 
                     <div className="mb-4">
                       <FormLabel>
-                        Set Location (click on map)<sup className="text-blue-400">*</sup>
+                        Set Location (click on map)<sup className="text-red-300">*</sup>
                       </FormLabel>
                       <div className="h-[180px]">
                         <AddFacilityMap centerCoord={regionsCoordConfig[region]}
@@ -289,7 +289,7 @@ export const AddFacility = () => {
                     </div>
                     <div className="mb-4">
                       <FormLabel>
-                        Describe facility details<sup className="text-blue-400">*</sup>
+                        Describe facility details<sup className="text-red-300">*</sup>
                       </FormLabel>
                       <FormTextarea
                         value={description}
@@ -301,7 +301,7 @@ export const AddFacility = () => {
 
                     {!isLoading ? (
                       <div className="flex">
-                        <div className="w-2/3 text-sm text-gray-400">
+                        <div className="w-2/3">
                         </div>
                         <div className="w-1/3 text-right">
                           <Button title="Next" onClick={() => saveStep1()} />
@@ -316,7 +316,7 @@ export const AddFacility = () => {
                 {currentStep === 2 && (
                   <form onSubmit={(e) => e.preventDefault()}>
                     <div className="mb-4">
-                      <FormLabel>Current Photo<sup className="text-blue-400">*</sup></FormLabel>
+                      <FormLabel>Current Photo<sup className="text-red-300">*</sup></FormLabel>
                       <FormInput type="file"
                                  accept="image/*"
                                  className="text-sm"
@@ -356,7 +356,7 @@ export const AddFacility = () => {
             <>
               {newItem && (
                 <>
-                  <h3 className="text-center text-xl font-medium">Facility published!</h3>
+                  <h3 className="text-center text-xl font-semibold">Facility published!</h3>
 
                   <Link to={`/facility/${newItem.token_id}`} className="my-6 border rounded-lg flex flex-row">
                     <img src={getMediaUrl(newItem.media)} alt="media" className="facility-image rounded-l-lg mr-4" />
