@@ -19,6 +19,13 @@ export const statusConfig = {
   'Issue': 'Has Issues',
 };
 
+export const statusColorMap = {
+  'Fundraising': 'bg-sky-100 text-sky-700',
+  'InProgress': 'bg-green-100 text-green-700',
+  'Completed': 'bg-orange-100 text-orange-700',
+  'Issue': 'bg-red-100 text-red-700',
+}
+
 export const regionsConfig = {
   '1': 'Cherkasy Oblast',
   '2': 'Chernihiv Oblast',

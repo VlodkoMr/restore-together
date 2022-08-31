@@ -61,9 +61,9 @@ export const FacilitiesFilter = ({ size }) => {
   }, []);
 
   const FilterOption = ({ title, selected, options, onSelect }) => (
-    <div className="whitespace-nowrap w-1/3">
-      <small className="block font-semibold mb-1">{title}</small>
-      <div>
+    <div className={`whitespace-nowrap w-1/3 ${title !== "Region" ? "border-l border-gray-200 pl-4" : "pl-1"}`}>
+      <small className="block font-medium text-gray-400 mb-1">{title}</small>
+      <div className="font-medium">
         <Dropdown title="All" options={options} selected={selected} onSelect={onSelect} />
       </div>
     </div>
@@ -85,7 +85,7 @@ export const FacilitiesFilter = ({ size }) => {
     <>
       <div
         className={`w-full relative bg-white mx-auto flex flex-row text-slate-900 
-          ${size === "sm" ? "pr-2 pl-8 bg-gray-50 h-14 py-2" : "sm:w-[740px] px-10 rounded-full h-16 py-3"}
+          ${size === "sm" ? "pr-2 pl-6 bg-gray-50 h-14 py-2" : "sm:w-[800px] pl-10 pr-16 rounded-full h-20 py-5"}
         `}>
         <FilterOption title="Region"
                       options={regionList}
@@ -118,8 +118,8 @@ export const FacilitiesFilter = ({ size }) => {
         {size !== "sm" && (
           <Link to={getFacilityUrl(region, facility, status)}>
             <button type="button"
-                    className={`absolute right-2.5 text-white bg-blue-500 transition hover:bg-blue-600 hover:text-white focus:ring-4 items-center
-                  focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-3 text-center inline-flex top-2.5`}>
+                    className={`absolute right-4 text-white bg-blue-500 transition hover:bg-blue-600 hover:text-white focus:ring-4 items-center
+                  focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-3 text-center inline-flex top-[18px]`}>
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd"
                       d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"

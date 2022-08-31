@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { googleAPIKey, statusConfig } from '../near/content';
+import { googleAPIKey, statusColorMap, statusConfig } from '../near/content';
 import { getMediaUrl } from '../near/utils';
 
 function FacilitiesMap({ locations, centerCoord, setHighLight, filterItems, google }) {
@@ -54,7 +54,7 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, filterItems, goog
           google={google}
           mapContainerStyle={{
             width: '100%',
-            height: 'calc(100vh - 170px)'
+            height: 'calc(100vh - 94px)'
           }}
           onLoad={onLoad}
           center={center}
@@ -62,7 +62,8 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, filterItems, goog
           onClick={onMapClicked}
           options={{
             mapTypeControl: false,
-            clickableIcons: false
+            clickableIcons: false,
+            zoomControl: true,
           }}
         >
           {locations.filter(filterItems).map(item => (
@@ -87,7 +88,7 @@ function FacilitiesMap({ locations, centerCoord, setHighLight, filterItems, goog
                          href={`/facility/${activeLocation.token_id}`}>{activeLocation.title}</a>
                     </h1>
                     <p
-                      className="absolute left-4 top-4 bg-white/75 font-normal rounded-md px-2 py-1 drop-shadow-md ">
+                      className={`absolute left-4 top-4 font-medium rounded-md px-2 py-1 drop-shadow-md  ${statusColorMap[activeLocation.status]}`}>
                       {statusConfig[activeLocation.status]}
                     </p>
                   </>

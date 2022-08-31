@@ -72,28 +72,29 @@ export const Facilities = () => {
               <div className="w-1/2 border-r border-r facility-col overflow-y-scroll" style={{
                 height: 'calc(100vh - 94px)',
               }}>
-                <div className="bg-gray-50 pb-2 pt-3 border-b">
-                  <Container className="h-14 pt-1 text-sm text-gray-500">
-                    {facilityList.length > 0 ? (
-                      <p>Total in {regionsConfig[region]}: {facilityList.length}</p>
-                    ) : (
-                      <p>No facilities in {regionsConfig[region]}</p>
-                    )}
-                    <Link to="/add-facility" state={{ region: region }}
-                          className="block underline mt-0.5 hover:text-blue-500">
-                      Add new facility
-                    </Link>
-                  </Container>
+                <div className="bg-gray-50 pb-2 pt-3 border-b z-10 relative">
+                  <FacilitiesFilter size="sm" />
                 </div>
+
+                <Container className="py-3 text-sm text-gray-500">
+                  {facilityList.length > 0 ? (
+                    <p className="text-right font-semibold">Total in {regionsConfig[region]}: {facilityList.length}</p>
+                  ) : (
+                    <p>No facilities in {regionsConfig[region]}</p>
+                  )}
+                </Container>
 
                 {
                   facilityList.length > 0 && facilityList.filter(filterItems).length > 0 ? (
                     facilityList.filter(filterItems).map(facility => (
-                      <Container
-                        className={`border-b transition hover:bg-blue-50/30 ${highLight === facility.token_id ? "bg-gray-50" : ""}`}
-                        key={facility.token_id}>
+                      <Container key={facility.token_id}>
                         <OneFacility facility={facility} />
                       </Container>
+                      // <Container
+                      //   className={`border-b transition hover:bg-blue-50/30 ${highLight === facility.token_id ? "bg-gray-50" : ""}`}
+                      //   key={facility.token_id}>
+                      //   <OneFacility facility={facility} />
+                      // </Container>
                     ))
                   ) : (
                     <div className="m-4 text-gray-500">*No facilities</div>
@@ -101,15 +102,13 @@ export const Facilities = () => {
                 }
               </div>
 
-              <div className="w-1/2">
-                <div className="bg-gray-50 pb-3 pt-2 relative z-10 border-b">
-                  <FacilitiesFilter size="sm" />
-                </div>
+              <div className="w-8/12">
                 <div className="relative z-0">
                   <FacilitiesMap filterItems={filterItems}
                                  centerCoord={centerCoord}
                                  locations={facilityList}
-                                 setHighLight={setHighLight} />
+                                 setHighLight={setHighLight}
+                  />
                 </div>
               </div>
 

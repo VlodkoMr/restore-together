@@ -26,21 +26,19 @@ export const Link = styled(ReactLink).attrs(() => ({
 
 export const NavLink = styled(ReactNavLink).attrs((props) => ({
   className: `
-    px-2.5
-    py-2.5
-    lg:px-4
-    md:ml-0.5
-    xl:ml-1
+    mx-4
+    px-1
+    py-3
     font-medium
     transition
     ease-in-out
     duration-200
-    rounded-xl
     hover:text-blue-400
     cursor-pointer`,
 }))`
 &.active{ 
-  text-decoration: underline; 
+  border-bottom: 2px solid #FFF;
+  padding-bottom: 2px;
  }`;
 
 export const Btn = styled.button`

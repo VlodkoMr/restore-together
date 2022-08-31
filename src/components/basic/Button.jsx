@@ -15,8 +15,8 @@ export const Button = ({
 }) => {
   const sizeMapping = {
     xs: "text-sm lg:px-4 px-3 lg:py-2 py-1",
-    sm: "text-sm lg:px-4 px-3 lg:py-3 py-2.5",
-    md: "text-base lg:px-5 px-4 lg:py-2 py-1.5",
+    sm: "text-sm lg:px-4 px-4 lg:py-3 py-2.5",
+    md: "text-base lg:px-5 px-5 lg:py-2 py-1.5",
   };
 
   const iconMapping = {
@@ -32,7 +32,7 @@ export const Button = ({
           disabled && "grayscale cursor-default opacity-40"
         } 
         ${
-          roundedClass ? roundedClass : "rounded-lg"
+          roundedClass ? roundedClass : "rounded-full"
         }
         ${
           readonly && "grayscale opacity-70"
