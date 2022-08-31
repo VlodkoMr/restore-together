@@ -23,40 +23,38 @@ export const Header = ({ color, width }) => {
   return (
     <Container width={width}
                className={`flex flex-row justify-between py-5 
-                 ${color === "dark" ? "text-neutral-700 border-b" : "text-white max-w-[1400px]"}`}
+                 ${color === "dark" ? "text-neutral-700 border-b" : "text-white max-w-[1500px]"}`}
     >
-      <div className="flex">
-        <div className="w-64">
-          <Link to="/">
-            <img src={color === "dark" ? logoIcon : logoWhiteIcon} alt="logo" width="140" />
-          </Link>
-        </div>
-
-        <div className={`pt-4 ${color === "dark" ? "" : "ml-10"}`}>
-          <NavLink to="/">Home</NavLink>
-          <span className={`border-r ${color === "dark"
-            ? "border-gray-200"
-            : "opacity-20 border-gray-100"
-          }`}>&nbsp;</span>
-          <NavLink to="/facility">All Facilities</NavLink>
-          <span className={`border-r ${color === "dark"
-            ? "border-gray-200"
-            : "opacity-20 border-gray-100"
-          }`}>&nbsp;</span>
-          <NavLink to="/about">About Us</NavLink>
-        </div>
+      <div className="w-1/3">
+        <Link to="/">
+          <img src={color === "dark" ? logoIcon : logoWhiteIcon} alt="logo" width="140" />
+        </Link>
       </div>
 
-      <div className="pt-1 text-right">
+      <div className={`pt-4 ${color === "dark" ? "" : "ml-10"}`}>
+        <NavLink to="/">HOME</NavLink>
+        <span className={`border-r ${color === "dark"
+          ? "border-gray-200"
+          : "opacity-20 border-gray-100"
+        }`}>&nbsp;</span>
+        <NavLink to="/facility">FACILITIES</NavLink>
+        <span className={`border-r ${color === "dark"
+          ? "border-gray-200"
+          : "opacity-20 border-gray-100"
+        }`}>&nbsp;</span>
+        <NavLink to="/about">ABOUT US</NavLink>
+      </div>
+
+      <div className="text-right w-1/3">
         {currentUser.id ? (
-          <div className="flex">
+          <div className="flex justify-end pt-1">
             <Button title="Add Facility"
                     onClick={() => navigate("/add-facility")}
                     noIcon
-                    className={`bg-transparent
+                    className={`bg-transparent 
                     ${color === "dark"
-                      ? "text-blue-500 border-blue-400 hover:text-blue-500"
-                      : "hover:border-blue-400 hover:text-blue-400"}`}
+                      ? "text-blue-400 border-blue-400 hover:text-blue-500"
+                      : "hover:border-blue-300 hover:text-blue-300"}`}
             />
 
             <div className="mt-0 flex flex-row place-content-end">
@@ -80,7 +78,7 @@ export const Header = ({ color, width }) => {
         ) : (
           <Button title="LogIn"
                   onClick={login}
-                  className={`bg-transparent ${color === "dark"
+                  className={`bg-transparent mt-1 ${color === "dark"
                     ? "text-blue-400 border-blue-400 hover:text-blue-500"
                     : "hover:border-blue-400 hover:text-blue-400"}`}
           />

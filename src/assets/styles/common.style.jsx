@@ -35,11 +35,7 @@ export const NavLink = styled(ReactNavLink).attrs((props) => ({
     duration-200
     hover:text-blue-400
     cursor-pointer`,
-}))`
-&.active{ 
-  border-bottom: 2px solid #FFF;
-  padding-bottom: 2px;
- }`;
+}))``;
 
 export const Btn = styled.button`
 `;

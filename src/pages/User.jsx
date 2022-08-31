@@ -17,6 +17,7 @@ export const User = () => {
   const [performerName, setPerformerName] = useState("");
   const [performerPhone, setPerformerPhone] = useState("");
   const [performerDescription, setPerformerDescription] = useState("");
+  const [showPerformerCreate, setShowPerformerCreate] = useState(false);
   // const logoInput = React.createRef();
   // const [performerLogo, setPerformerLogo] = useState("");
 
@@ -77,17 +78,14 @@ export const User = () => {
             <div className="w-7/12 border-r pr-10">
               <h3 className="text-xl font-semibold mb-4 pl-4 pt-2">My Investments</h3>
               {isReady ? (
-                <div>
+                <>
                   {investorFacilities.length > 0 ?
                     investorFacilities.map(facility => (
-                      <div className="transition hover:bg-gray-50 pl-4 border-b border-dashed last:border-b-0"
-                           key={facility.token_id}>
-                        <OneFacility facility={facility} />
-                      </div>
+                      <OneFacility facility={facility} key={facility.token_id} />
                     )) : (
                       <div className="text-gray-500 pl-4">*No investments</div>
                     )}
-                </div>
+                </>
               ) : (
                 <Loader />
               )}
@@ -137,10 +135,7 @@ export const User = () => {
                   <div className="pb-6">
                     {performerFacilities.length > 0 ?
                       performerFacilities.map(facility => (
-                        <div className="transition hover:bg-gray-50 border-b border-dashed last:border-b-0"
-                             key={facility.token_id}>
-                          <OneFacility facility={facility} size="small" />
-                        </div>
+                        <OneFacility facility={facility} size="small" key={facility.token_id} />
                       )) : (
                         <div className="text-gray-500 mt-4">*No facilities</div>
                       )}
@@ -148,47 +143,57 @@ export const User = () => {
                 </div>
               ) : (
                 <form onSubmit={registerPerformer} className="max-w-[480px]">
-                  <div className="text-gray-500 text-sm">
-                    To start work on the restoration of cultural heritage, you need to provide additional information
-                    about the company (or private entrepreneur).
-                  </div>
-                  <div className="mt-6">
-                    <div className="mb-3">
-                      <FormLabel>Company Name<sup className="text-blue-400">*</sup></FormLabel>
-                      <FormInput type="text"
-                                 value={performerName}
-                                 onChange={(e) => setPerformerName(e.target.value)} />
-                    </div>
-                    {/*<div className="mb-3">*/}
-                    {/*  <FormLabel>Company Logo:</FormLabel>*/}
-                    {/*  <FormInput type="file"*/}
-                    {/*             ref={logoInput}*/}
-                    {/*             onChange={() => uploadImage()}/>*/}
-                    {/*</div>*/}
-                    <div className="mb-3">
-                      <FormLabel>Phone<sup className="text-blue-400">*</sup></FormLabel>
-                      <FormInput type="text"
-                                 value={performerPhone}
-                                 placeholder="+380"
-                                 onChange={(e) => setPerformerPhone(e.target.value)} />
-                    </div>
-                    <div className="mb-3">
-                      <FormLabel>Description<sup className="text-blue-400">*</sup></FormLabel>
-                      <FormTextarea value={performerDescription}
-                                    placeholder="Describe your experience, sphere of activity and works."
-                                    onChange={(e) => setPerformerDescription(e.target.value)}>
-                      </FormTextarea>
-                    </div>
-                    <div className="flex flex-row">
-                      <div className="w-1/2 text-sm text-gray-500">
-                        *Your request requires 0.25 NEAR for this verification.
+                  {showPerformerCreate ? (
+                    <>
+                      <div className="text-gray-500 text-sm">
+                        To start work on the restoration of cultural heritage, you need to provide additional information
+                        about the company (or private entrepreneur).
                       </div>
-                      <div className="text-right w-1/2">
-                        <Button title="Create Account" noIcon />
+                      <div className="mt-6">
+                        <div className="mb-3">
+                          <FormLabel>Company Name<sup className="text-blue-400">*</sup></FormLabel>
+                          <FormInput type="text"
+                                     value={performerName}
+                                     onChange={(e) => setPerformerName(e.target.value)} />
+                        </div>
+                        {/*<div className="mb-3">*/}
+                        {/*  <FormLabel>Company Logo:</FormLabel>*/}
+                        {/*  <FormInput type="file"*/}
+                        {/*             ref={logoInput}*/}
+                        {/*             onChange={() => uploadImage()}/>*/}
+                        {/*</div>*/}
+                        <div className="mb-3">
+                          <FormLabel>Phone<sup className="text-blue-400">*</sup></FormLabel>
+                          <FormInput type="text"
+                                     value={performerPhone}
+                                     placeholder="+380"
+                                     onChange={(e) => setPerformerPhone(e.target.value)} />
+                        </div>
+                        <div className="mb-3">
+                          <FormLabel>Description<sup className="text-blue-400">*</sup></FormLabel>
+                          <FormTextarea value={performerDescription}
+                                        placeholder="Describe your experience, sphere of activity and works."
+                                        onChange={(e) => setPerformerDescription(e.target.value)}>
+                          </FormTextarea>
+                        </div>
+                        <div className="flex flex-row">
+                          <div className="w-1/2 text-sm text-gray-500">
+                            *Your request requires 0.25 NEAR for company verification.
+                          </div>
+                          <div className="text-right w-1/2">
+                            <Button title="Create Account" noIcon />
+                          </div>
+                        </div>
                       </div>
-
+                    </>
+                  ) : (
+                    <div className="text-gray-500 text-sm">
+                      To start work on the restoration, you need Performer Account:
+                      <div className="mt-2">
+                        <Button title="Performer Registration" noIcon secondary onClick={() => setShowPerformerCreate(true)} />
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </form>
               )}
 

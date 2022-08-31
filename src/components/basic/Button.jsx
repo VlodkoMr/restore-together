@@ -39,7 +39,7 @@ export const Button = ({
         }
          ${
           secondary
-            ? "border-blue-500 hover:text-blue-400 hover:border-blue-600"
+            ? "border-blue-400 text-blue-400 hover:text-blue-500 hover:border-blue-500"
             : className ? className : "border-transparent bg-blue-500 hover:bg-blue-600"
         } `}
         onClick={() => {

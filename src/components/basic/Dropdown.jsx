@@ -18,7 +18,7 @@ export default function Dropdown({ title, options, selected, border, onSelect })
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button
         className={`flex items-center justify-between py-2 pl-3 pr-4 text-gray-700 
-        hover:bg-gray-50 min-w-[140px] xl:min-w-[190px] ${border ? "border min-w-[220px]" : "border-0 md:p-0 md:w-auto"}
+        hover:bg-gray-50 min-w-[140px] xl:min-w-[200px] ${border ? "border min-w-[220px]" : "border-0 md:p-0 md:w-auto"}
         md:hover:bg-transparent md:hover:text-blue-700`}>
         {getTitle()}
         <ChevronDownIcon className={`-mr-1 ml-2 h-5 w-5`} aria-hidden="true" />

@@ -83,6 +83,16 @@ body {
     display: none;
 }
 
+.active {
+    @apply text-blue-500 border-b-2 border-blue-400;
+    padding-bottom: 2px;
+    pointer-events: none;
+}
+
+.text-white .active {
+    @apply text-blue-300 border-b-2 border-blue-300;
+}
+
 /*.lrContainers {*/
 /*  width: 200px;*/
 /*  justify-content: end;*/
