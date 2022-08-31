@@ -33,7 +33,7 @@ export const OneProposal = ({
   }
 
   return (
-    <div className={`shadow border border-gray-100 rounded-lg px-8 py-6 relative mb-3 
+    <div className={`shadow border border-gray-100 rounded-xl px-8 py-6 relative mb-3 
     ${proposal.performer_id == currentUser.id ? "bg-yellow-100/10" : "bg-gray-50/50"}`}>
       <div
         className="flex flex-row"
@@ -42,36 +42,38 @@ export const OneProposal = ({
         {/*  <img src={tmpLogo} alt="" width="w-full" className="rounded-full my-1" />*/}
         {/*</div>*/}
         <div className="w-full">
-          <p className="text-lg font-medium leading-5">
-            <span className="mr-4">{allPerformers[proposal.performer_id].name}</span>
+          <p className="text-md font-medium leading-5">
+            <span className="mr-2">{allPerformers[proposal.performer_id].name}</span>
+
+            {allPerformers[proposal.performer_id].is_validated ? (
+              <small className="bg-green-100 text-green-500 px-2 py-0.5 rounded font-medium">Verified</small>
+            ) : (
+              <small className="bg-gray-200 text-gray-600 px-2 py-0.5 rounded font-medium">Not Verified</small>
+            )}
           </p>
+
           <small className="text-gray-500 mt-2">
-            Estimate Time: <b className="mr-4">{proposal.estimate_time} days</b>
-            Budget: <b>{convertFromYocto(proposal.estimate_amount, 1)} NEAR</b>
+            Estimate: <b className="font-medium text-sm">{proposal.estimate_time} days</b>
+            <span className="mx-2 text-xl align-sub opacity-50">/</span>
+            Budget: <b className="font-medium text-sm">{convertFromYocto(proposal.estimate_amount, 1)} NEAR</b>
             {
               totalUserInvestment && (
                 <>
-                  <span className="mx-1.5">·</span>
-                  Votes: {investedVotesPct() || 0}%
+                  <span className="mx-2 text-xl align-sub opacity-50">/</span>
+                  Votes: <b>{investedVotesPct() || 0}%</b>
                 </>
               )
             }
           </small>
-          <p className="mt-2" style={{ whiteSpace: "pre-wrap" }}>
-            {proposal.text}
-          </p>
         </div>
-        <div className="w-48 text-right">
-          <small className="text-gray-500">
-            {timestampToDate(proposal.created_at)}
-          </small>
 
+        <div className="w-48 text-right">
           {
-            canVote() && (
+            canVote() ? (
               <>
                 {!userVotedPerformer ? (
                   <button onClick={() => addVote()}
-                          className="text-sm mt-3 border-2 border-main text-main px-4 py-1 rounded-md font-medium hover:bg-blue-50 transition">
+                          className="text-sm mt-2 border-2 border-main text-main px-4 py-1 rounded-md font-medium hover:bg-blue-50 transition">
                     + VOTE
                   </button>
                 ) : (
@@ -80,35 +82,29 @@ export const OneProposal = ({
                       <div className="text-main font-medium mt-2">VOTED</div>
                     )}
                   </>
-
                 )}
+              </>
+            ) : (
+              <>
+                <small className="text-gray-500">
+                  {timestampToDate(proposal.created_at)}
+                </small>
               </>
             )
           }
         </div>
       </div>
 
-      <hr className="my-3 " />
+      <hr className="my-3 border-dashed" />
 
-      <div className="text-sm flex flex-row justify-between">
-        <div className="">
-          <span className="mr-2">Company Status:</span>
-          {allPerformers[proposal.performer_id].is_validated ? (
-            <>
-              <img src={verified_icon} alt="verified" title="verified" className="inline w-5 mr-1" />
-              <span>Verified</span>
-            </>
-          ) : (
-            <>
-              <img src={pending_icon} alt="pending" title="pending" className="inline w-5 mr-1" />
-              <span className="text-gray-500">Not Verified</span>
-            </>
-          )}
-        </div>
-        <div>
+      <div className="flex flex-row justify-between">
+        <p className="mt-2 pr-10" style={{ whiteSpace: "pre-wrap" }}>
+          {proposal.text}
+        </p>
+        <div className="relative">
           {!companyDetailsVisible && (
             <span onClick={() => setCompanyDetailsVisible(true)}
-                  className="text-mainLight underline cursor-pointer">
+                  className="text-mainLight w-40 text-right text-sm underline cursor-pointer absolute bottom-0 right-0">
               read more
             </span>
           )}
@@ -116,7 +112,7 @@ export const OneProposal = ({
       </div>
 
       <div className={`mt-1 text-sm text-gray-500 ${companyDetailsVisible ? "" : "hidden"}`}>
-        {allPerformers[proposal.performer_id].description}
+        About the Company: {allPerformers[proposal.performer_id].description}
       </div>
 
     </div>

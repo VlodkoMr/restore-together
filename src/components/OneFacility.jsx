@@ -11,7 +11,7 @@ export const OneFacility = ({ facility, size }) => {
       <img src={getMediaUrl(facility.media)} className="facility-image rounded-lg mr-6 mt-4 xl:mt-0" alt="photo" />
       <div className="w-full">
         <b className="absolute top-3 right-4 text-lg font-medium text-gray-500" title="Invested Total">
-          {convertFromYocto(facility.total_invested, 1)} NEAR
+          {facility.total_invested > 0 ? convertFromYocto(facility.total_invested, 1) : 0} NEAR
         </b>
 
         <small className={`px-2 py-1 font-medium text-xsm rounded ${statusColorMap[facility.status]}`}>

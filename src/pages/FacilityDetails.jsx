@@ -153,7 +153,12 @@ export const FacilityDetails = () => {
                   <small className={`px-2 py-1 font-medium text-sm rounded ${statusColorMap[facility.status]}`}>
                     {statusConfig[facility.status]}
                   </small>
-                  <span className="ml-4 font-medium">{facilityTypeConfig[facility.facility_type]}</span>
+                  <span className="text-3xl leading-3 align-sub mx-2 opacity-50">&#11825;</span>
+                  <span className="font-medium">{facilityTypeConfig[facility.facility_type]}</span>
+                  <span className="text-3xl leading-3 align-sub mx-2 opacity-50">&#11825;</span>
+                  <span className="font-medium">
+                    {facility.total_invested > 0 ? `Investors: ${facility.total_investors}` : "No investors (for now)"}
+                  </span>
                 </div>
 
                 <p className="mt-5" style={{ whiteSpace: "pre-wrap" }}>{facility.description}</p>
@@ -189,8 +194,10 @@ export const FacilityDetails = () => {
                         .filter(item => item.user_id === currentUser.id)
                         .map((item, index) => (
                           <div className="flex flex-row my-2 mx-5" key={item.timestamp}>
-                            <div className="w-1/2">{index + 1}. {timestampToDate(item.timestamp)}</div>
-                            <div className="w-1/2 text-right">
+                            <div className="w-1/2 text-gray-500">
+                              {index + 1}. {timestampToDate(item.timestamp)}
+                            </div>
+                            <div className="w-1/2 text-right text-gray-500">
                               <b className="font-medium">{convertFromYocto(item.amount)} NEAR</b>
                               {/*<div className="text-main">cancel</div>*/}
                             </div>
@@ -231,7 +238,7 @@ export const FacilityDetails = () => {
 
 
                 {isMyInvestments() && (
-                  <div className="border border-gray-200 rounded-xl shadow-lg bg-white my-4 overflow-hidden text-center p-6 mint-nft-block">
+                  <div className="border border-gray-200 rounded-xl shadow-lg bg-white my-4 overflow-hidden text-center p-6">
                     {!isInvestorNftMinted ? (
                       <div>
                         <p className="mb-4 text-gray-500">You can claim your NFT as investor that support Ukraine!</p>
@@ -239,7 +246,7 @@ export const FacilityDetails = () => {
                       </div>
                     ) : (
                       <div className="text-center text-gray-500 my-6">
-                        <img src={nftMinted} alt="minted" className="w-5 h-5 inline align-middle mr-2" />
+                        <img src={nftMinted} alt="minted" className="w-7 h-7 inline align-middle mr-2" />
                         Your unique NFT Minted.
                       </div>
                     )}
