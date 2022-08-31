@@ -31,7 +31,7 @@ impl Contract {
 
     // Convert u64 to yocto NEAR Gas
     pub(crate) fn to_tera(&self, tokens: u64) -> Gas {
-        tokens * 10u128.pow(12) as u64
+        (tokens * 10u128.pow(12) as u64).into()
     }
 
     // Check contract owner

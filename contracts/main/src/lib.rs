@@ -1,5 +1,5 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, log, Gas, serde_json::json, setup_alloc, assert_one_yocto};
+use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, Gas, serde_json::json, assert_one_yocto};
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
@@ -9,8 +9,6 @@ use near_sdk::serde_json::Value as JsonValue;
 
 mod utils;
 mod internal;
-
-setup_alloc!();
 
 // #[ext_contract(ext_self)]
 // pub trait ExtSelf {
@@ -136,7 +134,7 @@ impl Default for Contract {
         Self {
             // owner_id: env::predecessor_account_id(),
             management_accounts: vec![],
-            contract_nft: format!("nft.{}", env::current_account_id()),
+            contract_nft: format!("nft.{}", env::current_account_id()).parse().unwrap(),
 
             performers: UnorderedMap::new(StorageKeys::Performers),
             performer_facilities: LookupMap::new(StorageKeys::Performers),
@@ -169,7 +167,7 @@ impl Contract {
         }
 
         let facility = Facility {
-            owner_id: account_id.to_string(),
+            owner_id: account_id,
             token_id: id.to_string(),
             title,
             description,
@@ -227,7 +225,7 @@ impl Contract {
 
         let mut facility_investors = self.facility_investors.get(&token_id).unwrap_or(vec![]);
         facility_investors.push(FacilityInvestment {
-            user_id: env::predecessor_account_id().to_string(),
+            user_id: account_id.clone(),
             amount: deposit,
             timestamp: env::block_timestamp(),
         });
@@ -249,7 +247,7 @@ impl Contract {
             }
         }
         if user_voted_performer.is_some() {
-            self.check_facility_status_by_voting(facility, user_voted_performer.unwrap());
+            self.check_facility_status_by_voting(facility, user_voted_performer.unwrap().parse().unwrap());
         }
     }
 
@@ -291,7 +289,7 @@ impl Contract {
         };
 
         let performer = Performer {
-            id: account_id.to_string(),
+            id: account_id.clone(),
             name,
             phone,
             media: None,
@@ -309,13 +307,13 @@ impl Contract {
         let mut proposals = self.facility_proposals.get(&facility_id).unwrap_or(vec![]);
 
         for item in &proposals {
-            if item.performer_id == account_id.to_string() {
+            if item.performer_id == account_id {
                 panic!("You can add only one proposal for facility");
             }
         }
 
         proposals.push(FacilityProposal {
-            performer_id: account_id.to_string(),
+            performer_id: account_id.clone(),
             estimate_amount: budget.0,
             estimate_time: time,
             text,
@@ -346,7 +344,7 @@ impl Contract {
                 let mut votes_total_invest = 0;
                 for user_id in &proposal.votes {
                     for investor in &facility_investors {
-                        if investor.user_id == user_id.to_string() {
+                        if &investor.user_id == user_id {
                             votes_total_invest += investor.amount;
                         }
                     }
@@ -357,7 +355,7 @@ impl Contract {
                     self.facility.remove(&facility.token_id);
 
                     facility.status = FacilityStatus::InProgress;
-                    facility.performer = Some(performer_id.to_string());
+                    facility.performer = Some(performer_id.clone());
                     self.facility.insert(&facility.token_id, &facility);
 
                     // add facility to performer list
@@ -442,7 +440,7 @@ impl Contract {
             }
             // Add user vote
             if proposal.performer_id == performer_id {
-                proposal.votes.push(user_id.to_string());
+                proposal.votes.push(user_id.clone());
             }
             proposal
         }).collect();
@@ -465,7 +463,7 @@ impl Contract {
         }
         let mut progress = self.facility_execution_progress.get(&facility_id).unwrap_or(vec![]);
         let new_progress = FacilityExecutionProgress {
-            performer_id: performer.to_string(),
+            performer_id: performer.into(),
             media,
             description,
             timestamp: env::block_timestamp(),
@@ -567,8 +565,8 @@ impl Contract {
         });
 
         let mint_gas: Gas = self.to_tera(80);
-        Promise::new(self.contract_nft.to_string()).function_call(
-            b"nft_mint".to_vec(),
+        Promise::new(self.contract_nft.clone()).function_call(
+            "nft_mint".to_string(),
             metadata.to_string().as_bytes().to_vec(),
             env::attached_deposit(),
             mint_gas,
