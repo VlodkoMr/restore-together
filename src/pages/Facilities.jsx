@@ -70,7 +70,7 @@ export const Facilities = () => {
         {
           isReady ? (
             <div className="flex flex-row mb-auto">
-              <div className="w-1/2 border-r border-r facility-col overflow-y-scroll" style={{
+              <div className="w-5/12  border-r border-r facility-col overflow-y-scroll" style={{
                 height: 'calc(100vh - 160px)',
               }}>
                 <div className="bg-gray-50 pb-2 pt-2 border-b z-10 relative">
@@ -96,7 +96,7 @@ export const Facilities = () => {
                 }
               </div>
 
-              <div className="w-8/12">
+              <div className="w-7/12">
                 <div className="relative z-0">
                   <FacilitiesMap filterItems={filterItems}
                                  centerCoord={centerCoord}

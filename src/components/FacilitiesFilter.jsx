@@ -64,7 +64,7 @@ export const FacilitiesFilter = ({ size }) => {
     <div className={`whitespace-nowrap w-1/3 ${title !== "Region" ? "border-l border-gray-200 pl-4" : "pl-1"}`}>
       <small className="block font-medium text-gray-500/80 mb-1">{title}</small>
       <div className="font-medium">
-        <Dropdown title="All" options={options} selected={selected} onSelect={onSelect} />
+        <Dropdown title="All" options={options} selected={selected} onSelect={onSelect} isSmall={size === "sm"} />
       </div>
     </div>
   );

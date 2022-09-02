@@ -2,7 +2,7 @@ import React from "react";
 import { Menu } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 
-export default function Dropdown({ title, options, selected, border, onSelect }) {
+export default function Dropdown({ title, options, selected, border, onSelect, isSmall }) {
 
   const getTitle = () => {
     let titleStr = title;
@@ -17,8 +17,9 @@ export default function Dropdown({ title, options, selected, border, onSelect })
   return (
     <Menu as="div" className="relative inline-block text-left">
       <Menu.Button
-        className={`flex items-center justify-between py-2 pl-3 pr-4 text-gray-700 
-        hover:bg-gray-50 min-w-[140px] xl:min-w-[200px] ${border ? "border min-w-[220px]" : "border-0 md:p-0 md:w-auto"}
+        className={`flex items-center justify-between py-2 pl-3 pr-4 text-gray-700 max-w-full hover:bg-gray-50 
+        ${isSmall ? "w-full min-w-[100px]" : "w-[140px] xl:w-[200px]"}  
+        ${border ? "border w-[220px]" : "border-0 md:p-0 md:w-auto"}
         md:hover:bg-transparent md:hover:text-main`}>
         {getTitle()}
         <ChevronDownIcon className={`-mr-1 ml-2 h-5 w-5`} aria-hidden="true" />

@@ -22,16 +22,16 @@ export const Header = ({ color, width }) => {
 
   return (
     <Container width={width}
-               className={`flex flex-row justify-between py-5 
+               className={`flex flex-row xl:justify-between justify-around py-5 
                  ${color === "dark" ? "text-neutral-700 border-b-2" : "text-white max-w-[1500px]"}`}
     >
-      <div className="w-1/3">
+      <div className="xl:w-1/4 w-32">
         <Link to="/">
           <img src={color === "dark" ? logoIcon : logoWhiteIcon} alt="logo" width="140" />
         </Link>
       </div>
 
-      <div className={`pt-4 ${color === "dark" ? "" : "ml-10"}`}>
+      <div className={`pt-4 ${color === "dark" ? "" : "ml-4"}`}>
         <NavLink to="/">HOME</NavLink>
         <span className={`border-r ${color === "dark"
           ? "border-gray-200"
@@ -45,13 +45,13 @@ export const Header = ({ color, width }) => {
         <NavLink to="/about">ABOUT US</NavLink>
       </div>
 
-      <div className="text-right w-1/3">
+      <div className="text-right xl:w-1/4">
         {currentUser.id ? (
           <div className="flex justify-end pt-1">
             <Button title="Add Facility"
                     onClick={() => navigate("/add-facility")}
                     noIcon
-                    className={`bg-transparent 
+                    className={`bg-transparent mr-1
                     ${color === "dark"
                       ? "text-main border-main hover:text-main/90"
                       : "hover:border-mainLight hover:text-mainLight"}`}

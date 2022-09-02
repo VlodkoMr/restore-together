@@ -11,14 +11,14 @@ export const Footer = ({ color, width }) => {
       <Container width={width}
                  className={`flex flex-row justify-between pt-4 h-16`}
       >
-        <div className={`w-1/3 text-sm leading-8 ${color === "dark" ? "text-gray-500/90" : "text-gray-300/80"}`}>
+        <div className={`xl:w-1/4 w-1/2 text-sm leading-8 ${color === "dark" ? "text-gray-500/90" : "text-gray-300/80"}`}>
           © MADE BY <a href="https://atomic-lab.io/"
                        target="_blank"
                        className="font-semibold"
         >ATOMIC-LAB.IO</a>
         </div>
 
-        <div className={`w-1/3 text-sm text-center leading-8 ${color === "dark" ? "text-gray-500/90" : "text-gray-300/80"}`}>
+        <div className={`w-1/2 hidden xl:block text-sm text-center leading-8 ${color === "dark" ? "text-gray-500/90" : "text-gray-300/80"}`}>
           Supported by
           <a href="https://near.org/"
              target="_blank"
@@ -37,7 +37,7 @@ export const Footer = ({ color, width }) => {
           </a>
         </div>
 
-        <div className="text-right w-1/3">
+        <div className="text-right xl:w-1/4 w-1/2">
           <a href="https://twitter.com/Ukraine_restore" target="_blank" className="inline-block opacity-80 hover:opacity-90 transition">
             <img src={twitterIcon} alt="" className="w-8 h-8" />
           </a>
