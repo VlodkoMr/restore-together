@@ -81,24 +81,17 @@ export const Facilities = () => {
                   {facilityList.length > 0 ? (
                     <p className="text-right font-semibold">Total in {regionsConfig[region]}: {facilityList.length}</p>
                   ) : (
-                    <p>No facilities in {regionsConfig[region]}</p>
+                    <p>*No facilities in {regionsConfig[region]}</p>
                   )}
                 </Container>
 
                 {
-                  facilityList.length > 0 && facilityList.filter(filterItems).length > 0 ? (
+                  facilityList.length > 0 && facilityList.filter(filterItems).length > 0 && (
                     facilityList.filter(filterItems).map(facility => (
                       <Container key={facility.token_id}>
                         <OneFacility facility={facility} />
                       </Container>
-                      // <Container
-                      //   className={`border-b transition hover:bg-blue-50/30 ${highLight === facility.token_id ? "bg-gray-50" : ""}`}
-                      //   key={facility.token_id}>
-                      //   <OneFacility facility={facility} />
-                      // </Container>
                     ))
-                  ) : (
-                    <div className="m-4 text-gray-500">*No facilities</div>
                   )
                 }
               </div>

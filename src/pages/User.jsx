@@ -6,6 +6,7 @@ import { Button } from '../components/basic/Button';
 import { convertToTera, convertToYocto } from '../near/utils';
 import { OneFacility } from '../components/OneFacility';
 import { Loader } from '../components/basic/Loader';
+import { Footer } from '../components/Footer';
 
 export const User = () => {
   const currentUser = useSelector(state => state.user.account);
@@ -72,7 +73,7 @@ export const User = () => {
       <Wrapper>
         <Header color="dark" />
 
-        <Container className="mt-4">
+        <Container className="mt-4 mb-auto">
           <div className="flex flex-row mt-8">
 
             <div className="w-7/12 border-r pr-10">
@@ -201,6 +202,7 @@ export const User = () => {
           </div>
         </Container>
 
+        <Footer color="dark" />
       </Wrapper>
 
     </>

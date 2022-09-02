@@ -222,7 +222,7 @@ export const AddFacility = () => {
       <Wrapper>
         <Header color="dark" />
 
-        <Container className="pt-4 w-[520px]">
+        <Container className="pt-6 w-[520px] mb-auto">
           <h2 className="text-3xl text-center my-6 font-semibold">Add Facility</h2>
 
           {isReady ? (
