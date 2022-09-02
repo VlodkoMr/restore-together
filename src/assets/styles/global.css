@@ -98,7 +98,7 @@ body {
     background-size: 20%;
 }
 
-footer {
-    background: rgb(0, 0, 0);
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%);
-}
+/*footer {*/
+/*    background: rgb(0, 0, 0);*/
+/*    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%);*/
+/*}*/
