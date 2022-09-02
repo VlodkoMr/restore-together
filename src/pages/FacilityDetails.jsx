@@ -141,10 +141,10 @@ export const FacilityDetails = () => {
 
               <Container className="flex flex-row mt-4 pt-2 pb-6">
                 <div className="w-9/12 mr-14">
-                  <h1 className="flex flex-row justify-between mt-1">
-                    <div className="text-2xl font-medium">{facility.title}</div>
+                  <h1 className="flex flex-row justify-between relative mb-1">
+                    <div className="text-2xl font-medium uppercase">{facility.title}</div>
 
-                    <div className="mt-2 font-medium">
+                    <div className="font-medium absolute right-0 top-8">
                       <b className="text-gray-500 ml-1 text-xl" title="Invested Total">
                         {facility.total_invested > 0 ? convertFromYocto(facility.total_invested, 1) : 0} NEAR
                       </b>
@@ -159,11 +159,12 @@ export const FacilityDetails = () => {
                     <span className="font-medium">{facilityTypeConfig[facility.facility_type]}</span>
                     <span className="text-3xl leading-3 align-sub mx-2 opacity-50">&#11825;</span>
                     <span className="font-medium">
-                    {facility.total_invested > 0 ? `Investors: ${facility.total_investors}` : "No investors (for now)"}
-                  </span>
+                      {facility.total_invested > 0 ? `Investors: ${facility.total_investors}` : "No investors (for now)"}
+                    </span>
                   </div>
 
-                  <p className="mt-5" style={{ whiteSpace: "pre-wrap" }}>{facility.description}</p>
+                  <hr className="mt-4" />
+                  <p className="mt-6" style={{ whiteSpace: "pre-wrap" }}>{facility.description}</p>
 
                   <hr className="my-6 block" />
                   {

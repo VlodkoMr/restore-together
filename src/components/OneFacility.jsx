@@ -10,19 +10,18 @@ export const OneFacility = ({ facility, size }) => {
           to={`/facility/${facility.token_id}`}>
       <img src={getMediaUrl(facility.media)} className="facility-image rounded-lg mr-6 mt-4 xl:mt-0" alt="photo" />
       <div className="w-full">
-        <b className="absolute top-3 right-4 text-lg font-medium text-gray-500" title="Invested Total">
+        <b className="absolute top-3 right-5 text-lg font-medium text-gray-500" title="Invested Total">
           {facility.total_invested > 0 ? convertFromYocto(facility.total_invested, 1) : 0} NEAR
         </b>
 
+        <h4 className="text-lg mt-1 font-medium whitespace-nowrap text-ellipsis overflow-hidden facility-title">
+          {facility.title}
+        </h4>
         <small className={`px-2 py-1 font-medium text-xsm rounded ${statusColorMap[facility.status]}`}>
           {statusConfig[facility.status]}
         </small>
 
-        <h4 className="text-lg mt-1 mb-3 font-medium whitespace-nowrap text-ellipsis overflow-hidden facility-title">
-          {facility.title}
-        </h4>
-
-        <div className={`text-sm text-gray-600 block 
+        <div className={`text-sm mt-3 text-gray-600 block 
           ${size === 'small' ? "" : "xl:flex xl:flex-row"}
         `}>
           <div className="w-64">

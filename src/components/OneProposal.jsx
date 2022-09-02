@@ -75,7 +75,7 @@ export const OneProposal = ({
               <>
                 {!userVotedPerformer ? (
                   <button onClick={() => addVote()}
-                          className="text-sm mt-2 border-2 border-main text-main px-4 py-1 rounded-md font-medium hover:bg-blue-50 transition">
+                          className="text-sm mt-2 border-2 border-main text-main px-4 py-1 rounded-md font-medium bg-white hover:bg-blue-50 transition">
                     + VOTE
                   </button>
                 ) : (
