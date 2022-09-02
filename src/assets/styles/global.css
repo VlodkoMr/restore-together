@@ -84,13 +84,13 @@ body {
 }
 
 .active {
-    @apply text-main border-b-2 border-main;
+    @apply text-gray-500 border-b-2 border-gray-300/80;
     padding-bottom: 2px;
     pointer-events: none;
 }
 
 .text-white .active {
-    @apply text-mainLight border-b-2 border-mainLight;
+    @apply text-gray-400 border-gray-300/30;
 }
 
 .mint-nft-block {

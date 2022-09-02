@@ -12,6 +12,7 @@ import { Loader } from '../components/basic/Loader';
 import { convertFromYocto, convertToTera, convertToYocto, getMediaUrl, timestampToDate, transformFacility } from '../near/utils';
 import { FacilityDetailsFundraising } from '../components/FacilityDetails/Fundraising';
 import { FacilityDetailsInProgress } from '../components/FacilityDetails/InProgress';
+import { Footer } from '../components/Footer';
 
 export const FacilityDetails = () => {
   let { id } = useParams();
@@ -122,7 +123,7 @@ export const FacilityDetails = () => {
 
         {isReady ? (
           <>
-            <div className="bg-gray-50 h-[180px]">
+            <div className="bg-gray-50 border-t-2 h-[180px] mt-[-1px]">
               <OneFacilityMap centerCoord={getFacilityCoordString()} locations={[facility]} />
             </div>
 
@@ -137,7 +138,7 @@ export const FacilityDetails = () => {
               </Container>
             </div>
 
-            <Container className="flex flex-row mt-4 pt-2">
+            <Container className="flex flex-row mt-4 pt-2 pb-20">
               <div className="w-9/12 mr-14">
                 <h1 className="flex flex-row justify-between mt-1">
                   <div className="text-2xl font-medium">{facility.title}</div>
@@ -255,6 +256,8 @@ export const FacilityDetails = () => {
               </div>
 
             </Container>
+
+            <Footer color="dark" />
           </>
         ) : (
           <div className="mt-8">

@@ -33,7 +33,7 @@ export const NavLink = styled(ReactNavLink).attrs((props) => ({
     transition
     ease-in-out
     duration-200
-    hover:text-main/90
+    hover:text-gray-400
     cursor-pointer`,
 }))``;
 

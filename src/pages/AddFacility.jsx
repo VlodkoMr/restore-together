@@ -22,6 +22,7 @@ import {
   resizeFileImage,
   uploadMediaToIPFS
 } from '../near/utils';
+import { Footer } from '../components/Footer';
 
 export const AddFacility = () => {
     const navigate = useNavigate();
@@ -287,7 +288,7 @@ export const AddFacility = () => {
                                         setMarkerLocation={setMarkerLocation} />
                       </div>
                     </div>
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <FormLabel>
                         Describe facility details<sup className="text-red-300">*</sup>
                       </FormLabel>
@@ -381,6 +382,8 @@ export const AddFacility = () => {
           )}
 
         </Container>
+
+        <Footer color="dark" />
       </Wrapper>
     );
   }

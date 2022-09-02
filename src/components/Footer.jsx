@@ -2,44 +2,53 @@ import React from "react";
 import twitterIcon from '../assets/images/twitter.png';
 import discordIcon from '../assets/images/discord.png';
 import telegramIcon from '../assets/images/telegram.png';
+import { Container } from '../assets/styles/common.style';
 
-export const Footer = () => {
+export const Footer = ({ color, width }) => {
 
   return (
-    <footer className="fixed bottom-0 right-0 left-0 border-t-2 border-gray-500 bg-gray-700">
-      <div className={`max-w-[1500px] mx-auto px-6 container flex flex-row justify-between pt-4 h-16`}
+    <footer className={`fixed bottom-0 right-0 left-0 border-t-2 ${color === "dark" ? "bg-gray-50 border-gray-200" : "bg-gray-700 border-gray-500"}`}>
+      <Container width={width}
+                 className={`flex flex-row justify-between pt-4 h-16`}
       >
-        <div className="w-1/3 text-sm leading-8 text-gray-300">
+        <div className={`w-1/3 text-sm leading-8 ${color === "dark" ? "text-gray-500/90" : "text-gray-300/80"}`}>
           © MADE BY <a href="https://atomic-lab.io/"
                        target="_blank"
                        className="font-semibold"
         >ATOMIC-LAB.IO</a>
         </div>
 
-        <div className="w-1/3 text-sm text-center leading-8 text-gray-300">
-          Supported by <a href="https://near.org/" target="_blank" className="border-b border-gray-500">NEAR.UA</a>
+        <div className={`w-1/3 text-sm text-center leading-8 ${color === "dark" ? "text-gray-500/90" : "text-gray-300/80"}`}>
+          Supported by
+          <a href="https://near.org/"
+             target="_blank"
+             className={`border-b ml-1 ${color === "dark" ? "border-gray-300" : "border-gray-500"}`}>
+            NEAR.UA
+          </a>
+
           <span className="mx-2 opacity-30">|</span>
-          Winner of <a
-          href="https://medium.com/the-crowdpolicy-collection-en/these-are-the-finalists-of-coding-challenge-4-ukraine-9ca3c9b64aaf"
-          target="_blank"
-          className="border-b border-gray-500"
-        >
-          Coding Challenge for Ukraine
-        </a>
+
+          Winner of
+          <a href="https://medium.com/the-crowdpolicy-collection-en/these-are-the-finalists-of-coding-challenge-4-ukraine-9ca3c9b64aaf"
+             target="_blank"
+             className={`border-b ml-1 ${color === "dark" ? "border-gray-300" : "border-gray-500"}`}
+          >
+            Coding Challenge for Ukraine
+          </a>
         </div>
 
         <div className="text-right w-1/3">
-          <a href="https://twitter.com/Ukraine_restore" target="_blank" className="inline-block">
-            <img src={twitterIcon} alt="" className="w-8 h-8 opacity-90" />
+          <a href="https://twitter.com/Ukraine_restore" target="_blank" className="inline-block opacity-80 hover:opacity-90 transition">
+            <img src={twitterIcon} alt="" className="w-8 h-8" />
           </a>
-          {/*<a href="" target="_blank" className="ml-2 inline-block">*/}
-          {/*  <img src={telegramIcon} alt="" className="w-8 h-8 opacity-90" />*/}
-          {/*</a>*/}
-          <a href="https://discord.gg/WhCMVPbEyZ" target="_blank" className="ml-2 inline-block">
-            <img src={discordIcon} alt="" className="w-8 h-8 opacity-90" />
+          <a href="" target="_blank" className="ml-2 inline-block opacity-90 hover:opacity-100 transition">
+            <img src={telegramIcon} alt="" className="w-8 h-8 opacity-90" />
+          </a>
+          <a href="https://discord.gg/WhCMVPbEyZ" target="_blank" className="ml-2 inline-block opacity-80 hover:opacity-90 transition">
+            <img src={discordIcon} alt="" className="w-8 h-8" />
           </a>
         </div>
-      </div>
+      </Container>
     </footer>
 
   );

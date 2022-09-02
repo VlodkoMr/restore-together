@@ -10,6 +10,7 @@ import { setFacility, setRegion, setStatus } from '../store/facilityFilterSlice'
 import { Loader } from '../components/basic/Loader';
 import { OneFacility } from '../components/OneFacility';
 import { transformFacility } from '../near/utils';
+import { Footer } from '../components/Footer';
 
 export const Facilities = () => {
   const dispatch = useDispatch();
@@ -70,9 +71,9 @@ export const Facilities = () => {
           isReady ? (
             <div className="flex flex-row">
               <div className="w-1/2 border-r border-r facility-col overflow-y-scroll" style={{
-                height: 'calc(100vh - 94px)',
+                height: 'calc(100vh - 158px)',
               }}>
-                <div className="bg-gray-50 pb-2 pt-3 border-b z-10 relative">
+                <div className="bg-gray-50 pb-2 pt-2 border-b z-10 relative">
                   <FacilitiesFilter size="sm" />
                 </div>
 
@@ -120,6 +121,7 @@ export const Facilities = () => {
           )
         }
 
+        <Footer width="full" color="dark" />
       </Wrapper>
     </>
   );
