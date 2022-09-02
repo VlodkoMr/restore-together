@@ -3,16 +3,18 @@ import { Link as ReactLink, NavLink as ReactNavLink } from "react-router-dom";
 
 export const Wrapper = styled.section.attrs({
   className: `
+  flex 
+  flex-col
   relative
   h-screen
+  justify-between
   z-1`
 })``;
 
 export const Container = styled.section.attrs((props) => ({
   className: `
-  mx-auto
   px-6
-  ${props.width === "full" ? "" : "container"}`
+  ${props.width === "full" ? "" : "container mx-auto"}`
 }))``;
 
 export const Link = styled(ReactLink).attrs(() => ({

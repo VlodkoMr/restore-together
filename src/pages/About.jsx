@@ -8,7 +8,7 @@ export const About = () => {
     <Wrapper>
       <Header color="dark" />
 
-      <Container className="pt-4 xl:w-1/2 sm:w-3/4 mx-auto text-lg text-justify">
+      <Container className="pt-4 xl:w-1/2 sm:w-3/4 mx-auto mb-auto text-lg text-justify">
         <h2 className="text-3xl text-center my-6 font-semibold">About Us</h2>
         <p className="mb-4">Many monuments and cultural heritage have been affected by Russia's attack on Ukraine in
           2022. We want to restore this heritage together using NEAR blockchain and DeFi
@@ -46,7 +46,7 @@ export const About = () => {
           We take 1% fee of all transactions that will be paid for moderators that check all information and for service operating costs and marketing.
         </p>
         <hr />
-        <p className="pb-28 pt-6">
+        <p className="pb-16 pt-6">
           Also we launched separate project on Polygon blockchain:
           NFT Collection of 9999 unique NFTs that you receive by donating to support ordinary people and help to rebuild their homes. <br />
           URL: <a href="https://nft.restore-together.in.ua/" target="_blank" className="text-main underline">nft.restore-together.in.ua</a>

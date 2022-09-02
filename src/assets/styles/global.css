@@ -86,7 +86,6 @@ body {
 .active {
     @apply text-gray-500 border-b-2 border-gray-300/80;
     padding-bottom: 2px;
-    pointer-events: none;
 }
 
 .text-white .active {

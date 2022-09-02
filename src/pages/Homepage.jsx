@@ -21,17 +21,19 @@ export const Homepage = () => {
       <Wrapper className="text-white">
         <Header />
 
-        <div className="mt-4">
-          <FacilitiesFilter />
-        </div>
+        <main className="mb-auto">
+          <div className="mt-4">
+            <FacilitiesFilter />
+          </div>
 
-        <div className="text-center mt-8 leading-6">
-          <p>Many monuments and cultural heritage have been affected by Russia's attack on Ukraine in 2022. </p>
-          <p>
-            Let's restore Ukraine together!
-            <Link to={`/about`} className="ml-1 border-b border-gray-200/40">Read more</Link>.
-          </p>
-        </div>
+          <div className="text-center mt-8 leading-6">
+            <p>Many monuments and cultural heritage have been affected by Russia's attack on Ukraine in 2022. </p>
+            <p>
+              Let's restore Ukraine together!
+              <Link to={`/about`} className="ml-1 border-b border-gray-200/40">Read more</Link>.
+            </p>
+          </div>
+        </main>
 
         <Footer />
       </Wrapper>

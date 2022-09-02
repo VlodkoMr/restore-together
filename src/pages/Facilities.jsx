@@ -69,9 +69,9 @@ export const Facilities = () => {
 
         {
           isReady ? (
-            <div className="flex flex-row">
+            <div className="flex flex-row mb-auto">
               <div className="w-1/2 border-r border-r facility-col overflow-y-scroll" style={{
-                height: 'calc(100vh - 158px)',
+                height: 'calc(100vh - 160px)',
               }}>
                 <div className="bg-gray-50 pb-2 pt-2 border-b z-10 relative">
                   <FacilitiesFilter size="sm" />
@@ -115,7 +115,7 @@ export const Facilities = () => {
 
             </div>
           ) : (
-            <div className="mt-8">
+            <div className="mt-8 mb-auto">
               <Loader />
             </div>
           )

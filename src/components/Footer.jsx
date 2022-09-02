@@ -7,7 +7,7 @@ import { Container } from '../assets/styles/common.style';
 export const Footer = ({ color, width }) => {
 
   return (
-    <footer className={`fixed bottom-0 right-0 left-0 border-t-2 ${color === "dark" ? "bg-gray-50 border-gray-200" : "bg-gray-700 border-gray-500"}`}>
+    <footer className={`border-t-2 ${color === "dark" ? "bg-gray-50 border-gray-200" : "bg-gray-700 border-gray-500"}`}>
       <Container width={width}
                  className={`flex flex-row justify-between pt-4 h-16`}
       >

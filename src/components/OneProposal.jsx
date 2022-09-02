@@ -10,7 +10,8 @@ export const OneProposal = ({
   canVote,
   allPerformers,
   userVotedPerformer,
-  totalUserInvestment
+  totalUserInvestment,
+  isCurrentPerformer
 }) => {
   const currentUser = useSelector(state => state.user.account);
   const [companyDetailsVisible, setCompanyDetailsVisible] = useState(false);
@@ -33,8 +34,9 @@ export const OneProposal = ({
   }
 
   return (
-    <div className={`shadow border border-gray-100 rounded-xl px-8 py-6 relative mb-3 
-    ${proposal.performer_id == currentUser.id ? "bg-yellow-100/10" : "bg-gray-50/50"}`}>
+    <div className={`shadow border border-gray-100 rounded-xl px-8 py-6 relative 
+    ${isCurrentPerformer ? "" : "mb-3"} 
+    ${proposal.performer_id == currentUser.id ? "bg-yellow-100/10" : "bg-gray-50"}`}>
       <div
         className="flex flex-row"
         key={proposal.performer_id}>

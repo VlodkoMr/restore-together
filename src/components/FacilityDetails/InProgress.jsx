@@ -180,6 +180,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                            canVote={() => false}
                            facility={facility}
                            allPerformers={allPerformers}
+                           isCurrentPerformer={true}
               />
             )
           }
@@ -189,23 +190,25 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
       {
         executionProgress.length > 0 && (
           <>
-            <h3 className="mt-10 mb-2 font-medium text-xl">Execution Progress</h3>
-            <div className="mb-8 grid xl:grid-cols-3 lg:grid-cols-2 gap-6">
-              {
-                executionProgress.map((result, index) => (
-                    <div className="overflow-hidden shadow-lg border border-gray-200 rounded-xl"
-                         key={index}>
-                      <img src={getMediaUrl(result.media)} alt="result"
-                           className="block h-64 w-full object-cover bg-gray-50"
-                      />
-                      <div className="text-sm p-6">
-                        <b className="text-lg">{timestampToDate(result.timestamp)}</b>
-                        <p className="mt-2 max-h-24 overflow-y-auto text-gray-500">{result.description}</p>
+            <div className="mb-8 shadow border border-gray-100 bg-gray-50/20 rounded-b-xl p-8 mt-[-10px]">
+              <h3 className="mb-2 font-medium text-xl">Execution Progress</h3>
+              <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-6 ">
+                {
+                  executionProgress.map((result, index) => (
+                      <div className="overflow-hidden shadow-lg border border-gray-200 rounded-xl"
+                           key={index}>
+                        <img src={getMediaUrl(result.media)} alt="result"
+                             className="block h-64 w-full object-cover bg-gray-50"
+                        />
+                        <div className="text-sm p-6">
+                          <b className="text-lg">{timestampToDate(result.timestamp)}</b>
+                          <p className="mt-2 max-h-24 overflow-y-auto text-gray-500">{result.description}</p>
+                        </div>
                       </div>
-                    </div>
+                    )
                   )
-                )
-              }
+                }
+              </div>
             </div>
           </>
         )
