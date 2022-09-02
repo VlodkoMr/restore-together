@@ -1,7 +1,8 @@
 import Big from "big.js";
 import { connect, Contract, keyStores, WalletConnection } from 'near-api-js'
 import getConfig from './config'
-import { NFTStorage, File } from 'nft.storage'
+import { NFTStorage, File } from '../assets/bundle.esm.min'
+// import { NFTStorage, File } from 'nft.storage'
 
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 
@@ -147,12 +148,13 @@ export const uploadMediaToIPFS = (media) => {
   return new Promise(async (resolve, reject) => {
     const name = `${+new Date()}.jpg`;
     const image = dataURLtoFile(media, name);
-    const nftStorage = new NFTStorage({ token: process.env.NFT_STORAGE_KEY })
+    const nftStorage = new NFTStorage({ token: process.env.NFT_STORAGE_KEY });
     const token = await nftStorage.store({
       image,
       name,
       description: "Restore Together",
     });
+
     if (token.url) {
       resolve(token.data.image.pathname.replace('//', ''));
     }
