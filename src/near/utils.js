@@ -42,7 +42,8 @@ export async function initContract() {
       'add_execution_progress',
       'performer_claim_tokens',
       'performer_set_completed',
-      'mint_investor_nft'
+      'mint_investor_nft',
+      'add_performer_feedback'
     ],
   });
 }

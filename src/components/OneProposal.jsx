@@ -3,6 +3,11 @@ import { convertFromYocto, convertToTera, timestampToDate } from '../near/utils'
 import { useSelector } from 'react-redux';
 import verified_icon from '../assets/images/verify.png';
 import pending_icon from '../assets/images/pending.png';
+import { Button } from "./basic/Button";
+import { FormInput, FormLabel, FormTextarea } from "../assets/styles/common.style";
+import { Loader } from "./basic/Loader";
+import { Popup } from "./basic/Popup";
+import ReactStars from "react-rating-stars-component";
 
 export const OneProposal = ({
   facility,
@@ -14,7 +19,16 @@ export const OneProposal = ({
   isCurrentPerformer
 }) => {
   const currentUser = useSelector(state => state.user.account);
+  const [feedbackPopupVisible, setFeedbackPopupVisible] = useState(false);
   const [companyDetailsVisible, setCompanyDetailsVisible] = useState(false);
+  const [rate, setRate] = useState(0);
+  const [description, setDescription] = useState("");
+  const [isFeedbackLoading, setIsFeedbackLoading] = useState(false);
+
+  const sendPerformerFeedback = () => {
+    setIsFeedbackLoading(true);
+
+  }
 
   const addVote = async () => {
     await window.contract.vote_for_performer({
@@ -31,6 +45,10 @@ export const OneProposal = ({
       }
     });
     return parseInt(total / parseFloat(convertFromYocto(facility.total_invested)) * 100);
+  }
+
+  const ratingChanged = (rating) => {
+    setRate(rating * 2);
   }
 
   return (
@@ -91,6 +109,12 @@ export const OneProposal = ({
                 <small className="text-gray-500">
                   {timestampToDate(proposal.created_at)}
                 </small>
+                {facility.performer !== currentUser.id && (
+                  <button onClick={() => setFeedbackPopupVisible(true)}
+                          className="text-sm mt-1 border-2 border-main text-main px-4 py-1 rounded-md font-medium bg-white hover:bg-blue-50 transition">
+                    Add Feedback
+                  </button>
+                )}
               </>
             )
           }
@@ -117,7 +141,50 @@ export const OneProposal = ({
         About the Company: {allPerformers[proposal.performer_id].description}
       </div>
 
-    </div>
 
+      <Popup
+        title="Add Company Feedback"
+        popupVisible={feedbackPopupVisible}
+        setPopupVisible={setFeedbackPopupVisible}
+      >
+        <form className="mt-2 w-3/4 block mx-auto" onSubmit={(e) => e.preventDefault()}>
+          <div className="mb-3">
+            <FormLabel className="text-left">
+              Rating<sup className="text-red-300">*</sup>
+            </FormLabel>
+            <div>
+              <ReactStars
+                count={5}
+                onChange={ratingChanged}
+                size={32}
+                isHalf={true}
+                activeColor="#ffd700"
+              />
+            </div>
+          </div>
+
+          <div className="mb-3 mt-3">
+            <FormLabel className="text-left">
+              Feedback Details<sup className="text-red-300">*</sup>
+            </FormLabel>
+            <FormTextarea
+              placeholder="Provide publicly available details"
+              value={description}
+              maxlength={500}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          <div className="mt-2 text-right">
+            {!isFeedbackLoading ? (
+              <Button title="Send Feedback" onClick={() => sendPerformerFeedback()}/>
+            ) : (
+              <Loader/>
+            )}
+          </div>
+        </form>
+      </Popup>
+
+    </div>
   );
 };

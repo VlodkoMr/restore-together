@@ -1,5 +1,5 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, Gas, serde_json::json, assert_one_yocto};
+use near_sdk::{env, near_bindgen, BorshStorageKey, Balance, AccountId, Timestamp, Promise, Gas, serde_json::json, assert_one_yocto, require};
 use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk::collections::{LookupMap, UnorderedMap};
 use near_sdk::serde::{Deserialize, Serialize};
@@ -78,7 +78,16 @@ pub struct Performer {
     pub media: Option<String>,
     pub description: String,
     pub rating: u8,
+    pub rating_votes: Vec<AccountId>,
     pub is_validated: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[serde(crate = "near_sdk::serde")]
+pub struct PerformerFeedback {
+    pub description: String,
+    pub rating: u8,
+    pub from_account: AccountId,
 }
 
 #[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
@@ -103,6 +112,7 @@ pub enum StorageKeys {
     InvestorNft,
     FacilityProposals,
     FacilityExecutionProgress,
+    PerformerFeedback,
 }
 
 #[near_bindgen]
@@ -114,6 +124,7 @@ pub struct Contract {
 
     performers: UnorderedMap<PerformerId, Performer>,
     performer_facilities: LookupMap<PerformerId, Vec<TokenId>>,
+    performer_feedback: LookupMap<PerformerId, Vec<PerformerFeedback>>,
     performer_facility_claimed: LookupMap<TokenId, Balance>,
 
     facility_count: u32,
@@ -126,7 +137,6 @@ pub struct Contract {
 
     investor_nft_count: u32,
     investor_nft: LookupMap<AccountId, Vec<TokenId>>,
-
 }
 
 impl Default for Contract {
@@ -137,6 +147,7 @@ impl Default for Contract {
             contract_nft: format!("nft.{}", env::current_account_id()).parse().unwrap(),
 
             performers: UnorderedMap::new(StorageKeys::Performers),
+            performer_feedback: LookupMap::new(StorageKeys::PerformerFeedback),
             performer_facilities: LookupMap::new(StorageKeys::Performers),
             performer_facility_claimed: LookupMap::new(StorageKeys::PerformerFacilityClaimed),
 
@@ -160,7 +171,6 @@ impl Contract {
     pub fn add_facility(&mut self, id: String, title: String, region: u8, facility_type: u8, media: String, lat: String, lng: String, description: String) {
         assert_eq!(env::attached_deposit(), Contract::convert_to_yocto("0.1"), "Requires attached deposit of exactly 0.1 NEAR");
 
-        // self.assert_contract_owner(self.owner_id.to_string());
         let account_id = env::predecessor_account_id();
         if self.facility.contains_key(&id) {
             panic!("Facility ID already exists");
@@ -295,6 +305,7 @@ impl Contract {
             media: None,
             description,
             rating: 0,
+            rating_votes: vec![],
             is_validated: false,
         };
         self.performers.insert(&account_id, &performer);
@@ -449,6 +460,34 @@ impl Contract {
         self.check_facility_status_by_voting(facility, performer_id);
     }
 
+    pub fn add_performer_feedback(&mut self, performer_id: PerformerId, facility_id: TokenId, rate: u8, description: String) {
+        let account_id = env::predecessor_account_id();
+        let mut performer = self.performers.get(&performer_id).unwrap();
+        let facility = self.facility.get(&facility_id).unwrap();
+
+        require!(facility.performer == Some(performer_id.clone()) , "Wrong performer");
+        require!(performer_id != account_id, "Can't add feedback to your own account");
+        require!(rate > 0 && rate <= 10, "Wrong rate");
+        require!(!performer.rating_votes.contains(&account_id), "Feedback already exists");
+
+        let investor_exists = self.is_facility_investor(&facility_id, &account_id);
+        require!(investor_exists, "No investments for feedback");
+
+        performer.rating += rate;
+        performer.rating_votes.push(account_id.clone());
+        self.performers.insert(&performer_id, &performer);
+
+        let mut feedbacks = self.performer_feedback.get(&performer_id).unwrap_or(vec![]);
+        feedbacks.push(PerformerFeedback {
+            rating: rate,
+            description,
+            from_account: account_id.clone()
+        });
+        self.performer_feedback.insert(&performer_id, &feedbacks);
+    }
+
+    // ------------ Performer ------------
+
     pub fn get_performer_facilities(&self, account_id: PerformerId) -> Vec<Facility> {
         let performer_facilities = self.performer_facilities.get(&account_id).unwrap_or(vec![]);
         performer_facilities.iter().map(|token_id| self.facility.get(&token_id).unwrap()).collect()
@@ -522,6 +561,8 @@ impl Contract {
         facility.status = FacilityStatus::Completed;
         self.facility.insert(&facility_id, &facility);
     }
+
+    // ------------ Investor NFT ------------
 
     pub fn is_investor_nft_minted(&self, facility_id: TokenId, account_id: AccountId) -> bool {
         let investor_nft_list = self.investor_nft.get(&account_id).unwrap_or(vec![]);
