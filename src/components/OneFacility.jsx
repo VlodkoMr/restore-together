@@ -26,7 +26,7 @@ export const OneFacility = ({ facility, size }) => {
         `}>
           <div className="w-64">
             <p>{facilityTypeConfig[facility.facility_type]}</p>
-            <p>{facility.total_invested > 0 ? `Investors: ${facility.total_investors}` : "No investors (for now)"}</p>
+            <p>{facility.total_invested > 0 ? `Investors: ${facility.total_investors}` : "No investors for now"}</p>
           </div>
         </div>
       </div>

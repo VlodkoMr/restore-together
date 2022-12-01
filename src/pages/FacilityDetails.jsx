@@ -182,7 +182,7 @@ export const FacilityDetails = () => {
                     <span className="font-medium">{facilityTypeConfig[facility.facility_type]}</span>
                     <span className="text-3xl leading-3 align-sub mx-2 opacity-50">&#11825;</span>
                     <span className="font-medium">
-                      {facility.total_invested > 0 ? `Investors: ${facility.total_investors}` : "No investors (for now)"}
+                      {facility.total_invested > 0 ? `Investors: ${facility.total_investors}` : "No investors for now"}
                     </span>
                   </div>
 

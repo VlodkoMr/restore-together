@@ -35,10 +35,11 @@ export const OneProposal = ({
       rate,
       description
     }).then(() => {
-      setIsFeedbackLoading(false);
-      setRate(0);
-      setDescription("");
-      setFeedbackPopupVisible(false);
+      // setIsFeedbackLoading(false);
+      // setRate(0);
+      // setDescription("");
+      // setFeedbackPopupVisible(false);
+      document.location.reload();
     });
   }
 
@@ -99,7 +100,7 @@ export const OneProposal = ({
             {
               totalUserInvestment && (
                 <>
-                  <span className="mx-2 text-xl align-sub opacity-50">/</span>
+                  <span className="mx-2 text-xl align-sub opacity-30 -mt-1">/</span>
                   Votes: <b>{investedVotesPct() || 0}%</b>
                 </>
               )
@@ -116,7 +117,7 @@ export const OneProposal = ({
                 edit={false}
               />
               <span className={"ml-2"}>
-                ({allPerformers[proposal.performer_id].rating_votes.length} votes)
+                ({allPerformers[proposal.performer_id].rating_votes.length || "No"} feedbacks)
               </span>
             </span>
           </small>
