@@ -16,7 +16,9 @@ export const OneProposal = ({
   allPerformers,
   userVotedPerformer,
   totalUserInvestment,
-  isCurrentPerformer
+  isCurrentPerformer,
+  isMyInvestments,
+  myFeedback
 }) => {
   const currentUser = useSelector(state => state.user.account);
   const [feedbackPopupVisible, setFeedbackPopupVisible] = useState(false);
@@ -28,7 +30,7 @@ export const OneProposal = ({
   const sendPerformerFeedback = async () => {
     setIsFeedbackLoading(true);
     await window.contract.add_performer_feedback({
-      performer_id:  proposal.performer_id,
+      performer_id: proposal.performer_id,
       facility_id: facility.token_id,
       rate,
       description
@@ -36,6 +38,7 @@ export const OneProposal = ({
       setIsFeedbackLoading(false);
       setRate(0);
       setDescription("");
+      setFeedbackPopupVisible(false);
     });
   }
 
@@ -60,6 +63,14 @@ export const OneProposal = ({
     setRate(rating * 2);
   }
 
+  const getCompanyRating = () => {
+    const performer = allPerformers[proposal.performer_id];
+    if (performer.rating_votes.length > 0) {
+      return (performer.rating / performer.rating_votes.length) / 2;
+    }
+    return 0;
+  }
+
   return (
     <div className={`shadow border border-gray-100 rounded-xl px-8 py-6 relative 
     ${isCurrentPerformer ? "" : "mb-3"} 
@@ -81,9 +92,9 @@ export const OneProposal = ({
             )}
           </p>
 
-          <small className="text-gray-500 mt-2">
+          <small className="text-gray-500 mt-2 flex flex-row">
             Estimate: <b className="font-medium text-sm">{proposal.estimate_time} days</b>
-            <span className="mx-2 text-xl align-sub opacity-50">/</span>
+            <span className="mx-2 text-xl align-sub opacity-30 -mt-1">/</span>
             Budget: <b className="font-medium text-sm">{convertFromYocto(proposal.estimate_amount, 1)} NEAR</b>
             {
               totalUserInvestment && (
@@ -93,10 +104,25 @@ export const OneProposal = ({
                 </>
               )
             }
+            <span className="mx-2 text-xl align-sub opacity-30 -mt-1">/</span>
+            <span className={"w-64 flex flex-row"}>
+              <ReactStars
+                count={5}
+                onChange={ratingChanged}
+                size={16}
+                isHalf={true}
+                value={getCompanyRating()}
+                activeColor="#ffd700"
+                edit={false}
+              />
+              <span className={"ml-2"}>
+                ({allPerformers[proposal.performer_id].rating_votes.length} votes)
+              </span>
+            </span>
           </small>
         </div>
 
-        <div className="w-48 text-right">
+        <div className="w-64 text-right">
           {
             canVote() ? (
               <>
@@ -118,11 +144,28 @@ export const OneProposal = ({
                 <small className="text-gray-500">
                   {timestampToDate(proposal.created_at)}
                 </small>
-                {facility.performer !== currentUser.id && (
-                  <button onClick={() => setFeedbackPopupVisible(true)}
-                          className="text-sm mt-1 border-2 border-main text-main px-4 py-1 rounded-md font-medium bg-white hover:bg-blue-50 transition">
-                    Add Feedback
-                  </button>
+                {facility.performer !== currentUser.id && isMyInvestments && (
+                  <>
+                    {myFeedback ? (
+                      <div className={"flex flex-row justify-end mt-1"}>
+                        <small className={"text-gray-500 pt-0.5 mr-1"}>My feedback:</small>
+                        <ReactStars
+                          count={5}
+                          onChange={ratingChanged}
+                          size={16}
+                          isHalf={true}
+                          value={myFeedback.rating / 2}
+                          activeColor="#ffd700"
+                          edit={false}
+                        />
+                      </div>
+                    ) : (
+                      <button onClick={() => setFeedbackPopupVisible(true)}
+                              className="text-sm mt-1 border-2 border-main text-main px-4 py-1 rounded-md font-medium bg-white hover:bg-blue-50 transition">
+                        Add Feedback
+                      </button>
+                    )}
+                  </>
                 )}
               </>
             )

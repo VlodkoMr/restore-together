@@ -460,6 +460,10 @@ impl Contract {
         self.check_facility_status_by_voting(facility, performer_id);
     }
 
+    pub fn get_performer_feedbacks(&self, performer_id: PerformerId) -> Vec<PerformerFeedback> {
+        self.performer_feedback.get(&performer_id).unwrap_or(vec![])
+    }
+
     pub fn add_performer_feedback(&mut self, performer_id: PerformerId, facility_id: TokenId, rate: u8, description: String) {
         let account_id = env::predecessor_account_id();
         let mut performer = self.performers.get(&performer_id).unwrap();
@@ -481,7 +485,7 @@ impl Contract {
         feedbacks.push(PerformerFeedback {
             rating: rate,
             description,
-            from_account: account_id.clone()
+            from_account: account_id.clone(),
         });
         self.performer_feedback.insert(&performer_id, &feedbacks);
     }

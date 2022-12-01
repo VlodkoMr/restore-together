@@ -6,7 +6,7 @@ import { Link } from '../../assets/styles/common.style';
 import { convertFromYocto } from '../../near/utils';
 import Big from 'big.js';
 
-export const FacilityDetailsFundraising = ({ facility, facilityProposals, facilityInvestments, allPerformers }) => {
+export const FacilityDetailsFundraising = ({ facility, facilityProposals, facilityInvestments, allPerformers, isMyInvestments }) => {
   const currentUser = useSelector(state => state.user.account);
   const [userVotedPerformer, setUserVotedPerformer] = useState(null);
   const [totalUserInvestment, setTotalUserInvestment] = useState({});

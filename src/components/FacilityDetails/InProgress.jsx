@@ -15,7 +15,7 @@ import { Button } from '../basic/Button';
 import { Popup } from '../basic/Popup';
 import { Loader } from '../basic/Loader';
 
-export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerformers }) => {
+export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerformers, isMyInvestments, myFeedback }) => {
   const currentUser = useSelector(state => state.user.account);
   const [proposal, setProposal] = useState();
   const [isClaimLoading, setIsClaimLoading] = useState(false);
@@ -185,6 +185,8 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                      facility={facility}
                      allPerformers={allPerformers}
                      isCurrentPerformer={true}
+                     isMyInvestments={isMyInvestments}
+                     myFeedback={myFeedback}
         />
       )}
 

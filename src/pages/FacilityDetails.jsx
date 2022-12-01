@@ -20,10 +20,11 @@ export const FacilityDetails = () => {
   const [facility, setFacility] = useState();
   const [facilityInvestments, setFacilityInvestments] = useState([]);
   const [facilityProposals, setFacilityProposals] = useState([]);
-  const [isReady, setIsReady] = useState();
+  const [isReady, setIsReady] = useState(false);
   const [investAmount, setInvestAmount] = useState("");
   const [allPerformers, setAllPerformers] = useState({});
   const [isInvestorNftMinted, setIsInvestorNftMinted] = useState(false);
+  const [myFeedback, setMyFeedback] = useState();
 
   const facilityPromise = new Promise(async (resolve) => {
     let result = await window.contract.get_facility_by_id({
@@ -56,23 +57,45 @@ export const FacilityDetails = () => {
         facility_id: id,
         account_id: currentUser.id
       });
-      console.log('isInvestorNftMintedPromise result', result)
       resolve(result);
     } else {
       resolve();
     }
   });
 
-  const loadFacilityData = async () => {
+  const performerFeedbacksPromise = (performerId) => {
+    return new Promise(async (resolve) => {
+      if (currentUser.id) {
+        let result = await window.contract.get_performer_feedbacks({
+          performer_id: performerId,
+        });
+        resolve(result);
+      } else {
+        resolve();
+      }
+    })
+  };
+
+  const loadFacilityData = () => {
     setIsReady(false);
 
     Promise.all([facilityPromise, facilityInvestmentPromise, facilityProposalsPromise, allPerformersPromise, isInvestorNftMintedPromise]).then(result => {
-      setFacility(transformFacility(result[0]));
+      const facility = transformFacility(result[0]);
+      setFacility(facility);
       setFacilityInvestments(result[1]);
       setFacilityProposals(result[2]);
       setAllPerformers(result[3]);
       setIsInvestorNftMinted(result[4]);
       setIsReady(true);
+
+      if (facility.performer) {
+        performerFeedbacksPromise(facility.performer).then(feedbacks => {
+          const feedback = feedbacks.filter(feedback => feedback.from_account === currentUser.id)
+          if (feedback.length > 0) {
+            setMyFeedback(feedback[0]);
+          }
+        })
+      }
     });
   }
 
@@ -174,12 +197,15 @@ export const FacilityDetails = () => {
                         facilityProposals={facilityProposals}
                         facilityInvestments={facilityInvestments}
                         allPerformers={allPerformers}
+                        isMyInvestments={isMyInvestments()}
                       />
                     ) : (
                       <FacilityDetailsInProgress
                         facility={facility}
                         facilityProposals={facilityProposals}
                         allPerformers={allPerformers}
+                        isMyInvestments={isMyInvestments()}
+                        myFeedback={myFeedback}
                       />
                     )
                   }
@@ -212,7 +238,6 @@ export const FacilityDetails = () => {
                         <div className="text-gray-500 text-center">*No investments</div>
                       )}
 
-
                       {facility.status === 'Fundraising' && (
                         <div className="m-5 text-center flex flex-row">
                           <input type="number"
@@ -244,16 +269,15 @@ export const FacilityDetails = () => {
                     </div>
                   </div>
 
-
                   {isMyInvestments() && (
                     <div className="border border-gray-200 rounded-xl shadow-lg bg-white my-4 overflow-hidden text-center p-6">
                       {!isInvestorNftMinted ? (
                         <div>
-                          <p className="mb-4 text-gray-500">You can claim your NFT as investor that support Ukraine!</p>
-                          <Button title="Claim MY NFT" noIcon onClick={() => claimNFT()}/>
+                          <p className="mb-4 text-gray-500">You can mint your NFT as investor that support Ukraine!</p>
+                          <Button title="Mint my NFT" noIcon onClick={() => claimNFT()}/>
                         </div>
                       ) : (
-                        <div className="text-center text-gray-500 my-6">
+                        <div className="text-center text-gray-500">
                           <img src={nftMinted} alt="minted" className="w-7 h-7 inline align-middle mr-2"/>
                           Your unique NFT Minted.
                         </div>
@@ -261,7 +285,6 @@ export const FacilityDetails = () => {
                     </div>
                   )}
                 </div>
-
               </Container>
             </>
           ) : (
