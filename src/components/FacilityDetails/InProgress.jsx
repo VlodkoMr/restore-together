@@ -57,8 +57,6 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
     });
     setClaimedAmount(claim_amount[0]);
     setCanClaimAmount(claim_amount[1]);
-
-    console.log(claim_amount)
   }
 
   const claimTokens = async () => {
@@ -101,8 +99,6 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
       uploadMediaToIPFS(media).then(mediaURL => {
         const GAS = convertToTera("200");
         const DEPOSIT = 1;
-
-        console.log('mediaURL', mediaURL);
 
         window.contract.add_execution_progress({
           media: mediaURL,

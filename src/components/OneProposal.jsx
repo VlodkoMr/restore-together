@@ -25,9 +25,18 @@ export const OneProposal = ({
   const [description, setDescription] = useState("");
   const [isFeedbackLoading, setIsFeedbackLoading] = useState(false);
 
-  const sendPerformerFeedback = () => {
+  const sendPerformerFeedback = async () => {
     setIsFeedbackLoading(true);
-
+    await window.contract.add_performer_feedback({
+      performer_id:  proposal.performer_id,
+      facility_id: facility.token_id,
+      rate,
+      description
+    }).then(() => {
+      setIsFeedbackLoading(false);
+      setRate(0);
+      setDescription("");
+    });
   }
 
   const addVote = async () => {
