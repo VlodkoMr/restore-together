@@ -18,6 +18,7 @@ import { Loader } from '../basic/Loader';
 export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerformers }) => {
   const currentUser = useSelector(state => state.user.account);
   const [proposal, setProposal] = useState();
+  const [isClaimLoading, setIsClaimLoading] = useState(false);
   const [executionProgress, setExecutionProgress] = useState("");
   const [progressPopupVisible, setProgressPopupVisible] = useState(false);
   const [canClaimAmount, setCanClaimAmount] = useState("0");
@@ -61,8 +62,11 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
   }
 
   const claimTokens = async () => {
+    setIsClaimLoading(true);
     window.contract.performer_claim_tokens({
       facility_id: facility.token_id
+    }).then(() => {
+      window.document.location.reload();
     });
   }
 
@@ -111,7 +115,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
 
   return (
     <>
-      {facility.performer === currentUser.id ? (
+      {facility.performer === currentUser.id && (
         <>
           <div className="flex flex-row">
             {
@@ -128,19 +132,25 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                   <p>Claimed: <b className="font-medium">{convertFromYocto(claimedAmount)} NEAR</b></p>
 
                   <div className="mt-4">
-                    <Button title="Claim Tokens"
-                            noIcon
-                            disabled={parseFloat(convertFromYocto(canClaimAmount, 2)) === 0}
-                            className="border border-main text-main bg-blue-50/40 hover:border-main hover:text-main/90"
-                            onClick={() => claimTokens()} />
+                    {isClaimLoading ? (
+                      <div className="mt-2 w-1/2">
+                        <Loader/>
+                      </div>
+                    ) : (
+                      <Button title="Claim Tokens"
+                              noIcon
+                              disabled={parseFloat(convertFromYocto(canClaimAmount, 2)) === 0}
+                              className="border border-main text-main bg-blue-50/40 hover:border-main hover:text-main/90"
+                              onClick={() => claimTokens()}
+                      />
+                    )}
                   </div>
                 </div>
               )
             }
 
-            <div className="w-8/12 ml-10">
+            <div className="w-8/12 ml-10 mb-10">
               <h3 className="text-xl font-medium mb-2">Work Progress</h3>
-
               {
                 facility.status === "InProgress" ? (
                   <div className="mr-10">
@@ -151,7 +161,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                     <Button title="Update execution progress"
                             onClick={() => startUpdateProgress()}
                             noIcon
-                            className="border border-main text-main bg-blue-50/40 hover:border-main/90 hover:text-main/90" />
+                            className="border border-main text-main bg-blue-50/40 hover:border-main/90 hover:text-main/90"/>
 
                     {executionProgress.length > 0 && (
                       <Button title="Completed"
@@ -167,51 +177,45 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
                   </div>
                 )
               }
-
             </div>
           </div>
         </>
-      ) : (
-        <>
-          <h3 className="text-xl font-medium mb-2">Facility Performer</h3>
-          {
-            proposal && (
-              <OneProposal proposal={proposal}
-                           canVote={() => false}
-                           facility={facility}
-                           allPerformers={allPerformers}
-                           isCurrentPerformer={true}
-              />
-            )
-          }
-        </>
       )}
 
-      {
-        executionProgress.length > 0 && (
-          <>
-            <div className="mb-8 shadow border border-gray-100 bg-gray-50/20 rounded-b-xl p-8 mt-[-10px]">
-              <h3 className="mb-2 font-medium text-xl">Execution Progress</h3>
-              <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-6 ">
-                {
-                  executionProgress.map((result, index) => (
-                      <div className="overflow-hidden shadow-lg border border-gray-200 rounded-xl"
-                           key={index}>
-                        <img src={getMediaUrl(result.media)} alt="result"
-                             className="block h-64 w-full object-cover bg-gray-50"
-                        />
-                        <div className="text-sm p-6">
-                          <b className="text-lg">{timestampToDate(result.timestamp)}</b>
-                          <p className="mt-2 max-h-24 overflow-y-auto text-gray-500">{result.description}</p>
-                        </div>
+      <h3 className="text-xl font-medium mb-2">Facility Performer</h3>
+      {proposal && (
+        <OneProposal proposal={proposal}
+                     canVote={() => false}
+                     facility={facility}
+                     allPerformers={allPerformers}
+                     isCurrentPerformer={true}
+        />
+      )}
+
+      {executionProgress.length > 0 && (
+        <>
+          <div className="mb-8 shadow border border-gray-100 bg-gray-50/20 rounded-b-xl p-8 mt-[-10px]">
+            <h3 className="mb-2 font-medium text-xl">Execution Progress</h3>
+            <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-6 ">
+              {
+                executionProgress.map((result, index) => (
+                    <div className="overflow-hidden shadow-lg border border-gray-200 rounded-xl"
+                         key={index}>
+                      <img src={getMediaUrl(result.media)} alt="result"
+                           className="block h-64 w-full object-cover bg-gray-50"
+                      />
+                      <div className="text-sm p-6">
+                        <b className="text-lg">{timestampToDate(result.timestamp)}</b>
+                        <p className="mt-2 max-h-24 overflow-y-auto text-gray-500">{result.description}</p>
                       </div>
-                    )
+                    </div>
                   )
-                }
-              </div>
+                )
+              }
             </div>
-          </>
-        )
+          </div>
+        </>
+      )
       }
 
       <Popup
@@ -246,9 +250,9 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
 
           <div className="mt-2 text-right">
             {!isLoading ? (
-              <Button title="Save" onClick={() => addExecutionProgress()} />
+              <Button title="Save" onClick={() => addExecutionProgress()}/>
             ) : (
-              <Loader />
+              <Loader/>
             )}
           </div>
         </form>

@@ -36,7 +36,7 @@ export const OneProposal = ({
   return (
     <div className={`shadow border border-gray-100 rounded-xl px-8 py-6 relative 
     ${isCurrentPerformer ? "" : "mb-3"} 
-    ${proposal.performer_id == currentUser.id ? "bg-yellow-100/10" : "bg-gray-50"}`}>
+    ${proposal.performer_id === currentUser.id ? "bg-yellow-50" : "bg-gray-50"}`}>
       <div
         className="flex flex-row"
         key={proposal.performer_id}>
@@ -97,7 +97,7 @@ export const OneProposal = ({
         </div>
       </div>
 
-      <hr className="my-3 border-dashed" />
+      <hr className="my-3 border-dashed"/>
 
       <div className="flex flex-row justify-between">
         <p className="mt-2 pr-10" style={{ whiteSpace: "pre-wrap" }}>

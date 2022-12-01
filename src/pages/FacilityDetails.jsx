@@ -119,13 +119,13 @@ export const FacilityDetails = () => {
   return (
     <>
       <Wrapper>
-        <Header color="dark" />
+        <Header color="dark"/>
 
         <main className="mb-auto">
           {isReady ? (
             <>
               <div className="bg-gray-50 border-t-2 h-[180px] mt-[-1px]">
-                <OneFacilityMap centerCoord={getFacilityCoordString()} locations={[facility]} />
+                <OneFacilityMap centerCoord={getFacilityCoordString()} locations={[facility]}/>
               </div>
 
               <div className="bg-gray-50 border-b text-sm text-gray-500">
@@ -163,10 +163,10 @@ export const FacilityDetails = () => {
                     </span>
                   </div>
 
-                  <hr className="mt-4" />
+                  <hr className="mt-4"/>
                   <p className="mt-6" style={{ whiteSpace: "pre-wrap" }}>{facility.description}</p>
 
-                  <hr className="my-6 block" />
+                  <hr className="my-6 block"/>
                   {
                     facility.status === "Fundraising" ? (
                       <FacilityDetailsFundraising
@@ -187,26 +187,31 @@ export const FacilityDetails = () => {
 
                 <div className="w-3/12 min-w-[320px]">
                   <div className="border border-gray-200 rounded-xl shadow-lg mt-2 overflow-hidden">
-                    <img src={getMediaUrl(facility.media)} alt="" className="w-full shadow-md max-h-64 object-cover" />
+                    <img src={getMediaUrl(facility.media)} alt="" className="w-full shadow-md max-h-64 object-cover"/>
 
                     <div className="p-5">
                       <h3 className="text-lg uppercase font-medium text-center mb-5">My Investment</h3>
 
-                      <div className="text-sm my-3">
-                        {isMyInvestments() && facilityInvestments
-                          .filter(item => item.user_id === currentUser.id)
-                          .map((item, index) => (
-                            <div className="flex flex-row my-2 mx-5" key={item.timestamp}>
-                              <div className="w-1/2 text-gray-500">
-                                {index + 1}. {timestampToDate(item.timestamp)}
+                      {isMyInvestments() ? (
+                        <div className="text-sm my-3">
+                          {facilityInvestments
+                            .filter(item => item.user_id === currentUser.id)
+                            .map((item, index) => (
+                              <div className="flex flex-row my-2 mx-5" key={item.timestamp}>
+                                <div className="w-1/2 text-gray-500">
+                                  {index + 1}. {timestampToDate(item.timestamp)}
+                                </div>
+                                <div className="w-1/2 text-right text-gray-500">
+                                  <b className="font-medium">{convertFromYocto(item.amount)} NEAR</b>
+                                  {/*<div className="text-main">cancel</div>*/}
+                                </div>
                               </div>
-                              <div className="w-1/2 text-right text-gray-500">
-                                <b className="font-medium">{convertFromYocto(item.amount)} NEAR</b>
-                                {/*<div className="text-main">cancel</div>*/}
-                              </div>
-                            </div>
-                          ))}
-                      </div>
+                            ))}
+                        </div>
+                      ) : (
+                        <div className="text-gray-500 text-center">*No investments</div>
+                      )}
+
 
                       {facility.status === 'Fundraising' && (
                         <div className="m-5 text-center flex flex-row">
@@ -216,18 +221,18 @@ export const FacilityDetails = () => {
                                  className="p-2.5 border rounded-l-lg text-base border-2 border-grey-600/90 border-r-transparent
                                focus:outline-0 inline-block w-full"
                                  onChange={(e) => setInvestAmount(e.target.value)}
-                                 placeholder="NEAR Amount" />
+                                 placeholder="NEAR Amount"/>
                           <Button title="Invest"
                                   noIcon
                                   roundedClass="rounded-r-lg"
                                   className={"border-transparent bg-main hover:bg-main/90 ml-[-2px]"}
-                                  onClick={() => handleInvest()} />
+                                  onClick={() => handleInvest()}/>
                         </div>
                       )}
 
                       {isMyInvestments() && (
                         <>
-                          <hr />
+                          <hr/>
                           <div className="flex flex-row m-5 mb-0 font-medium">
                             <div className="w-1/2">Total</div>
                             <div className="w-1/2 text-right">
@@ -245,11 +250,11 @@ export const FacilityDetails = () => {
                       {!isInvestorNftMinted ? (
                         <div>
                           <p className="mb-4 text-gray-500">You can claim your NFT as investor that support Ukraine!</p>
-                          <Button title="Claim MY NFT" noIcon onClick={() => claimNFT()} />
+                          <Button title="Claim MY NFT" noIcon onClick={() => claimNFT()}/>
                         </div>
                       ) : (
                         <div className="text-center text-gray-500 my-6">
-                          <img src={nftMinted} alt="minted" className="w-7 h-7 inline align-middle mr-2" />
+                          <img src={nftMinted} alt="minted" className="w-7 h-7 inline align-middle mr-2"/>
                           Your unique NFT Minted.
                         </div>
                       )}
@@ -261,12 +266,12 @@ export const FacilityDetails = () => {
             </>
           ) : (
             <div className="mt-8">
-              <Loader />
+              <Loader/>
             </div>
           )}
         </main>
 
-        <Footer color="dark" />
+        <Footer color="dark"/>
       </Wrapper>
     </>
   );
