@@ -71,6 +71,8 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
   const setCompletedStatus = async () => {
     window.contract.performer_set_completed({
       facility_id: facility.token_id
+    }).then(() => {
+      window.document.location.reload();
     });
   }
 
@@ -178,7 +180,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
         </>
       )}
 
-      <h3 className="text-xl font-medium mb-2">Facility Performer</h3>
+      <h3 className="text-xl font-medium mb-2 mt-6">Facility Performer</h3>
       {proposal && (
         <OneProposal proposal={proposal}
                      canVote={() => false}
