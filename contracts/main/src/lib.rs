@@ -80,6 +80,7 @@ pub struct Performer {
     pub rating: u8,
     pub rating_votes: Vec<AccountId>,
     pub is_validated: bool,
+    pub is_blocked: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
@@ -307,6 +308,7 @@ impl Contract {
             rating: 0,
             rating_votes: vec![],
             is_validated: false,
+            is_blocked: false
         };
         self.performers.insert(&account_id, &performer);
     }

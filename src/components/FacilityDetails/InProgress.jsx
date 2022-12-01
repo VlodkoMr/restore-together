@@ -192,7 +192,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
 
       {executionProgress.length > 0 && (
         <>
-          <div className="mb-8 shadow border border-gray-100 bg-gray-50/20 rounded-b-xl p-8 mt-[-10px]">
+          <div className="mb-8 shadow border border-gray-100 bg-gray-50/30 rounded-b-xl p-8 mt-[-10px]">
             <h3 className="mb-2 font-medium text-xl">
               Execution Progress
             </h3>
