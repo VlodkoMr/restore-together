@@ -16,8 +16,6 @@ contracts/target/
 
 src/__mocks__
 
-yarn.lock
-
 # keys
 /neardev
 
