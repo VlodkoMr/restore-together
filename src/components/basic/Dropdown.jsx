@@ -15,10 +15,10 @@ export default function Dropdown({ title, options, selected, border, onSelect, i
   }
 
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className="relative inline-block text-left w-full">
       <Menu.Button
-        className={`flex items-center justify-between py-2 pl-3 pr-4 text-gray-700 max-w-full hover:bg-gray-50 
-        ${isSmall ? "w-full min-w-[100px]" : "w-[140px] xl:w-[200px]"}  
+        className={`flex items-center justify-between pr-4 text-gray-700 max-w-full hover:bg-gray-50 
+        ${isSmall ? "w-full min-w-[100px]" : "w-full md:w-[140px] xl:w-[200px]"}  
         ${border ? "border w-[220px]" : "border-0 md:p-0 md:w-auto"}
         md:hover:bg-transparent md:hover:text-main`}>
         {getTitle()}
@@ -26,7 +26,7 @@ export default function Dropdown({ title, options, selected, border, onSelect, i
       </Menu.Button>
 
       <Menu.Items
-        className={`origin-top-right absolute w-52 rounded-md bg-white shadow-lg bg-white ${border ? "" : "left-[-16px]"}`}>
+        className={`origin-top-right absolute w-52 z-40 rounded-md bg-white shadow-lg bg-white ${border ? "" : "left-[-16px]"}`}>
         <div className="py-2 max-h-64 overflow-x-hidden overflow-y-scroll">
           {options?.map((option, index) => (
             <Menu.Item key={index}>

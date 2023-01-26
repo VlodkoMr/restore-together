@@ -60,13 +60,15 @@ export const FacilitiesFilter = ({ size }) => {
     setStatusList(optionsStatusList);
   }, []);
 
-  const FilterOption = ({ title, selected, options, onSelect }) => (
-    <div className={`whitespace-nowrap w-1/3 ${title !== "Region" ? "border-l border-gray-200 pl-4" : "pl-1"}`}>
+  const FilterOption = ({ title, size, selected, options, onSelect }) => (
+    <label className={`block whitespace-nowrap md:w-1/3 rounded-lg py-1 px-2 md:px-0 md:py-0 mb-2 md:mb-0
+    ${size === "sm" ? "" : "bg-white/90"}
+    ${title !== "Region" ? "border-l border-gray-200 md:pl-4" : "md:pl-1"}`}>
       <small className="block font-medium text-gray-500/80 mb-1">{title}</small>
-      <div className="font-medium">
+      <span className="font-medium block">
         <Dropdown title="All" options={options} selected={selected} onSelect={onSelect} isSmall={size === "sm"}/>
-      </div>
-    </div>
+      </span>
+    </label>
   );
 
   const getFacilityUrl = (_region, _facility, _status) => {
@@ -84,12 +86,15 @@ export const FacilitiesFilter = ({ size }) => {
   return (
     <>
       <div
-        className={`w-full relative bg-white mx-auto flex flex-row text-slate-900 
-          ${size === "sm" ? "pr-2 pl-6 bg-gray-50 h-14 py-2" : "sm:w-[800px] pl-10 pr-16 rounded-full py-4"}
+        className={`w-full relative mx-auto text-slate-900 
+          ${size === "sm"
+          ? "pr-2 md:pl-6 pl-2 bg-gray-50 h-14 py-2 flex flex-row"
+          : "md:bg-white sm:w-[800px] pl-10 pr-10 md:pr-16 md:rounded-full py-4 md:flex md:flex-row"}
         `}>
         <FilterOption title="Region"
                       options={regionList}
                       selected={region}
+                      size={size}
                       onSelect={(id) => {
                         dispatch(setRegion({ id }));
                         if (size === "sm") {
@@ -97,6 +102,7 @@ export const FacilitiesFilter = ({ size }) => {
                         }
                       }}/>
         <FilterOption title="Facility Type"
+                      size={size}
                       options={facilityTypeList}
                       selected={facility}
                       onSelect={(id) => {
@@ -106,6 +112,7 @@ export const FacilitiesFilter = ({ size }) => {
                         }
                       }}/>
         <FilterOption title="Stage"
+                      size={size}
                       options={statusList}
                       selected={status}
                       onSelect={(id) => {
@@ -118,8 +125,9 @@ export const FacilitiesFilter = ({ size }) => {
         {size !== "sm" && (
           <Link to={getFacilityUrl(region, facility, status)}>
             <button type="button"
-                    className={`absolute right-4 text-white bg-main transition hover:bg-main/90 hover:text-white focus:ring-4 items-center
-                  focus:outline-none focus:ring-main font-medium rounded-full text-sm p-3 text-center inline-flex top-[14px]`}>
+                    className={`md:absolute right-4 text-white bg-main transition hover:bg-main/90 hover:text-white focus:ring-4 items-center
+                  focus:outline-none focus:ring-main font-medium rounded-full text-sm px-6 py-3 md:px-3 text-center inline-flex top-[14px]`}>
+              <span className={"text-base mr-2 inline md:hidden"}>Search</span>
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd"
                       d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"

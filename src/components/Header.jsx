@@ -12,17 +12,11 @@ import { useNavigate } from 'react-router-dom';
 export const Header = ({ color, width }) => {
   const currentUser = useSelector(state => state.user.account);
   const navigate = useNavigate();
-  // const [scroll, setScroll] = useState(false);
-  // useEffect(() => {
-  //   // Change header bg on scroll
-  //   window.addEventListener("scroll", () => {
-  //     setScroll(window.scrollY > 60);
-  //   });
-  // }, []);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <Container width={width}
-               className={`flex flex-row xl:justify-between justify-around py-5 
+               className={`flex flex-row justify-between xl:justify-between sm:justify-around py-5 
                  ${color === "dark" ? "text-neutral-700 border-b-2" : "text-white max-w-[1500px]"}`}
     >
       <div className="xl:w-1/4 w-32">
@@ -31,7 +25,7 @@ export const Header = ({ color, width }) => {
         </Link>
       </div>
 
-      <div className={`pt-4 ${color === "dark" ? "" : "ml-4"}`}>
+      <div className={`pt-4 hidden md:block ${color === "dark" ? "" : "ml-4"}`}>
         <NavLink to="/">HOME</NavLink>
         <span className={`border-r ${color === "dark"
           ? "border-gray-200"
@@ -45,7 +39,7 @@ export const Header = ({ color, width }) => {
         <NavLink to="/about">ABOUT US</NavLink>
       </div>
 
-      <div className="text-right xl:w-1/4">
+      <div className="text-right xl:w-1/4 hidden md:block">
         {currentUser.id ? (
           <div className="flex justify-end pt-1">
             <Button title="Add Facility"
@@ -82,6 +76,50 @@ export const Header = ({ color, width }) => {
                     ? "text-main border-main hover:text-main/90"
                     : "hover:border-mainLight hover:text-mainLight"}`}
           />
+        )}
+      </div>
+
+      <div className={"md:hidden relative"}>
+        <button
+          onClick={() => setMobileOpen(prev => !prev)}
+          className={`px-2.5 py-2 ml-auto rounded-md lg:hidden focus:outline-none 
+          ${mobileOpen && "bg-gray-600"} ${color === "dark" && !mobileOpen ? "text-gray-700" : "text-white"}`}>
+          <svg
+            className="w-7 h-7 fill-current"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            {mobileOpen && (
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M18.278 16.864a1 1 0 0 1-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 0 1-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 0 1 1.414-1.414l4.829 4.828 4.828-4.828a1 1 0 1 1 1.414 1.414l-4.828 4.829 4.828 4.828z"
+              />
+            )}
+            {!mobileOpen && (
+              <path
+                fillRule="evenodd"
+                d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"
+              />
+            )}
+          </svg>
+        </button>
+
+        {mobileOpen && (
+          <div className={`flex flex-col w-full absolute top-8 right-0 w-48 z-20 text-white
+            bg-gray-600 px-4 py-3 text-right leading-8 rounded-b-lg rounded-l-lg`}>
+            <Link onClick={() => setMobileOpen(false)} to={`/`}>HOME</Link>
+            <Link onClick={() => setMobileOpen(false)} to={`/facility`}>FACILITIES</Link>
+            <Link onClick={() => setMobileOpen(false)} to={`/about`}>ABOUT US</Link>
+            {currentUser.id ? (
+              <>
+                <Link onClick={() => setMobileOpen(false)} to={`/my`}>DASHBOARD</Link>
+                <Link onClick={() => setMobileOpen(false)} to={`/add-facility`}>ADD FACILITY</Link>
+                <Link onClick={() => setMobileOpen(false)} to={`/`}>LOGOUT</Link>
+              </>
+            ) : (
+              <Link onClick={() => setMobileOpen(false)} to={`/`}>LOGIN</Link>
+            )}
+          </div>
         )}
       </div>
     </Container>

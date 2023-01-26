@@ -222,7 +222,7 @@ export const AddFacility = () => {
       <Wrapper>
         <Header color="dark"/>
 
-        <Container className="pt-6 w-[520px] mb-auto">
+        <Container className="pt-6 md:w-[520px] w-full mb-auto">
           <h2 className="text-3xl text-center my-6 font-semibold">Add Facility</h2>
 
           {isReady ? (
@@ -254,7 +254,7 @@ export const AddFacility = () => {
                                  onChange={(e) => setTitle(e.target.value)}/>
                     </div>
                     <div className="flex flex-row relative z-10">
-                      <div className="mb-4 w-1/2 mr-8">
+                      <div className="mb-4 w-1/2 md:mr-8 mr-2">
                         <FormLabel>
                           Region<sup className="text-red-300">*</sup>
                         </FormLabel>
@@ -363,7 +363,7 @@ export const AddFacility = () => {
                     <img src={getMediaUrl(newItem.media)} alt="media" className="facility-image rounded-l-lg mr-4"/>
                     <div>
                       <h3
-                        className="text-lg my-2 whitespace-nowrap text-ellipsis overflow-hidden w-[275px]">{newItem.title}</h3>
+                        className="md:text-lg my-2 whitespace-nowrap text-ellipsis overflow-hidden w-[275px]">{newItem.title}</h3>
                       <p className="text-sm text-gray-500">Region: {regionsConfig[newItem.region]}</p>
                       <p className="text-sm text-gray-500">Status: {statusConfig[newItem.status]}</p>
                       <p className="text-sm text-gray-500">Type: {facilityTypeConfig[newItem.facility_type]}</p>
