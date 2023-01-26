@@ -115,10 +115,10 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
     <>
       {facility.performer === currentUser.id && (
         <>
-          <div className="flex flex-row">
+          <div className="md:flex md:flex-row">
             {
               canClaimAmount > 0 && (
-                <div className="w-4/12">
+                <div className="md:w-4/12">
                   <h3 className="text-xl font-medium mb-2">Finances</h3>
                   <p>
                     Available: <b className="font-medium">
@@ -147,7 +147,7 @@ export const FacilityDetailsInProgress = ({ facility, facilityProposals, allPerf
               )
             }
 
-            <div className="w-8/12 ml-10 mb-10">
+            <div className="md:w-8/12 md:ml-10 mb-10 mt-10 md:mt-0">
               <h3 className="text-xl font-medium mb-2">Work Progress</h3>
               {
                 facility.status === "InProgress" ? (

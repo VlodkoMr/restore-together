@@ -114,10 +114,10 @@ export const Header = ({ color, width }) => {
               <>
                 <Link onClick={() => setMobileOpen(false)} to={`/my`}>DASHBOARD</Link>
                 <Link onClick={() => setMobileOpen(false)} to={`/add-facility`}>ADD FACILITY</Link>
-                <Link onClick={() => setMobileOpen(false)} to={`/`}>LOGOUT</Link>
+                <button className={"text-right"} onClick={logout}>LOGOUT</button>
               </>
             ) : (
-              <Link onClick={() => setMobileOpen(false)} to={`/`}>LOGIN</Link>
+              <button className={"text-right"} onClick={login}>LOGIN</button>
             )}
           </div>
         )}
