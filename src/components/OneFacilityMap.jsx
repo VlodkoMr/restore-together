@@ -45,7 +45,7 @@ function OneFacilityMap({ locations, centerCoord, google }) {
           zoom={zoom}
         >
           {locations.map(item => (
-            <Marker position={item} key={item.token_id} />
+            <Marker position={item} key={item.token_id}/>
           ))}
         </GoogleMap>
       )}

@@ -47,37 +47,37 @@ export default function App() {
               exact
               path="/"
               element={
-                <Homepage />
+                <Homepage/>
               }
             />
             <Route
               exact
               path="/facility"
               element={
-                <Facilities />
+                <Facilities/>
               }
             />
             <Route
               exact
               path="/facility/:id"
               element={
-                <FacilityDetails />
+                <FacilityDetails/>
               }
             />
             <Route
               exact
               path="/add-facility"
-              element={<AddFacility />}
+              element={<AddFacility/>}
             />
             <Route
               exact
               path="/about"
-              element={<About />}
+              element={<About/>}
             />
             <Route
               exact
               path="/my"
-              element={<User />}
+              element={<User/>}
             />
           </Routes>
         )}

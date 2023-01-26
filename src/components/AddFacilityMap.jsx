@@ -55,7 +55,7 @@ function AddFacilityMap({ centerCoord, google, markerLocation, setMarkerLocation
           onClick={onMapClicked}
         >
           {markerLocation.lat && (
-            <Marker position={markerLocation} />
+            <Marker position={markerLocation}/>
           )}
         </GoogleMap>
       )}

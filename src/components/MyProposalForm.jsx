@@ -45,17 +45,17 @@ export const MyProposalForm = ({ facility_id }) => {
                    min={1}
                    value={proposalTime}
                    onChange={(e) => setProposalTime(e.target.value)}
-                   placeholder="Time" />
+                   placeholder="Time"/>
             <span className="text-gray-600">days</span>
             <input type="number" className="border px-2 ml-10 py-1.5 w-[90px] mr-2"
                    min={1}
                    value={proposalBudget}
                    onChange={(e) => setProposalBudget(e.target.value)}
-                   placeholder="Budget" />
+                   placeholder="Budget"/>
             <span className="text-gray-600">NEAR</span>
           </div>
 
-          <Button title="Add Proposal" size="xs" noIcon />
+          <Button title="Add Proposal" size="xs" noIcon/>
         </div>
 
       </div>

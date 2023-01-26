@@ -6,7 +6,7 @@ import { Footer } from '../components/Footer';
 export const About = () => {
   return (
     <Wrapper>
-      <Header color="dark" />
+      <Header color="dark"/>
 
       <Container className="pt-4 xl:w-1/2 sm:w-3/4 mx-auto mb-auto text-lg text-justify">
         <h2 className="text-3xl text-center my-6 font-semibold">About Us</h2>
@@ -43,17 +43,18 @@ export const About = () => {
         </p>
         <p className="pb-6">
           Everyone can offer a facility for support or restore, but should pay 0.1 NEAR to avoid spam and cheat requests.
-          We take 1% fee of all transactions that will be paid for moderators that check all information and for service operating costs and marketing.
+          We take 1% fee of all transactions that will be paid for moderators that check all information and for service operating costs and
+          marketing.
         </p>
-        <hr />
+        <hr/>
         <p className="pb-16 pt-6">
           Also we launched separate project on Polygon blockchain:
-          NFT Collection of 9999 unique NFTs that you receive by donating to support ordinary people and help to rebuild their homes. <br />
+          NFT Collection of 9999 unique NFTs that you receive by donating to support ordinary people and help to rebuild their homes. <br/>
           URL: <a href="https://nft.restore-together.in.ua/" target="_blank" className="text-main underline">nft.restore-together.in.ua</a>
         </p>
       </Container>
 
-      <Footer color="dark" />
+      <Footer color="dark"/>
     </Wrapper>
   );
 };

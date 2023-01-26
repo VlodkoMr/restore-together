@@ -90,9 +90,11 @@ export const FacilityDetails = () => {
 
       if (facility.performer) {
         performerFeedbacksPromise(facility.performer).then(feedbacks => {
-          const feedback = feedbacks.filter(feedback => feedback.from_account === currentUser.id)
-          if (feedback.length > 0) {
-            setMyFeedback(feedback[0]);
+          if (feedbacks) {
+            const feedback = feedbacks.filter(feedback => feedback.from_account === currentUser.id)
+            if (feedback.length > 0) {
+              setMyFeedback(feedback[0]);
+            }
           }
         })
       }
@@ -162,12 +164,12 @@ export const FacilityDetails = () => {
                 </Container>
               </div>
 
-              <Container className="flex flex-row mt-4 pt-2 pb-6">
-                <div className="w-9/12 mr-14">
+              <Container className="md:flex md:flex-row mt-4 pt-2 pb-6">
+                <div className="w-full md:w-9/12 md:mr-14">
                   <h1 className="flex flex-row justify-between relative mb-1">
-                    <div className="text-2xl font-medium uppercase">{facility.title}</div>
+                    <div className="text-2xl leading-6 mb-2 font-medium uppercase">{facility.title}</div>
 
-                    <div className="font-medium absolute right-0 top-8">
+                    <div className="font-medium lg:absolute right-0 top-8">
                       <b className="text-gray-500 ml-1 text-xl" title="Invested Total">
                         {facility.total_invested > 0 ? convertFromYocto(facility.total_invested, 1) : 0} NEAR
                       </b>

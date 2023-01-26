@@ -55,7 +55,7 @@ export const Button = ({
         >
           {title}
           {!noIcon && (
-            <ArrowRightIcon className={`ml-2 ${iconMapping[size ?? "md"]}`} />
+            <ArrowRightIcon className={`ml-2 ${iconMapping[size ?? "md"]}`}/>
           )}
         </Row>
       </Btn>

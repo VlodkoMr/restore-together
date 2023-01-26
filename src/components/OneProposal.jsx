@@ -77,7 +77,7 @@ export const OneProposal = ({
     ${isCurrentPerformer ? "" : "mb-3"} 
     ${proposal.performer_id === currentUser.id ? "bg-yellow-50" : "bg-gray-50"}`}>
       <div
-        className="flex flex-row"
+        className="lg:flex lg:flex-row"
         key={proposal.performer_id}>
         {/*<div className="w-16 mr-5">*/}
         {/*  <img src={tmpLogo} alt="" width="w-full" className="rounded-full my-1" />*/}
@@ -93,7 +93,7 @@ export const OneProposal = ({
             )}
           </p>
 
-          <small className="text-gray-500 mt-2 flex flex-row">
+          <small className="text-gray-500 mt-2 lg:flex lg:flex-row">
             Estimate: <b className="font-medium text-sm">{proposal.estimate_time} days</b>
             <span className="mx-2 text-xl align-sub opacity-30 -mt-1">/</span>
             Budget: <b className="font-medium text-sm">{convertFromYocto(proposal.estimate_amount, 1)} NEAR</b>
@@ -142,7 +142,7 @@ export const OneProposal = ({
               </>
             ) : (
               <>
-                <small className="text-gray-500">
+                <small className="text-gray-500 mt-4 lg:mt-0 block">
                   {timestampToDate(proposal.created_at)}
                 </small>
                 {facility.performer !== currentUser.id && isMyInvestments && (

@@ -220,7 +220,7 @@ export const AddFacility = () => {
 
     return (
       <Wrapper>
-        <Header color="dark" />
+        <Header color="dark"/>
 
         <Container className="pt-6 w-[520px] mb-auto">
           <h2 className="text-3xl text-center my-6 font-semibold">Add Facility</h2>
@@ -231,14 +231,14 @@ export const AddFacility = () => {
                 <div className="flex flex-row relative">
                   <div className="absolute h-1 left-16 right-16 bg-blue-400 top-6 z-0">&nbsp;</div>
                   <div className={`absolute h-1 right-16 ${stepLineMap[currentStep]} bg-gray-200 top-6 z-0`}>&nbsp;</div>
-                  <StepCircle step={1} />
-                  <StepCircle step={2} />
-                  <StepCircle step={3} />
+                  <StepCircle step={1}/>
+                  <StepCircle step={2}/>
+                  <StepCircle step={3}/>
                 </div>
                 <div className="flex flex-row">
-                  <StepDescription step={1} text="General Info" />
-                  <StepDescription step={2} text="Upload Photo" />
-                  <StepDescription step={3} text="Done" />
+                  <StepDescription step={1} text="General Info"/>
+                  <StepDescription step={2} text="Upload Photo"/>
+                  <StepDescription step={3} text="Done"/>
                 </div>
               </div>
 
@@ -251,7 +251,7 @@ export const AddFacility = () => {
                       </FormLabel>
                       <FormInput type="text"
                                  value={title}
-                                 onChange={(e) => setTitle(e.target.value)} />
+                                 onChange={(e) => setTitle(e.target.value)}/>
                     </div>
                     <div className="flex flex-row relative z-10">
                       <div className="mb-4 w-1/2 mr-8">
@@ -285,7 +285,7 @@ export const AddFacility = () => {
                       <div className="h-[180px]">
                         <AddFacilityMap centerCoord={regionsCoordConfig[region]}
                                         markerLocation={markerLocation}
-                                        setMarkerLocation={setMarkerLocation} />
+                                        setMarkerLocation={setMarkerLocation}/>
                       </div>
                     </div>
                     <div className="mb-3">
@@ -305,11 +305,11 @@ export const AddFacility = () => {
                         <div className="w-2/3">
                         </div>
                         <div className="w-1/3 text-right">
-                          <Button title="Next" onClick={() => saveStep1()} />
+                          <Button title="Next" onClick={() => saveStep1()}/>
                         </div>
                       </div>
                     ) : (
-                      <Loader />
+                      <Loader/>
                     )}
                   </form>
                 )}
@@ -322,12 +322,12 @@ export const AddFacility = () => {
                                  accept="image/*"
                                  className="text-sm"
                                  ref={photoInput}
-                                 onChange={() => resizeImage()} />
+                                 onChange={() => resizeImage()}/>
                     </div>
 
                     {media && (
                       <div className="mb-4">
-                        <img src={media} alt="preview" className="h-80 w-full block object-cover" />
+                        <img src={media} alt="preview" className="h-80 w-full block object-cover"/>
                       </div>
                     )}
 
@@ -343,14 +343,14 @@ export const AddFacility = () => {
                         />
                       </div>
                     ) : (
-                      <Loader />
+                      <Loader/>
                     )}
                   </form>
                 )}
               </div>
             </>
           ) : (
-            <Loader />
+            <Loader/>
           )}
 
           {currentStep === 3 && (
@@ -360,7 +360,7 @@ export const AddFacility = () => {
                   <h3 className="text-center text-xl font-semibold">Facility published!</h3>
 
                   <Link to={`/facility/${newItem.token_id}`} className="my-6 border rounded-lg flex flex-row">
-                    <img src={getMediaUrl(newItem.media)} alt="media" className="facility-image rounded-l-lg mr-4" />
+                    <img src={getMediaUrl(newItem.media)} alt="media" className="facility-image rounded-l-lg mr-4"/>
                     <div>
                       <h3
                         className="text-lg my-2 whitespace-nowrap text-ellipsis overflow-hidden w-[275px]">{newItem.title}</h3>
@@ -374,7 +374,7 @@ export const AddFacility = () => {
                     <Button title="Add New Facility" noIcon onClick={() => {
                       resetForm();
                       setCurrentStep(1);
-                    }} />
+                    }}/>
                   </div>
                 </>
               )}
@@ -383,7 +383,7 @@ export const AddFacility = () => {
 
         </Container>
 
-        <Footer color="dark" />
+        <Footer color="dark"/>
       </Wrapper>
     );
   }

@@ -71,7 +71,7 @@ export const User = () => {
   return (
     <>
       <Wrapper>
-        <Header color="dark" />
+        <Header color="dark"/>
 
         <Container className="mt-4 mb-auto">
           <div className="flex flex-row mt-8">
@@ -82,13 +82,13 @@ export const User = () => {
                 <>
                   {investorFacilities.length > 0 ?
                     investorFacilities.map(facility => (
-                      <OneFacility facility={facility} key={facility.token_id} />
+                      <OneFacility facility={facility} key={facility.token_id}/>
                     )) : (
                       <div className="text-gray-500 pl-4">*No investments</div>
                     )}
                 </>
               ) : (
-                <Loader />
+                <Loader/>
               )}
             </div>
 
@@ -119,24 +119,24 @@ export const User = () => {
               {currentUser.performer ? (
                 <div className="mt-6">
                   <InfoField title="Company Name"
-                             value={currentUser.performer.name} />
+                             value={currentUser.performer.name}/>
                   <InfoField title="Phone"
-                             value={currentUser.performer.phone} />
+                             value={currentUser.performer.phone}/>
                   <InfoField title="Description"
-                             value={currentUser.performer.description} />
+                             value={currentUser.performer.description}/>
                   {
                     currentUser.performer.rating > 0 && (
                       <InfoField title="Rating (1-10)"
                                  valueClass={`font-medium ${currentUser.performer.rating > 5 ? "text-green-500" : "text-main"}`}
-                                 value={currentUser.performer.rating} />
+                                 value={currentUser.performer.rating}/>
                     )}
-                  <hr className="my-6" />
+                  <hr className="my-6"/>
 
                   <h3 className="text-lg font-medium pt-2">My Facilities</h3>
                   <div className="pb-6">
                     {performerFacilities.length > 0 ?
                       performerFacilities.map(facility => (
-                        <OneFacility facility={facility} size="small" key={facility.token_id} />
+                        <OneFacility facility={facility} size="small" key={facility.token_id}/>
                       )) : (
                         <div className="text-gray-500 mt-4">*No facilities</div>
                       )}
@@ -155,7 +155,7 @@ export const User = () => {
                           <FormLabel>Company Name<sup className="text-red-300">*</sup></FormLabel>
                           <FormInput type="text"
                                      value={performerName}
-                                     onChange={(e) => setPerformerName(e.target.value)} />
+                                     onChange={(e) => setPerformerName(e.target.value)}/>
                         </div>
                         {/*<div className="mb-3">*/}
                         {/*  <FormLabel>Company Logo:</FormLabel>*/}
@@ -168,7 +168,7 @@ export const User = () => {
                           <FormInput type="text"
                                      value={performerPhone}
                                      placeholder="+380"
-                                     onChange={(e) => setPerformerPhone(e.target.value)} />
+                                     onChange={(e) => setPerformerPhone(e.target.value)}/>
                         </div>
                         <div className="mb-3">
                           <FormLabel>Description<sup className="text-red-300">*</sup></FormLabel>
@@ -182,7 +182,7 @@ export const User = () => {
                             *Your request requires 0.25 NEAR for company verification.
                           </div>
                           <div className="text-right w-1/2">
-                            <Button title="Create Account" noIcon />
+                            <Button title="Create Account" noIcon/>
                           </div>
                         </div>
                       </div>
@@ -191,7 +191,7 @@ export const User = () => {
                     <div className="text-gray-500 text-sm">
                       To start work on the restoration, you need Performer Account:
                       <div className="mt-2">
-                        <Button title="Performer Registration" noIcon secondary onClick={() => setShowPerformerCreate(true)} />
+                        <Button title="Performer Registration" noIcon secondary onClick={() => setShowPerformerCreate(true)}/>
                       </div>
                     </div>
                   )}
@@ -202,7 +202,7 @@ export const User = () => {
           </div>
         </Container>
 
-        <Footer color="dark" />
+        <Footer color="dark"/>
       </Wrapper>
 
     </>

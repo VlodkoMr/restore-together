@@ -27,7 +27,7 @@ export const Header = ({ color, width }) => {
     >
       <div className="xl:w-1/4 w-32">
         <Link to="/">
-          <img src={color === "dark" ? logoIcon : logoWhiteIcon} alt="logo" width="140" />
+          <img src={color === "dark" ? logoIcon : logoWhiteIcon} alt="logo" width="140"/>
         </Link>
       </div>
 
@@ -51,7 +51,7 @@ export const Header = ({ color, width }) => {
             <Button title="Add Facility"
                     onClick={() => navigate("/add-facility")}
                     noIcon
-                    className={`bg-transparent mr-1
+                    className={`bg-transparent mr-1 hidden lg:block
                     ${color === "dark"
                       ? "text-main border-main hover:text-main/90"
                       : "hover:border-mainLight hover:text-mainLight"}`}
@@ -72,7 +72,7 @@ export const Header = ({ color, width }) => {
                    className={`w-9 h-9 grayscale hover:grayscale-0 ml-4 mt-1 cursor-pointer transition ${color === "dark"
                      ? "opacity-50 hover:opacity-70"
                      : "opacity-40 hover:opacity-60"}`}
-                   onClick={logout} />
+                   onClick={logout}/>
             </div>
           </div>
         ) : (

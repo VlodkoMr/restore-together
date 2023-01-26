@@ -68,7 +68,7 @@ export const FacilityDetailsFundraising = ({ facility, facilityProposals, facili
             <h3 className="font-medium mb-2 mt-10">Add your proposal:</h3>
             {
               currentUser.performer ? (
-                <MyProposalForm facility_id={facility.token_id} key={facility.token_id} />
+                <MyProposalForm facility_id={facility.token_id} key={facility.token_id}/>
               ) : (
                 <>
                   <p className="text-gray-500 pb-10 text-sm">To add new proposal, please register{" "}

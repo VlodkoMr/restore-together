@@ -65,16 +65,16 @@ export const Facilities = () => {
   return (
     <>
       <Wrapper>
-        <Header color="dark" width="full" />
+        <Header color="dark" width="full"/>
 
         {
           isReady ? (
             <div className="flex flex-row mb-auto">
-              <div className="w-5/12  border-r border-r facility-col overflow-y-scroll" style={{
+              <div className="w-full sm:w-8/12 lg:w-5/12  border-r border-r facility-col overflow-y-scroll" style={{
                 height: 'calc(100vh - 160px)',
               }}>
                 <div className="bg-gray-50 pb-2 pt-2 border-b z-10 relative">
-                  <FacilitiesFilter size="sm" />
+                  <FacilitiesFilter size="sm"/>
                 </div>
 
                 <Container className="py-3 text-sm text-gray-500">
@@ -89,14 +89,14 @@ export const Facilities = () => {
                   facilityList.length > 0 && facilityList.filter(filterItems).length > 0 && (
                     facilityList.filter(filterItems).map(facility => (
                       <Container key={facility.token_id}>
-                        <OneFacility facility={facility} />
+                        <OneFacility facility={facility}/>
                       </Container>
                     ))
                   )
                 }
               </div>
 
-              <div className="w-7/12">
+              <div className="hidden md:block sm:w-4/12 lg:w-7/12">
                 <div className="relative z-0">
                   <FacilitiesMap filterItems={filterItems}
                                  centerCoord={centerCoord}
@@ -109,12 +109,12 @@ export const Facilities = () => {
             </div>
           ) : (
             <div className="mt-8 mb-auto">
-              <Loader />
+              <Loader/>
             </div>
           )
         }
 
-        <Footer width="full" color="dark" />
+        <Footer width="full" color="dark"/>
       </Wrapper>
     </>
   );

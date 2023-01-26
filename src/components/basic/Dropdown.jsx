@@ -22,7 +22,7 @@ export default function Dropdown({ title, options, selected, border, onSelect, i
         ${border ? "border w-[220px]" : "border-0 md:p-0 md:w-auto"}
         md:hover:bg-transparent md:hover:text-main`}>
         {getTitle()}
-        <ChevronDownIcon className={`-mr-1 ml-2 h-5 w-5`} aria-hidden="true" />
+        <ChevronDownIcon className={`-mr-1 ml-2 h-5 w-5`} aria-hidden="true"/>
       </Menu.Button>
 
       <Menu.Items

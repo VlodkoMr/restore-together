@@ -19,11 +19,11 @@ export const Homepage = () => {
       <div className="top-gradient">&nbsp;</div>
 
       <Wrapper className="text-white">
-        <Header />
+        <Header/>
 
         <main className="mb-auto">
           <div className="mt-4">
-            <FacilitiesFilter />
+            <FacilitiesFilter/>
           </div>
 
           <div className="text-center mt-8 leading-6">
@@ -35,7 +35,7 @@ export const Homepage = () => {
           </div>
         </main>
 
-        <Footer />
+        <Footer/>
       </Wrapper>
     </>
   );
